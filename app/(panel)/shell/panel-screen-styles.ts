@@ -2,9 +2,9 @@ export const PANEL_SCREEN_STYLES: string = `
 [data-panel-page] {
   display: flex;
   flex-direction: column;
+  align-items: stretch;
   gap: 16px;
   width: 100%;
-  max-width: 1120px;
   min-width: 0;
 }
 [data-panel-page] h1 {
@@ -167,6 +167,7 @@ export const PANEL_SCREEN_STYLES: string = `
 [data-panel-form] {
   display: grid;
   gap: 12px;
+  max-width: 1120px;
   padding: 16px;
   border-radius: 16px;
   background: var(--color-paper);
@@ -192,7 +193,9 @@ export const PANEL_SCREEN_STYLES: string = `
 }
 [data-panel-table-wrap] {
   min-width: 0;
-  max-width: 100%;
+  width: 100%;
+  max-width: 1120px;
+  margin-inline: auto;
   overflow-x: auto;
   overflow-anchor: none;
   -webkit-overflow-scrolling: touch;
@@ -214,12 +217,12 @@ export const PANEL_SCREEN_STYLES: string = `
   padding: 16px 16px 0;
   color: var(--color-muted);
   font-size: 0.875rem;
-  text-align: left;
+  text-align: center;
 }
 [data-panel-table] th,
 [data-panel-table] td {
   padding: 12px 16px;
-  text-align: left;
+  text-align: center;
   vertical-align: middle;
   overflow-wrap: break-word;
   overflow-wrap: anywhere;
@@ -245,6 +248,7 @@ export const PANEL_SCREEN_STYLES: string = `
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  justify-content: center;
   gap: 8px;
 }
 [data-file-button] {

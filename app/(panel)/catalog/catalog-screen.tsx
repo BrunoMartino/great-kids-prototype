@@ -7,7 +7,6 @@ import { TrashIcon, UploadIcon } from "../shell/panel-icons";
 import { PANEL_SCREEN_STYLES } from "../shell/panel-screen-styles";
 import {
   StaffSessionToolbar,
-  staffRoleLabel,
   type StaffRole,
 } from "../shell/staff-session-toolbar";
 
@@ -120,14 +119,12 @@ export function CatalogScreen(): ReactElement {
       />
       {session.isLoading ? (
         <div data-panel-loading aria-live="polite" aria-busy="true">
-          <span data-panel-role>Catalog</span>
           <h1>Loading the catalog</h1>
           <div data-panel-loading-bar />
         </div>
       ) : null}
       {!session.isLoading && session.isForbidden ? (
         <div data-panel-forbidden role="alert">
-          <span data-panel-role>Catalog</span>
           <h1>Access denied</h1>
           <p>This catalog is staff only.</p>
         </div>
@@ -136,7 +133,6 @@ export function CatalogScreen(): ReactElement {
       !session.isForbidden &&
       session.errorMessage !== null ? (
         <div data-panel-error role="alert">
-          <span data-panel-role>Catalog</span>
           <h1>Could not load the catalog</h1>
           <p>{session.errorMessage}</p>
         </div>
@@ -146,9 +142,6 @@ export function CatalogScreen(): ReactElement {
       session.errorMessage === null &&
       session.role !== null ? (
         <div data-panel-success>
-          <span data-panel-role data-role={session.role}>
-            {staffRoleLabel(session.role)}
-          </span>
           <h1>Catalog</h1>
           <p>Staff missions, including drafts and review.</p>
           <form data-panel-form onSubmit={onCreateSubmit}>

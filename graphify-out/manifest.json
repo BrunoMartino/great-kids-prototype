@@ -210,8 +210,8 @@
     "semantic_hash": ""
   },
   "app/(panel)/layout.tsx": {
-    "mtime": 1792526619.9245987,
-    "seen": 1792527137.232254,
+    "mtime": 1792530734.9304106,
+    "seen": 1792530744.289356,
     "ast_hash": "60d2e74e93ad4235a390a1293582a256",
     "semantic_hash": ""
   },
@@ -768,9 +768,9 @@
     "semantic_hash": ""
   },
   "app/(panel)/catalog/catalog-screen.tsx": {
-    "mtime": 1792526619.9769826,
-    "seen": 1792527137.232078,
-    "ast_hash": "b10223f527b4640f40f34f0fb85998bc",
+    "mtime": 1792530641.0151503,
+    "seen": 1792530744.2891474,
+    "ast_hash": "9b16d3a4ed292c8220f24424e6120979",
     "semantic_hash": ""
   },
   "app/(panel)/catalog/page.tsx": {
@@ -3498,9 +3498,9 @@
     "semantic_hash": ""
   },
   "app/(panel)/shell/panel-screen-styles.ts": {
-    "mtime": 1792523371.9652915,
-    "seen": 1792523678.918634,
-    "ast_hash": "6bcc5fa942d045dfc5bd32a21adfa47c",
+    "mtime": 1792530737.181813,
+    "seen": 1792530744.2895598,
+    "ast_hash": "b8b31f7c9e9cfc85294067f6577ddef5",
     "semantic_hash": ""
   },
   "app/(panel)/shell/panel-staff-facade.ts": {
@@ -3510,8 +3510,8 @@
     "semantic_hash": ""
   },
   "app/(panel)/shell/staff-session-toolbar.tsx": {
-    "mtime": 1792526645.3042958,
-    "seen": 1792527137.2324624,
+    "mtime": 1792530735.1258202,
+    "seen": 1792530744.2895737,
     "ast_hash": "ee641486aa2808eaf1b8c7ea7e59b0d5",
     "semantic_hash": ""
   },
@@ -3633,6 +3633,12 @@
     "mtime": 1792526904.9100006,
     "seen": 1792527137.231092,
     "ast_hash": "6387fff170e7a443807677c36c716bdd",
+    "semantic_hash": ""
+  },
+  "especs/ingegnere/quality-report.md": {
+    "mtime": 1792528912.3700163,
+    "seen": 1792530616.2974143,
+    "ast_hash": "da28386b8dc399aa4123a8d90dc0e229",
     "semantic_hash": ""
   }
 }
