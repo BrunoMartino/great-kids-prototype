@@ -29,6 +29,7 @@ export type FamilySessionContextValue = {
 
 type FamilySessionProviderProps = {
   children: ReactNode;
+  initialSnapshot?: SessionSnapshot | null;
 };
 
 const FamilySessionContext = createContext<FamilySessionContextValue | null>(
@@ -53,12 +54,18 @@ function readSessionBody(p_value: unknown): SessionSnapshot | null {
 export function FamilySessionProvider(
   p_props: FamilySessionProviderProps,
 ): ReactElement {
-  const [snapshot, setSnapshot] = useState<SessionSnapshot | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const seeded: SessionSnapshot | null =
+    p_props.initialSnapshot === undefined ? null : p_props.initialSnapshot;
+  const hasSeed: boolean = seeded !== null;
+  const [snapshot, setSnapshot] = useState<SessionSnapshot | null>(seeded);
+  const [isLoading, setIsLoading] = useState<boolean>(!hasSeed);
   const [isSwitching, setIsSwitching] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   useEffect(() => {
+    if (hasSeed) {
+      return;
+    }
     let isActive: boolean = true;
 
     const loadSession = async (): Promise<void> => {
@@ -103,7 +110,7 @@ export function FamilySessionProvider(
     return (): void => {
       isActive = false;
     };
-  }, []);
+  }, [hasSeed]);
 
   const switchRole = async (p_role: SessionRole): Promise<void> => {
     setIsSwitching(true);

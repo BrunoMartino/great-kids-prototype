@@ -87,37 +87,41 @@ export function ChildSessionProvider(
     let isActive: boolean = true;
     const load = async (): Promise<void> => {
       setPresentation({ kind: "loading" });
-      try {
-        const command: ListCompletedCommand = new ListCompletedCommand(familyId);
-        const envelope = await command.execute();
-        if (!isActive) {
-          return;
-        }
-        setCompleted(envelope.missions);
+      const [completedResult, diaryResult] = await Promise.all([
+        new ListCompletedCommand(familyId)
+          .execute()
+          .then((p_envelope) => ({
+            ok: true as const,
+            missions: p_envelope.missions,
+          }))
+          .catch((p_error: unknown) => ({
+            ok: false as const,
+            blocked: p_error instanceof HistoryForbiddenError,
+          })),
+        new ListDiaryCommand(familyId)
+          .execute()
+          .then((p_diary: DiaryPayload) => ({
+            ok: true as const,
+            diary: p_diary,
+          }))
+          .catch(() => ({ ok: false as const })),
+      ]);
+      if (!isActive) {
+        return;
+      }
+      if (completedResult.ok) {
+        setCompleted(completedResult.missions);
         setCompletedBlocked(false);
-      } catch (p_error: unknown) {
-        void p_error;
-        if (!isActive) {
-          return;
-        }
+      } else {
         setCompleted([]);
-        setCompletedBlocked(p_error instanceof HistoryForbiddenError);
+        setCompletedBlocked(completedResult.blocked);
       }
-      try {
-        const diary: DiaryPayload = await new ListDiaryCommand(familyId).execute();
-        if (!isActive) {
-          return;
-        }
-        setNotes(diary);
-      } catch (p_error: unknown) {
-        void p_error;
-        if (isActive) {
-          setNotes(null);
-        }
+      if (diaryResult.ok) {
+        setNotes(diaryResult.diary);
+      } else {
+        setNotes(null);
       }
-      if (isActive) {
-        setPresentation({ kind: "ready" });
-      }
+      setPresentation({ kind: "ready" });
     };
     void load();
     return (): void => {

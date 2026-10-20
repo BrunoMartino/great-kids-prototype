@@ -1,7 +1,14 @@
 import type { ReactElement, ReactNode } from "react";
+import {
+  getPresentation,
+  isPresentationPresent,
+} from "@/app/api/session/presentation-strategy";
 import { PhoneChromeFrame } from "./chrome/phone-chrome-frame";
 import { SurfaceModeSwitch } from "./chrome/surface-mode-switch";
-import { FamilySessionProvider } from "./context-switch/family-session-context";
+import {
+  FamilySessionProvider,
+  type SessionSnapshot,
+} from "./context-switch/family-session-context";
 
 type FamilyLayoutProps = {
   children: ReactNode;
@@ -57,7 +64,22 @@ const FAMILY_SHELL_STYLES: string = `
 }
 `;
 
-export default function FamilyLayout(p_props: FamilyLayoutProps): ReactElement {
+function readInitialSnapshot(): SessionSnapshot | null {
+  if (!isPresentationPresent()) {
+    return null;
+  }
+  const present: ReturnType<typeof getPresentation> = getPresentation();
+  return {
+    role: present.role,
+    presentation: present.presentation,
+  };
+}
+
+export default async function FamilyLayout(
+  p_props: FamilyLayoutProps,
+): Promise<ReactElement> {
+  const initialSnapshot: SessionSnapshot | null = readInitialSnapshot();
+
   return (
     <div data-surface="family">
       <style href="family-shell" precedence="low">
@@ -65,7 +87,7 @@ export default function FamilyLayout(p_props: FamilyLayoutProps): ReactElement {
       </style>
       <div data-family-desk>
         <SurfaceModeSwitch />
-        <FamilySessionProvider>
+        <FamilySessionProvider initialSnapshot={initialSnapshot}>
           <PhoneChromeFrame>
             {p_props.children}
           </PhoneChromeFrame>

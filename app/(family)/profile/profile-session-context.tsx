@@ -187,14 +187,21 @@ export function ProfileSessionProvider(
     }
     setPresentation({ kind: "loading" });
     try {
-      const profileResponse: Response = await fetch(
-        `/api/families/${encodeURIComponent(trimmed)}/profile`,
-        { cache: "no-store", signal: p_signal },
-      );
+      const [profileResponse, answersResponse]: [Response, Response] =
+        await Promise.all([
+          fetch(`/api/families/${encodeURIComponent(trimmed)}/profile`, {
+            cache: "no-store",
+            signal: p_signal,
+          }),
+          fetch(
+            `/api/families/${encodeURIComponent(trimmed)}/profile/answers`,
+            { cache: "no-store", signal: p_signal },
+          ),
+        ]);
       if (p_signal?.aborted) {
         return;
       }
-      if (profileResponse.status === 403) {
+      if (profileResponse.status === 403 || answersResponse.status === 403) {
         setPresentation({ kind: "denied" });
         return;
       }
@@ -209,23 +216,6 @@ export function ProfileSessionProvider(
         });
         return;
       }
-      const profileBody: unknown = await profileResponse.json();
-      const document: GpsDocument | null = readGpsDocument(profileBody);
-      if (document === null) {
-        setPresentation({ kind: "error", message: "GPS in an invalid format." });
-        return;
-      }
-      const answersResponse: Response = await fetch(
-        `/api/families/${encodeURIComponent(trimmed)}/profile/answers`,
-        { cache: "no-store", signal: p_signal },
-      );
-      if (p_signal?.aborted) {
-        return;
-      }
-      if (answersResponse.status === 403) {
-        setPresentation({ kind: "denied" });
-        return;
-      }
       if (!answersResponse.ok) {
         setPresentation({
           kind: "error",
@@ -233,7 +223,15 @@ export function ProfileSessionProvider(
         });
         return;
       }
-      const answersBody: unknown = await answersResponse.json();
+      const [profileBody, answersBody]: [unknown, unknown] = await Promise.all([
+        profileResponse.json(),
+        answersResponse.json(),
+      ]);
+      const document: GpsDocument | null = readGpsDocument(profileBody);
+      if (document === null) {
+        setPresentation({ kind: "error", message: "GPS in an invalid format." });
+        return;
+      }
       const answersEnvelope: QuizAnswerEnvelope | null =
         readQuizEnvelope(answersBody);
       if (answersEnvelope === null) {
