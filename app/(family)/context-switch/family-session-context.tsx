@@ -8,6 +8,7 @@ import {
   type ReactElement,
   type ReactNode,
 } from "react";
+import { SEEDED_FAMILY_ID } from "../chrome/seeded-family";
 
 export type SessionRole = "Parent" | "Child";
 export type SessionPresentationKind = "parent" | "child";
@@ -19,6 +20,7 @@ export type SessionSnapshot = {
 
 export type FamilySessionContextValue = {
   snapshot: SessionSnapshot | null;
+  familyId: string;
   isLoading: boolean;
   isSwitching: boolean;
   errorMessage: string | null;
@@ -65,7 +67,7 @@ export function FamilySessionProvider(
         if (response.status === 401) {
           if (isActive) {
             setSnapshot(null);
-            setErrorMessage("Sessão ausente. Não chame as APIs da família.");
+            setErrorMessage("Session missing. Do not call family APIs.");
           }
           return;
         }
@@ -79,7 +81,7 @@ export function FamilySessionProvider(
         }
         if (parsed === null) {
           setSnapshot(null);
-          setErrorMessage("Resposta de sessão inválida.");
+          setErrorMessage("Invalid session response.");
           return;
         }
         setSnapshot(parsed);
@@ -88,7 +90,7 @@ export function FamilySessionProvider(
         void p_error;
         if (isActive) {
           setSnapshot(null);
-          setErrorMessage("Não foi possível carregar a sessão.");
+          setErrorMessage("Could not load the session.");
         }
       } finally {
         if (isActive) {
@@ -112,20 +114,20 @@ export function FamilySessionProvider(
         body: JSON.stringify({ role: p_role }),
       });
       if (!response.ok) {
-        setErrorMessage("Não foi possível trocar o contexto.");
+        setErrorMessage("Could not switch context.");
         return;
       }
       const body: unknown = await response.json();
       const parsed: SessionSnapshot | null = readSessionBody(body);
       if (parsed === null) {
-        setErrorMessage("Resposta de sessão inválida.");
+        setErrorMessage("Invalid session response.");
         return;
       }
       setSnapshot(parsed);
       setErrorMessage(null);
     } catch (p_error: unknown) {
       void p_error;
-      setErrorMessage("Não foi possível trocar o contexto.");
+      setErrorMessage("Could not switch context.");
     } finally {
       setIsSwitching(false);
     }
@@ -133,6 +135,7 @@ export function FamilySessionProvider(
 
   const value: FamilySessionContextValue = {
     snapshot,
+    familyId: SEEDED_FAMILY_ID,
     isLoading,
     isSwitching,
     errorMessage,

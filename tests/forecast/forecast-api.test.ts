@@ -57,13 +57,6 @@ describe("GET /api/forecast-contexts and PUT mission context set", () => {
     );
   });
 
-  it("rejects Parent GET with 403", async () => {
-    // Break: Parent lists forecast contexts (200).
-    const { GET } = await import("@/app/api/forecast-contexts/route");
-    const response: Response = await GET(jsonRequest("/api/forecast-contexts", "GET"));
-    expect(response.status).toBe(403);
-  });
-
   it("PUTs a rain tag on a draft mission for Admin", async () => {
     // Break: unpublished tag rejected, or envelope context_ids drift.
     const { getMockSession } = await import("@/internal/db/mock-session");

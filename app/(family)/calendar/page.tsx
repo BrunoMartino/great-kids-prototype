@@ -6,7 +6,7 @@ function CalendarFallback(): ReactElement {
     <div data-calendar-screen>
       <div data-calendar-scroll>
         <div aria-live="polite" aria-busy="true">
-          <h1>Carregando o calendário</h1>
+          <h1>Loading the calendar</h1>
         </div>
       </div>
     </div>

@@ -12,6 +12,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import type { DayDocument, SuggestionItem } from "../calendar/day-composite";
 import { DayComposite } from "../calendar/day-composite";
 import { readDayDocument } from "../calendar/schedule-on-day-command";
+import { SEEDED_FAMILY_ID } from "../chrome/seeded-family";
 import { useFamilySession } from "../context-switch/family-session-context";
 import { GpsViewPolicy } from "../quiz/gps-view-policy";
 import {
@@ -106,7 +107,8 @@ export function ForecastSessionProvider(
   const router: ReturnType<typeof useRouter> = useRouter();
   const searchParams: URLSearchParams = useSearchParams();
   const session: ReturnType<typeof useFamilySession> = useFamilySession();
-  const queryId: string = searchParams.get("id") ?? "";
+  const queryId: string =
+    (searchParams.get("id") ?? "").trim() || SEEDED_FAMILY_ID;
   const [presentation, setPresentation] = useState<ForecastPresentation>({
     kind: queryId.trim().length > 0 ? "loading" : "need-family",
   });
@@ -166,7 +168,7 @@ export function ForecastSessionProvider(
       if (!weekResponse.ok) {
         setPresentation({
           kind: "error",
-          message: "Não foi possível abrir a previsão.",
+          message: "Could not open the forecast.",
         });
         return;
       }
@@ -175,7 +177,7 @@ export function ForecastSessionProvider(
       if (week === null) {
         setPresentation({
           kind: "error",
-          message: "Previsão em formato inválido.",
+          message: "Forecast in an invalid format.",
         });
         return;
       }
@@ -197,14 +199,14 @@ export function ForecastSessionProvider(
       if (!dayResponse.ok) {
         setPresentation({
           kind: "error",
-          message: "Não foi possível abrir o dia.",
+          message: "Could not open the day.",
         });
         return;
       }
       const dayBody: unknown = await dayResponse.json();
       const document: DayDocument | null = readDayDocument(dayBody);
       if (document === null) {
-        setPresentation({ kind: "error", message: "Dia em formato inválido." });
+        setPresentation({ kind: "error", message: "Day in an invalid format." });
         return;
       }
       setPresentation({
@@ -222,7 +224,7 @@ export function ForecastSessionProvider(
       }
       setPresentation({
         kind: "error",
-        message: "Não foi possível abrir a previsão.",
+        message: "Could not open the forecast.",
       });
     }
   };
@@ -282,11 +284,11 @@ export function ForecastSessionProvider(
     drop: async (p_missionId: string): Promise<void> => {
       const familyId: string = queryId.trim();
       if (familyId.length === 0) {
-        setFormError("Informe o id da família.");
+        setFormError("Session family is missing.");
         return;
       }
       if (day.trim().length === 0) {
-        setFormError("Escolha o dia.");
+        setFormError("Choose the day.");
         return;
       }
       setIsSaving(true);
@@ -301,11 +303,11 @@ export function ForecastSessionProvider(
         await loadForecast(familyId, day);
       } catch (p_error: unknown) {
         if (p_error instanceof MissingDayDropError) {
-          setFormError("Escolha o dia.");
+          setFormError("Choose the day.");
         } else if (p_error instanceof UnpublishedDropError) {
-          setFormError("Missão não publicada.");
+          setFormError("Mission is not published.");
         } else {
-          setFormError("Não foi possível colocar no dia.");
+          setFormError("Could not place it on the day.");
         }
       } finally {
         setIsSaving(false);
@@ -314,7 +316,7 @@ export function ForecastSessionProvider(
     markDone: async (p_item: SuggestionItem): Promise<void> => {
       const familyId: string = queryId.trim();
       if (familyId.length === 0) {
-        setFormError("Informe o id da família.");
+        setFormError("Session family is missing.");
         return;
       }
       setIsSaving(true);
@@ -328,7 +330,7 @@ export function ForecastSessionProvider(
         const result: PatchSuggestionResult = await command.execute();
         await applyPatch(result);
       } catch {
-        setFormError("Não foi possível marcar como feita.");
+        setFormError("Could not mark as done.");
       } finally {
         setIsSaving(false);
       }
@@ -336,7 +338,7 @@ export function ForecastSessionProvider(
     moveDay: async (p_item: SuggestionItem): Promise<void> => {
       const familyId: string = queryId.trim();
       if (familyId.length === 0) {
-        setFormError("Informe o id da família.");
+        setFormError("Session family is missing.");
         return;
       }
       setIsSaving(true);
@@ -352,9 +354,9 @@ export function ForecastSessionProvider(
         await applyPatch(result);
       } catch (p_error: unknown) {
         if (p_error instanceof MissingTargetDayError) {
-          setFormError("Informe o dia de destino.");
+          setFormError("Enter the destination day.");
         } else {
-          setFormError("Não foi possível mover.");
+          setFormError("Could not move.");
         }
       } finally {
         setIsSaving(false);
@@ -378,7 +380,7 @@ export function ForecastSessionProvider(
         await command.execute();
         publishProposal(null);
       } catch {
-        setFormError("Não foi possível guardar o ritmo.");
+        setFormError("Could not save the rhythm.");
       } finally {
         setIsSaving(false);
       }
@@ -397,7 +399,7 @@ export function ForecastSessionProvider(
         await command.execute();
         publishProposal(null);
       } catch {
-        setFormError("Não foi possível dispensar o ritmo.");
+        setFormError("Could not dismiss the rhythm.");
       } finally {
         setIsSaving(false);
       }

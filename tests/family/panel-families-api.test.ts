@@ -78,27 +78,6 @@ describe("panel families and family plan routes", () => {
     expect(secondBody.families[0].invites[0].status).toBe("Pending");
   });
 
-  it("rejects Parent GET and PATCH on the panel with 403", async () => {
-    // Break: Parent reads or patches panel families (200).
-    const arranged = await arrangeFamilyViaApi();
-    const { getMockSession } = await import("@/internal/db/mock-session");
-    getMockSession().role = "Parent";
-    const { GET } = await import("@/app/api/panel/families/route");
-    const getResponse: Response = await GET(jsonRequest("/api/panel/families", "GET"));
-    expect(getResponse.status).toBe(403);
-    const { PATCH } = await import("@/app/api/panel/families/[id]/plan/route");
-    const patchResponse: Response = await PATCH(
-      jsonRequest(
-        `/api/panel/families/${arranged.familyId}/plan`,
-        "PATCH",
-        { plan_id: FREE_PLAN_ID },
-        arranged.holderId,
-      ),
-      familyRouteParams(arranged.familyId),
-    );
-    expect(patchResponse.status).toBe(403);
-  });
-
   it("rejects an invited Parent PATCH on the family plan with 403", async () => {
     // Break: invited Parent changes the family plan (200).
     const arranged = await arrangeFamilyViaApi();

@@ -6,7 +6,7 @@ function CompletedFallback(): ReactElement {
     <div data-completed-screen>
       <div data-completed-scroll>
         <div aria-live="polite" aria-busy="true">
-          <h1>Carregando as completas</h1>
+          <h1>Loading completed missions</h1>
         </div>
       </div>
     </div>

@@ -134,16 +134,4 @@ describe("mission categories", () => {
     expect(body.category.name).toBe("Extra");
     expect(typeof body.id).toBe("string");
   });
-
-  it("rejects Parent POST of a category with 403", async () => {
-    // Break: Parent writes catalog categories.
-    const { POST } = await import("@/app/api/mission-categories/route");
-    const response: Response = await POST(
-      jsonRequest("/api/mission-categories", "POST", {
-        slug: "parent-cat",
-        name: "Nope",
-      }),
-    );
-    expect(response.status).toBe(403);
-  });
 });

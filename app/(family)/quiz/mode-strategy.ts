@@ -12,7 +12,7 @@ export class ModeStrategy {
   }
 
   public prompt(): string {
-    return "Um adulto responde sozinho.";
+    return "One adult answers alone.";
   }
 }
 
@@ -22,7 +22,7 @@ export class SoloModeStrategy extends ModeStrategy {
   }
 
   public prompt(): string {
-    return "Um adulto responde sozinho.";
+    return "One adult answers alone.";
   }
 }
 
@@ -32,7 +32,7 @@ export class TableModeStrategy extends ModeStrategy {
   }
 
   public prompt(): string {
-    return "A família responde junta, à mesa.";
+    return "The family answers together, at the table.";
   }
 }
 

@@ -10,7 +10,7 @@
 This prototype has no Supabase Auth. The commissioner still needs to see Parent and Child screens.
 
 ### Solução e trade-offs
-Mock session starts as Parent. A control switches to Child views in the emulated app. Trade-off: not real auth; `auth_user_id` stays a pointer. Child is a view, not an account (INV-002). Panel still uses Admin/Operator mock separately.
+Mock session starts as Parent with a seeded `familyId` (no typed ids). Child is not a shared chrome switch: Child uses one route (`/child`) — chosen missions, completed history, notes only. Parent hamburger may offer “Ver como criança” for the demo. Trade-off: not real auth; `auth_user_id` stays a pointer. Child is not an account (INV-002). Panel uses Admin/Operator only (no Responsável).
 
 ### Fluxo (given/when/then)
 - Dado mock session as Parent

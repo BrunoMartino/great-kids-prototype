@@ -9,6 +9,7 @@ import {
   type ReactNode,
 } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { SEEDED_FAMILY_ID } from "../../chrome/seeded-family";
 import { useFamilySession } from "../../context-switch/family-session-context";
 import { GpsViewPolicy } from "../../quiz/gps-view-policy";
 import {
@@ -52,7 +53,8 @@ export function SurpriseSessionProvider(
   const router: ReturnType<typeof useRouter> = useRouter();
   const searchParams: URLSearchParams = useSearchParams();
   const session: ReturnType<typeof useFamilySession> = useFamilySession();
-  const queryId: string = searchParams.get("id") ?? "";
+  const queryId: string =
+    (searchParams.get("id") ?? "").trim() || SEEDED_FAMILY_ID;
   const [presentation, setPresentation] = useState<SurprisePresentation>({
     kind: queryId.trim().length > 0 ? "idle" : "need-family",
   });
@@ -137,7 +139,7 @@ export function SurpriseSessionProvider(
         } else {
           setPresentation({
             kind: "error",
-            message: "Não foi possível abrir a surpresa.",
+            message: "Could not open the surprise.",
           });
         }
       } finally {

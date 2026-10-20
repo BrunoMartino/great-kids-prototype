@@ -1,4 +1,5 @@
 import type { ReactElement, ReactNode } from "react";
+import { SurfaceModeSwitch } from "@/app/(family)/chrome/surface-mode-switch";
 import { type SurfaceChrome, SurfaceFacade } from "@/app/api/panel/surface-facade";
 
 type PanelLayoutProps = {
@@ -7,20 +8,18 @@ type PanelLayoutProps = {
 
 const PANEL_SHELL_STYLES: string = `
 [data-surface="panel"] {
-  --color-primary: #8b4a3c;
-  --color-secondary: #4f6b50;
-  --color-tertiary: #d4b896;
-  --color-success: #3d6b44;
-  --color-danger: #a33f3f;
-  --color-warning: #9a7028;
-  --color-ink: #2c2a28;
-  --color-muted: #5c564f;
-  --color-paper: #fff8f2;
-  --color-desk: #f3e8dc;
+  --color-primary: #ff5a36;
+  --color-secondary: #1f9d8a;
+  --color-tertiary: #ffc43d;
+  --color-success: #2f9e4d;
+  --color-danger: #e23d4d;
+  --color-warning: #f4a259;
+  --color-ink: #1f2a37;
+  --color-muted: #5a6674;
+  --color-paper: #f3f8ff;
+  --color-desk: #b8e4f0;
   min-height: 100%;
   min-height: 100vh;
-  min-height: -webkit-fill-available;
-  min-height: 100svh;
   min-height: 100dvh;
   background: var(--color-desk);
   color: var(--color-ink);
@@ -28,6 +27,7 @@ const PANEL_SHELL_STYLES: string = `
   text-size-adjust: 100%;
 }
 [data-panel-shell] {
+  position: relative;
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -35,8 +35,6 @@ const PANEL_SHELL_STYLES: string = `
   min-width: 0;
   min-height: 100%;
   min-height: 100vh;
-  min-height: -webkit-fill-available;
-  min-height: 100svh;
   min-height: 100dvh;
   margin: 0 auto;
 }
@@ -47,8 +45,9 @@ const PANEL_SHELL_STYLES: string = `
   z-index: 2;
   display: flex;
   flex: 0 0 auto;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 24px;
+  gap: 16px 24px;
   min-height: 64px;
   padding: 12px 24px;
   padding-top: max(12px, env(safe-area-inset-top, 0px));
@@ -71,6 +70,7 @@ const PANEL_SHELL_STYLES: string = `
 }
 [data-panel-nav] {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 8px;
 }
@@ -106,7 +106,7 @@ const PANEL_SHELL_STYLES: string = `
 }
 @media (hover: hover) and (pointer: fine) {
   [data-panel-nav] a:hover {
-    background: #efe4d6;
+    background: #e8f4ea;
     background: color-mix(in srgb, var(--color-tertiary) 36%, var(--color-paper));
     transform: translateY(-1px);
   }
@@ -145,12 +145,18 @@ export default function PanelLayout(p_props: PanelLayoutProps): ReactElement {
       <div data-panel-shell>
         <header data-panel-header>
           <a href="/" data-panel-brand>
-            Painel
+            Panel
           </a>
-          <nav data-panel-nav aria-label="Painel">
-            <a href="/catalog">Catálogo</a>
-            <a href="/questions">Perguntas</a>
-            <a href="/indicators">Indicadores</a>
+          <SurfaceModeSwitch />
+          <nav data-panel-nav aria-label="Panel">
+            <a href="/catalog">Catalog</a>
+            <a href="/materials">Materials</a>
+            <a href="/questions">Questions</a>
+            <a href="/families">Families</a>
+            <a href="/plans">Plans</a>
+            <a href="/users">Users</a>
+            <a href="/indicators">Indicators</a>
+            <a href="/contexts">Contexts</a>
           </nav>
         </header>
         <main data-panel-main>{p_props.children}</main>

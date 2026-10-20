@@ -94,7 +94,7 @@ export class DayComposite extends DayComponent {
       p_child.statusLabel(),
     );
     if (labels.length === 0) {
-      return "vazio";
+      return "empty";
     }
     return labels.join(" · ");
   }

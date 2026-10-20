@@ -10,6 +10,11 @@ import {
   type ReactNode,
 } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import {
+  SEEDED_ACCEPTED_CYCLE_ID,
+  SEEDED_ACCEPTED_TITLE,
+  SEEDED_FAMILY_ID,
+} from "../../chrome/seeded-family";
 import { useFamilySession } from "../../context-switch/family-session-context";
 import { GpsViewPolicy } from "../../quiz/gps-view-policy";
 import { CompleteMissionCommand } from "./complete-mission-command";
@@ -83,9 +88,12 @@ export function CycleSessionProvider(
   const router: ReturnType<typeof useRouter> = useRouter();
   const searchParams: URLSearchParams = useSearchParams();
   const session: ReturnType<typeof useFamilySession> = useFamilySession();
-  const queryId: string = searchParams.get("id") ?? "";
-  const queryCycle: string = searchParams.get("cycle") ?? "";
-  const queryTitle: string = searchParams.get("title") ?? "";
+  const queryId: string =
+    (searchParams.get("id") ?? "").trim() || SEEDED_FAMILY_ID;
+  const queryCycle: string =
+    (searchParams.get("cycle") ?? "").trim() || SEEDED_ACCEPTED_CYCLE_ID;
+  const queryTitle: string =
+    (searchParams.get("title") ?? "").trim() || SEEDED_ACCEPTED_TITLE;
   const boundCycleRef = useRef<string>("");
   const [cycle, setCycle] = useState<FamilyMissionCycle | null>(null);
   const [cycleTick, setCycleTick] = useState<number>(0);
@@ -145,7 +153,7 @@ export function CycleSessionProvider(
     if (gate === "error") {
       return {
         kind: "error",
-        message: formError ?? "Não foi possível avançar o ciclo.",
+        message: formError ?? "Could not advance the cycle.",
       };
     }
     if (session.isLoading) {
@@ -237,7 +245,7 @@ export function CycleSessionProvider(
         setCycleTick((p_tick: number) => p_tick + 1);
       } catch (p_error: unknown) {
         if (p_error instanceof IllegalCycleTransitionError) {
-          setFormError("Essa transição não é permitida.");
+          setFormError("That transition is not allowed.");
           return;
         }
         throw p_error;
@@ -257,9 +265,9 @@ export function CycleSessionProvider(
         } else if (p_error instanceof CycleMissingError) {
           setGate("missing");
         } else if (p_error instanceof CycleIllegalError) {
-          setFormError("Essa transição não é permitida.");
+          setFormError("That transition is not allowed.");
         } else {
-          setFormError("Não foi possível começar a missão.");
+          setFormError("Could not start the mission.");
         }
       } finally {
         setIsSaving(false);
@@ -272,7 +280,7 @@ export function CycleSessionProvider(
         return;
       }
       if (doAgain === null || saveMemory === null) {
-        setFormError("Responda as duas perguntas de fechamento.");
+        setFormError("Answer both closing questions.");
         return;
       }
       const previous: string = cycle.getName();
@@ -281,7 +289,7 @@ export function CycleSessionProvider(
         setCycleTick((p_tick: number) => p_tick + 1);
       } catch (p_error: unknown) {
         if (p_error instanceof IllegalCycleTransitionError) {
-          setFormError("Essa transição não é permitida.");
+          setFormError("That transition is not allowed.");
           return;
         }
         throw p_error;
@@ -309,9 +317,9 @@ export function CycleSessionProvider(
         } else if (p_error instanceof CycleMissingError) {
           setGate("missing");
         } else if (p_error instanceof CycleIllegalError) {
-          setFormError("Essa transição não é permitida.");
+          setFormError("That transition is not allowed.");
         } else {
-          setFormError("Não foi possível concluir a missão.");
+          setFormError("Could not complete the mission.");
         }
       } finally {
         setIsSaving(false);

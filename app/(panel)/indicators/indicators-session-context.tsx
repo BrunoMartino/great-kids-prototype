@@ -15,14 +15,13 @@ import {
   type PanelMockRole,
   type PanelSessionResult,
   type PanelSetRoleResult,
-  type PanelStaffRole,
 } from "./indicators-facade";
 
-export type SwitchableRole = "Admin" | "Operator" | "Parent";
+export type SwitchableRole = "Admin" | "Operator";
 
 export type IndicatorsSessionContextValue = {
-  role: PanelStaffRole | null;
-  activeRole: SwitchableRole;
+  role: PanelMockRole | null;
+  activeRole: SwitchableRole | null;
   counts: IndicatorsCounts | null;
   isLoading: boolean;
   isForbidden: boolean;
@@ -41,21 +40,18 @@ function makeFacade(): IndicatorsPanelFacade {
   return IndicatorsPanelFacade.instance;
 }
 
-function asSwitchableRole(p_role: PanelMockRole): SwitchableRole {
-  if (p_role === "Operator") {
-    return "Operator";
+function asSwitchableRole(p_role: PanelMockRole): SwitchableRole | null {
+  if (p_role === "Admin" || p_role === "Operator") {
+    return p_role;
   }
-  if (p_role === "Parent") {
-    return "Parent";
-  }
-  return "Admin";
+  return null;
 }
 
 export function IndicatorsSessionProvider(
   p_props: IndicatorsSessionProviderProps,
 ): ReactElement {
-  const [role, setRole] = useState<PanelStaffRole | null>(null);
-  const [activeRole, setActiveRole] = useState<SwitchableRole>("Parent");
+  const [role, setRole] = useState<PanelMockRole | null>(null);
+  const [activeRole, setActiveRole] = useState<SwitchableRole | null>(null);
   const [counts, setCounts] = useState<IndicatorsCounts | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isForbidden, setIsForbidden] = useState<boolean>(false);
@@ -76,8 +72,8 @@ export function IndicatorsSessionProvider(
         setIsForbidden(sessionResult.status === 403);
         setErrorMessage(
           sessionResult.status === 403
-            ? "Acesso negado"
-            : "Não foi possível carregar a sessão.",
+            ? "Access denied"
+            : "Could not load the session.",
         );
         setIsLoading(false);
         return;
@@ -93,8 +89,8 @@ export function IndicatorsSessionProvider(
         setIsForbidden(indicatorsResult.status === 403);
         setErrorMessage(
           indicatorsResult.status === 403
-            ? "Acesso negado"
-            : "Não foi possível carregar os indicadores.",
+            ? "Access denied"
+            : "Could not load indicators.",
         );
         setIsLoading(false);
         return;
@@ -117,7 +113,7 @@ export function IndicatorsSessionProvider(
     const facade: IndicatorsPanelFacade = makeFacade();
     const setResult: PanelSetRoleResult = await facade.setRole(p_role);
     if (!setResult.ok) {
-      setErrorMessage("Não foi possível trocar o papel.");
+      setErrorMessage("Could not switch role.");
       setIsLoading(false);
       return;
     }
@@ -129,8 +125,8 @@ export function IndicatorsSessionProvider(
       setIsForbidden(sessionResult.status === 403);
       setErrorMessage(
         sessionResult.status === 403
-          ? "Acesso negado"
-          : "Não foi possível carregar a sessão.",
+          ? "Access denied"
+          : "Could not load the session.",
       );
       setIsLoading(false);
       return;
@@ -142,8 +138,8 @@ export function IndicatorsSessionProvider(
       setIsForbidden(indicatorsResult.status === 403);
       setErrorMessage(
         indicatorsResult.status === 403
-          ? "Acesso negado"
-          : "Não foi possível carregar os indicadores.",
+          ? "Access denied"
+          : "Could not load indicators.",
       );
       setIsLoading(false);
       return;

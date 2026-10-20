@@ -1,11 +1,8 @@
 "use client";
 
-import {
-  type ChangeEvent,
-  type FormEvent,
-  type ReactElement,
-} from "react";
+import { type ReactElement } from "react";
 import { FamilyNav } from "../../chrome/family-nav";
+import { FamilyThumbShell } from "../../chrome/family-thumb-shell";
 import { useFamilySession } from "../../context-switch/family-session-context";
 import type { CompletedMissionItem } from "./completed-payload";
 import {
@@ -175,12 +172,12 @@ const SCREEN_STYLES: string = `
 
 function closingCopy(p_item: CompletedMissionItem): string {
   if (p_item.closing === null) {
-    return "Sem fechamento.";
+    return "No closing.";
   }
-  const again: string = p_item.closing.do_again ? "fariam de novo" : "não repetir";
+  const again: string = p_item.closing.do_again ? "would do again" : "do not repeat";
   const memory: string = p_item.closing.save_memory
-    ? "guardar na memória"
-    : "não guardar";
+    ? "save in memory"
+    : "do not save";
   return `${again}; ${memory}`;
 }
 
@@ -190,92 +187,74 @@ function CompletedScreenBody(): ReactElement {
   const role: string = session.snapshot?.role ?? "none";
   const presentation = history.presentation;
 
-  const onApply = (p_event: FormEvent<HTMLFormElement>): void => {
-    p_event.preventDefault();
-    history.applyId();
-  };
-
   return (
     <div data-completed-screen>
       <style href="completed-screen" precedence="medium">
         {SCREEN_STYLES}
       </style>
       <div data-completed-scroll>
+        <FamilyThumbShell
+          content={
+            <>
         <FamilyNav familyId={history.familyId} active="completed" />
         <span data-completed-badge data-role={role}>
-          Visão {role === "none" ? "sessão" : role}
+          View {role === "none" ? "session" : role}
         </span>
-        <form data-completed-tools onSubmit={onApply}>
-          <label>
-            Id da família
-            <input
-              type="text"
-              name="family-id"
-              autoComplete="off"
-              autoCorrect="off"
-              autoCapitalize="off"
-              spellCheck={false}
-              value={history.idDraft}
-              onChange={(p_event: ChangeEvent<HTMLInputElement>): void => {
-                history.setIdDraft(p_event.currentTarget.value);
-              }}
-            />
-          </label>
-          <button type="submit" data-kind="ghost">
-            Abrir histórico
-          </button>
-        </form>
+        {null}
         {presentation.kind === "loading" || session.isLoading ? (
           <div data-completed-enter aria-live="polite" aria-busy="true">
-            <h1>Carregando as completas</h1>
+            <h1>Loading completed missions</h1>
             <div data-completed-loading-bar />
           </div>
         ) : null}
         {presentation.kind === "need-family" && !session.isLoading ? (
           <div data-completed-enter>
-            <h1>Missões completas</h1>
-            <p>Informe o id da família para ver o histórico.</p>
+            <h1>Completed missions</h1>
+            <p>Opening family history.</p>
           </div>
         ) : null}
         {presentation.kind === "denied" ? (
           <div data-completed-enter role="alert">
-            <h1>Histórico só para Parent</h1>
-            <p>A visão Child não lista missões concluídas.</p>
+            <h1>History is Parent only</h1>
+            <p>Child view does not list completed missions.</p>
           </div>
         ) : null}
         {presentation.kind === "missing" ? (
           <div data-completed-enter>
-            <h1>Família não encontrada</h1>
-            <p>Esse id não abre o histórico.</p>
+            <h1>Family not found</h1>
+            <p>That id does not open history.</p>
           </div>
         ) : null}
         {presentation.kind === "error" ? (
           <div data-completed-enter role="alert">
-            <h1>Missões completas</h1>
+            <h1>Completed missions</h1>
             <p>{presentation.message}</p>
           </div>
         ) : null}
         {presentation.kind === "empty" ? (
           <div data-completed-enter data-completed-empty-state="true">
             <div data-completed-card>
-              <h1 data-completed-empty>Nenhuma missão concluída.</h1>
-              <p>O envelope chega vazio. Rascunhos e missões a fazer ficam de fora.</p>
+              <h1 data-completed-empty>No completed missions.</h1>
+              <p>The envelope arrives empty. Drafts and in-progress missions stay out.</p>
             </div>
           </div>
         ) : null}
         {presentation.kind === "ready" ? (
           <div data-completed-enter data-completed-list>
-            <h1>Missões completas</h1>
+            <h1>Completed missions</h1>
             {presentation.missions.map((p_item: CompletedMissionItem) => (
               <article key={p_item.id} data-completed-item>
                 <h2>{p_item.title}</h2>
                 <p data-completed-meta>
-                  {p_item.completed_at ?? "Sem data"} · {closingCopy(p_item)}
+                  {p_item.completed_at ?? "No date"} · {closingCopy(p_item)}
                 </p>
               </article>
             ))}
           </div>
         ) : null}
+            </>
+          }
+        />
       </div>
     </div>
   );

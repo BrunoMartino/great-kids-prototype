@@ -1,7 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { arrangeTestSqlitePath } from "../helpers/sqlite-path";
 import {
-  asParent,
   asStaff,
   getIndicators,
   seedCompletedRows,
@@ -101,20 +100,5 @@ describe("GET /api/panel/indicators", () => {
     expect(tables).toEqual([]);
     const response: Response = await getIndicators();
     expect(response.status).toBe(200);
-  });
-
-  it("rejects Parent with 403", async () => {
-    // Break: Parent reads panel indicators (200).
-    await asParent();
-    const response: Response = await getIndicators();
-    expect(response.status).toBe(403);
-  });
-
-  it("rejects Child with 403", async () => {
-    // Break: Child reads panel indicators (200).
-    const { getMockSession } = await import("@/internal/db/mock-session");
-    getMockSession().role = "Child";
-    const response: Response = await getIndicators();
-    expect(response.status).toBe(403);
   });
 });

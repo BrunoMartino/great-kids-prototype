@@ -1,6 +1,5 @@
 "use client";
 
-import { PanelPolicy } from "@/app/api/panel/panel-policy";
 import {
   createContext,
   useContext,
@@ -24,11 +23,11 @@ import {
   type QuestionKind,
 } from "./questions-facade";
 
-export type SwitchableRole = "Admin" | "Operator" | "Parent";
+export type SwitchableRole = "Admin" | "Operator";
 
 export type QuestionsSessionContextValue = {
   role: PanelMockRole | null;
-  activeRole: SwitchableRole;
+  activeRole: SwitchableRole | null;
   listId: string | null;
   questions: PanelQuestionRow[];
   kindFilter: QuestionKind | null;
@@ -62,21 +61,18 @@ function makeFacade(): QuestionsFacade {
   return QuestionsFacade.instance;
 }
 
-function asSwitchableRole(p_role: PanelMockRole): SwitchableRole {
-  if (p_role === "Operator") {
-    return "Operator";
+function asSwitchableRole(p_role: PanelMockRole): SwitchableRole | null {
+  if (p_role === "Admin" || p_role === "Operator") {
+    return p_role;
   }
-  if (p_role === "Parent") {
-    return "Parent";
-  }
-  return "Admin";
+  return null;
 }
 
 export function QuestionsSessionProvider(
   p_props: QuestionsSessionProviderProps,
 ): ReactElement {
   const [role, setRole] = useState<PanelMockRole | null>(null);
-  const [activeRole, setActiveRole] = useState<SwitchableRole>("Parent");
+  const [activeRole, setActiveRole] = useState<SwitchableRole | null>(null);
   const [listId, setListId] = useState<string | null>(null);
   const [allQuestions, setAllQuestions] = useState<PanelQuestionRow[]>([]);
   const [kindFilter, setKindFilterState] = useState<QuestionKind | null>(null);
@@ -101,24 +97,10 @@ export function QuestionsSessionProvider(
         setIsForbidden(sessionResult.status === 403);
         setErrorMessage(
           sessionResult.status === 403
-            ? "Acesso negado"
-            : "Não foi possível carregar a sessão.",
+            ? "Access denied"
+            : "Could not load the session.",
         );
         setIsLoading(false);
-        return;
-      }
-      try {
-        PanelPolicy.assertStaff(sessionResult.role);
-      } catch (p_error: unknown) {
-        void p_error;
-        if (isActive) {
-          setRole(null);
-          setListId(null);
-          setAllQuestions([]);
-          setIsForbidden(true);
-          setErrorMessage("Acesso negado");
-          setIsLoading(false);
-        }
         return;
       }
       const listResult: PanelQuestionsResult = await facade.loadQuestions(
@@ -135,8 +117,8 @@ export function QuestionsSessionProvider(
         setIsForbidden(listResult.status === 403);
         setErrorMessage(
           listResult.status === 403
-            ? "Acesso negado"
-            : "Não foi possível carregar as perguntas.",
+            ? "Access denied"
+            : "Could not load questions.",
         );
         setIsLoading(false);
         return;
@@ -167,8 +149,8 @@ export function QuestionsSessionProvider(
       setIsForbidden(listResult.status === 403);
       setErrorMessage(
         listResult.status === 403
-          ? "Acesso negado"
-          : "Não foi possível carregar as perguntas.",
+          ? "Access denied"
+          : "Could not load questions.",
       );
       return false;
     }
@@ -185,7 +167,7 @@ export function QuestionsSessionProvider(
     const facade: QuestionsFacade = makeFacade();
     const setResult: PanelSetRoleResult = await facade.setRole(p_role);
     if (!setResult.ok) {
-      setErrorMessage("Não foi possível trocar o papel.");
+      setErrorMessage("Could not switch role.");
       setIsLoading(false);
       return;
     }
@@ -198,20 +180,9 @@ export function QuestionsSessionProvider(
       setIsForbidden(sessionResult.status === 403);
       setErrorMessage(
         sessionResult.status === 403
-          ? "Acesso negado"
-          : "Não foi possível carregar a sessão.",
+          ? "Access denied"
+          : "Could not load the session.",
       );
-      setIsLoading(false);
-      return;
-    }
-    try {
-      PanelPolicy.assertStaff(sessionResult.role);
-    } catch (p_error: unknown) {
-      void p_error;
-      setListId(null);
-      setAllQuestions([]);
-      setIsForbidden(true);
-      setErrorMessage("Acesso negado");
       setIsLoading(false);
       return;
     }
@@ -230,7 +201,7 @@ export function QuestionsSessionProvider(
   const ensureStaffRole = async (
     p_facade: QuestionsFacade,
   ): Promise<boolean> => {
-    if (activeRole === "Parent") {
+    if (activeRole === null) {
       return false;
     }
     const setResult: PanelSetRoleResult = await p_facade.setRole(activeRole);
@@ -241,15 +212,15 @@ export function QuestionsSessionProvider(
     p_draft: PanelQuestionDraft,
   ): Promise<boolean> => {
     if (p_draft.question_text.trim().length === 0) {
-      setFormError("O texto da pergunta é obrigatório.");
+      setFormError("Question text is required.");
       return false;
     }
     const facade: QuestionsFacade = makeFacade();
     const staffOk: boolean = await ensureStaffRole(facade);
     if (!staffOk) {
-      setFormError("Acesso negado");
+      setFormError("Access denied");
       setIsForbidden(true);
-      setErrorMessage("Acesso negado");
+      setErrorMessage("Access denied");
       setAllQuestions([]);
       return false;
     }
@@ -257,14 +228,14 @@ export function QuestionsSessionProvider(
     if (!result.ok) {
       setFormError(
         result.status === 400
-          ? "Texto vazio ou tipo inválido."
+          ? "Empty text or invalid type."
           : result.status === 403
-            ? "Acesso negado"
-            : "Não foi possível criar a pergunta.",
+            ? "Access denied"
+            : "Could not create the question.",
       );
       if (result.status === 403) {
         setIsForbidden(true);
-        setErrorMessage("Acesso negado");
+        setErrorMessage("Access denied");
         setAllQuestions([]);
       }
       return false;
@@ -282,15 +253,15 @@ export function QuestionsSessionProvider(
       p_patch.question_text !== undefined &&
       p_patch.question_text.trim().length === 0
     ) {
-      setFormError("O texto da pergunta é obrigatório.");
+      setFormError("Question text is required.");
       return { ok: false, status: 400, error: "empty text" };
     }
     const facade: QuestionsFacade = makeFacade();
     const staffOk: boolean = await ensureStaffRole(facade);
     if (!staffOk) {
-      setFormError("Acesso negado");
+      setFormError("Access denied");
       setIsForbidden(true);
-      setErrorMessage("Acesso negado");
+      setErrorMessage("Access denied");
       setAllQuestions([]);
       return { ok: false, status: 403, error: "forbidden" };
     }
@@ -301,14 +272,14 @@ export function QuestionsSessionProvider(
     if (!result.ok) {
       setFormError(
         result.status === 400
-          ? "Texto vazio ou tipo inválido."
+          ? "Empty text or invalid type."
           : result.status === 403
-            ? "Acesso negado"
-            : "Não foi possível atualizar a pergunta.",
+            ? "Access denied"
+            : "Could not update the question.",
       );
       if (result.status === 403) {
         setIsForbidden(true);
-        setErrorMessage("Acesso negado");
+        setErrorMessage("Access denied");
         setAllQuestions([]);
       }
       return result;
@@ -330,9 +301,9 @@ export function QuestionsSessionProvider(
     const facade: QuestionsFacade = makeFacade();
     const staffOk: boolean = await ensureStaffRole(facade);
     if (!staffOk) {
-      setFormError("Acesso negado");
+      setFormError("Access denied");
       setIsForbidden(true);
-      setErrorMessage("Acesso negado");
+      setErrorMessage("Access denied");
       setAllQuestions([]);
       return false;
     }
@@ -340,12 +311,12 @@ export function QuestionsSessionProvider(
     if (!result.ok) {
       setFormError(
         result.status === 403
-          ? "Acesso negado"
-          : "Não foi possível excluir a pergunta.",
+          ? "Access denied"
+          : "Could not delete the question.",
       );
       if (result.status === 403) {
         setIsForbidden(true);
-        setErrorMessage("Acesso negado");
+        setErrorMessage("Access denied");
         setAllQuestions([]);
       }
       return false;

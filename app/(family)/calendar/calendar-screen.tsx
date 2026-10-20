@@ -6,8 +6,10 @@ import {
   type ReactElement,
 } from "react";
 import { FamilyNav } from "../chrome/family-nav";
+import { FamilyThumbShell } from "../chrome/family-thumb-shell";
 import { useFamilySession } from "../context-switch/family-session-context";
 import { SuggestionLeaf } from "./day-composite";
+import { SEEDED_PUBLISHED_MISSIONS } from "../chrome/seeded-family";
 import {
   CalendarSessionProvider,
   useCalendarSession,
@@ -104,7 +106,8 @@ const SCREEN_STYLES: string = `
   color: var(--color-muted);
   font-size: 0.85rem;
 }
-[data-calendar-screen] input {
+[data-calendar-screen] input,
+[data-calendar-screen] select {
   width: 100%;
   min-height: 44px;
   box-sizing: border-box;
@@ -183,78 +186,52 @@ function CalendarScreenBody(): ReactElement {
         {SCREEN_STYLES}
       </style>
       <div data-calendar-scroll>
+        <FamilyThumbShell
+          content={
+            <>
         <FamilyNav familyId={calendar.familyId} active="calendar" />
         <span data-calendar-badge data-role={role}>
-          Visão {role === "none" ? "sessão" : role}
+          View {role === "none" ? "session" : role}
         </span>
-        <form data-calendar-tools onSubmit={onApply}>
-          <label>
-            Id da família
-            <input
-              type="text"
-              name="family-id"
-              autoComplete="off"
-              autoCorrect="off"
-              autoCapitalize="off"
-              spellCheck={false}
-              value={calendar.idDraft}
-              onChange={(p_event: ChangeEvent<HTMLInputElement>): void => {
-                calendar.setIdDraft(p_event.currentTarget.value);
-              }}
-            />
-          </label>
-          <label>
-            Dia
-            <input
-              type="date"
-              name="day"
-              value={calendar.day}
-              onChange={(p_event: ChangeEvent<HTMLInputElement>): void => {
-                calendar.setDay(p_event.currentTarget.value);
-              }}
-            />
-          </label>
-          <button type="submit">Abrir dia</button>
-        </form>
         {presentation.kind === "loading" || session.isLoading ? (
           <div data-calendar-enter aria-live="polite" aria-busy="true">
-            <h1>Carregando o calendário</h1>
+            <h1>Loading the calendar</h1>
             <div data-calendar-loading-bar />
           </div>
         ) : null}
         {presentation.kind === "need-family" && !session.isLoading ? (
           <div data-calendar-enter>
-            <h1>Calendário da família</h1>
-            <p>Informe o id da família para ver o dia.</p>
+            <h1>Family calendar</h1>
+            <p>Opening the family calendar.</p>
           </div>
         ) : null}
         {presentation.kind === "denied" ? (
           <div data-calendar-enter role="alert">
-            <h1>Calendário só para Parent</h1>
-            <p>A visão Child não agenda missões.</p>
+            <h1>Calendar is Parent only</h1>
+            <p>Child view does not schedule missions.</p>
           </div>
         ) : null}
         {presentation.kind === "missing" ? (
           <div data-calendar-enter>
-            <h1>Família não encontrada</h1>
-            <p>Esse id não abre o calendário.</p>
+            <h1>Family not found</h1>
+            <p>That id does not open the calendar.</p>
           </div>
         ) : null}
         {presentation.kind === "error" ? (
           <div data-calendar-enter role="alert">
-            <h1>Calendário da família</h1>
+            <h1>Family calendar</h1>
             <p>{presentation.message}</p>
           </div>
         ) : null}
         {presentation.kind === "ready" ? (
           <div data-calendar-enter>
-            <h1>Calendário da família</h1>
+            <h1>Family calendar</h1>
             <p>
               {presentation.day.p_day} · {presentation.day.statusLabel()}
             </p>
             {presentation.day.getChildren().length === 0 ? (
               <div data-calendar-card>
-                <p>Nenhuma sugestão neste dia.</p>
+                <p>No suggestions on this day.</p>
               </div>
             ) : null}
             {presentation.day.getChildren().map((p_child, p_index) => (
@@ -265,29 +242,51 @@ function CalendarScreenBody(): ReactElement {
                 ) : null}
               </div>
             ))}
+          </div>
+        ) : null}
+            </>
+          }
+          actions={
+            <>
+        <form data-calendar-tools onSubmit={onApply}>
+          <label>
+            Day
+            <input
+              type="date"
+              name="day"
+              value={calendar.day}
+              onChange={(p_event: ChangeEvent<HTMLInputElement>): void => {
+                calendar.setDay(p_event.currentTarget.value);
+              }}
+            />
+          </label>
+          <button type="submit">Open day</button>
+        </form>
+        {presentation.kind === "ready" ? (
             <form data-calendar-card onSubmit={onPreview}>
-              <h2>Agendar missão publicada</h2>
+              <h2>Schedule a published mission</h2>
               <label>
-                Id da missão
-                <input
-                  type="text"
+                Published mission
+                <select
                   name="mission-id"
-                  autoComplete="off"
-                  autoCorrect="off"
-                  autoCapitalize="off"
-                  spellCheck={false}
                   value={calendar.missionDraft}
-                  onChange={(p_event: ChangeEvent<HTMLInputElement>): void => {
+                  onChange={(p_event: ChangeEvent<HTMLSelectElement>): void => {
                     calendar.setMissionDraft(p_event.currentTarget.value);
                   }}
-                />
+                >
+                  {SEEDED_PUBLISHED_MISSIONS.map((p_mission) => (
+                    <option key={p_mission.id} value={p_mission.id}>
+                      {p_mission.title}
+                    </option>
+                  ))}
+                </select>
               </label>
               <button type="submit" data-kind="ghost">
-                Verificar publicação
+                Check publication
               </button>
               {calendar.unpublishedTried ? (
                 <p data-calendar-error>
-                  Missão não publicada. Ela não aparece e não pode ser agendada.
+                  Unpublished mission. It does not appear and cannot be scheduled.
                 </p>
               ) : null}
               {calendar.published !== null ? (
@@ -300,10 +299,10 @@ function CalendarScreenBody(): ReactElement {
                   void calendar.schedule();
                 }}
               >
-                Agendar neste dia
+                Schedule on this day
               </button>
               <label>
-                Mover para o dia
+                Move to day
                 <input
                   type="date"
                   name="target-day"
@@ -321,7 +320,7 @@ function CalendarScreenBody(): ReactElement {
                   void calendar.move();
                 }}
               >
-                Mover
+                Move
               </button>
               {calendar.formError !== null ? (
                 <p data-calendar-error role="alert">
@@ -329,8 +328,10 @@ function CalendarScreenBody(): ReactElement {
                 </p>
               ) : null}
             </form>
-          </div>
         ) : null}
+            </>
+          }
+        />
       </div>
     </div>
   );

@@ -4,7 +4,7 @@ Source: `docs/harness/features/*` and `especs/design-docs/tdd-feature-*.md`. Do 
 
 ## Status (2026-10-20)
 
-Waves **0–9** are implemented (Red/Green Vitest + Pittore FE where the wave has FE). Handoffs live under `especs/tdd/wave{N}/`. `npx tsc --noEmit` and `npm run build` pass. Full Vitest last recorded: **327 passed**.
+Waves **0–9** are implemented (Red/Green Vitest + Pittore FE where the wave has FE). Handoffs live under `especs/tdd/wave{N}/`. Waves **10–12** (seeds, Coolify MinIO `bd-files`, admin panel, phone/paint) are in progress.
 
 | Wave | Backend | Frontend | Notes |
 |------|---------|----------|-------|
@@ -220,3 +220,41 @@ graph LR
 | F-26 | note-types | 9 | diary | [tdd-feature-note-types.md](tdd-feature-note-types.md) |
 | F-27 | family-diary | 9 | diary | [tdd-feature-family-diary.md](tdd-feature-family-diary.md) |
 | F-28 | indicators-panel | 9 | indicators | [tdd-feature-indicators-panel.md](tdd-feature-indicators-panel.md) |
+| F-29 | object-storage | 10 | storage | [../harness via feature-object-storage.md](../../docs/harness/features/feature-object-storage.md) |
+| F-30 | admin-users | 10 | panel-users | [../harness via feature-admin-users.md](../../docs/harness/features/feature-admin-users.md) |
+
+## Wave 10 — Seeds, object store, catalog and admin APIs
+
+Single Scultore lane. Coolify MinIO `bd-storage` / bucket **`bd-files`** (never `dbruns-files`). No local MinIO compose.
+
+| Layer | What | Owned paths |
+|-------|------|-------------|
+| DB | Demo seed (fixed UUIDs): Admin, Operator, titular Parent, Child member, family + plan, published/draft missions, curated_material, quiz rows, Accepted + Completed family_mission. Additive `deleted` on `plan` if needed. | `db/migrations/100100_demo_seed.sql` |
+| BE | `getMockSession().familyId`; ObjectStore Strategy/Adapter (MinIO + LocalDisk); panel CRUD missions + curated uploads (`great-kids/` prefix); Admin-only user block/edit; plan list/patch; category/context patch if missing | `internal/db/mock-session.ts`, `internal/storage/**`, `app/api/panel/**`, `models/**` |
+| FE | — | — |
+
+**Exit criteria:** Vitest green for new tests; demo family selected without typed ids; upload stores a key; Operator cannot block users.
+
+Handoff: `especs/tdd/wave10/handoff-to-pittore.md`.
+
+## Wave 11 — Admin panel and questions UX
+
+Pittore only.
+
+| Layer | What | Owned paths |
+|-------|------|-------------|
+| FE | Nav: Catálogo, Materiais, Perguntas, Famílias, Planos, Utilizadores, Indicadores, Contextos. Mission create + curated create. Question row pencil/trash + search + `#ededed`. No Responsável. | `app/(panel)/**` |
+
+**Exit criteria:** Browser: create a mission and a material; edit/delete a question; Admin blocks a user; Operator sees users read-only.
+
+Handoff: `especs/tdd/wave11/handoff-to-scultore.md`.
+
+## Wave 12 — Phone, Child route, paint
+
+Pittore only.
+
+| Layer | What | Owned paths |
+|-------|------|-------------|
+| FE | Scale chrome to 100dvh; hamburger drawer; `/child` (chosen + completed + notes); Convidar familiar / Alterar plano; hide id fields; paint MASTER.md (cheerful tokens); Graphify + schema HTML | `app/(family)/**`, `MASTER.md` |
+
+**Exit criteria:** Phone fits viewport; Child cannot open plan/invite; Parent drawer reaches Perfil/Plano/Sair; tokens no longer terracotta/cream.

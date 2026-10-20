@@ -10,7 +10,7 @@
 More than one adult should use the app without sharing one login or changing the plan.
 
 ### Solução e trade-offs
-`family_invite` (Pending, Accepted, Revoked, Expired), token_hash unique. Not an auth table. Trade-off: mock accept in prototype vs email provider.
+`family_invite` (Pending, Accepted, Revoked, Expired), token_hash unique. UI copy: **Convidar familiar** (Parent or Child). Not an auth table. Trade-off: mock accept in prototype vs email provider.
 
 ### Fluxo (given/when/then)
 - Dado titular

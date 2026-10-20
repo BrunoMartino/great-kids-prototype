@@ -9,6 +9,7 @@ import {
   type ReactNode,
 } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { SEEDED_FAMILY_ID, SEEDED_PUBLISHED_MISSIONS } from "../chrome/seeded-family";
 import { useFamilySession } from "../context-switch/family-session-context";
 import { GpsViewPolicy } from "../quiz/gps-view-policy";
 import {
@@ -75,13 +76,16 @@ export function CalendarSessionProvider(
   const router: ReturnType<typeof useRouter> = useRouter();
   const searchParams: URLSearchParams = useSearchParams();
   const session: ReturnType<typeof useFamilySession> = useFamilySession();
-  const queryId: string = searchParams.get("id") ?? "";
+  const queryId: string =
+    (searchParams.get("id") ?? "").trim() || SEEDED_FAMILY_ID;
   const [presentation, setPresentation] = useState<CalendarPresentation>({
     kind: queryId.trim().length > 0 ? "loading" : "need-family",
   });
   const [idDraft, setIdDraft] = useState<string>(queryId);
   const [day, setDay] = useState<string>(todayStamp());
-  const [missionDraft, setMissionDraft] = useState<string>("");
+  const [missionDraft, setMissionDraft] = useState<string>(
+    SEEDED_PUBLISHED_MISSIONS[0]?.id ?? "",
+  );
   const [published, setPublished] = useState<PublishedMission | null>(null);
   const [unpublishedTried, setUnpublishedTried] = useState<boolean>(false);
   const [targetDay, setTargetDay] = useState<string>("");
@@ -126,14 +130,14 @@ export function CalendarSessionProvider(
       if (!response.ok) {
         setPresentation({
           kind: "error",
-          message: "Não foi possível abrir o dia.",
+          message: "Could not open the day.",
         });
         return;
       }
       const body: unknown = await response.json();
       const document: DayDocument | null = readDayDocument(body);
       if (document === null) {
-        setPresentation({ kind: "error", message: "Dia em formato inválido." });
+        setPresentation({ kind: "error", message: "Day in an invalid format." });
         return;
       }
       setPresentation({
@@ -150,7 +154,7 @@ export function CalendarSessionProvider(
       }
       setPresentation({
         kind: "error",
-        message: "Não foi possível abrir o dia.",
+        message: "Could not open the day.",
       });
     }
   };
@@ -211,7 +215,7 @@ export function CalendarSessionProvider(
       setPublished(null);
       setUnpublishedTried(false);
       if (trimmed.length === 0) {
-        setFormError("Informe o id da missão publicada.");
+        setFormError("Choose a published mission.");
         return;
       }
       try {
@@ -237,11 +241,11 @@ export function CalendarSessionProvider(
     schedule: async (): Promise<void> => {
       const familyId: string = queryId.trim();
       if (familyId.length === 0 || published === null) {
-        setFormError("Só missões publicadas entram no calendário.");
+        setFormError("Only published missions go on the calendar.");
         return;
       }
       if (presentation.kind === "ready" && presentation.day.getChildren().length > 0) {
-        setFormError("Este dia já tem um documento. PUT é só na primeira escrita.");
+        setFormError("This day already has a document. PUT is only for the first write.");
         return;
       }
       setIsSaving(true);
@@ -257,13 +261,13 @@ export function CalendarSessionProvider(
         await loadDay(familyId, day);
       } catch (p_error: unknown) {
         if (p_error instanceof DayConflictError) {
-          setFormError("Este dia já está ocupado.");
+          setFormError("This day is already taken.");
         } else if (p_error instanceof UnpublishedScheduleError) {
           setUnpublishedTried(true);
           setPublished(null);
-          setFormError("Missão não publicada.");
+          setFormError("Mission is not published.");
         } else {
-          setFormError("Não foi possível agendar.");
+          setFormError("Could not schedule.");
         }
       } finally {
         setIsSaving(false);
@@ -273,11 +277,11 @@ export function CalendarSessionProvider(
       const familyId: string = queryId.trim();
       const nextDay: string = targetDay.trim();
       if (familyId.length === 0 || published === null) {
-        setFormError("Só missões publicadas podem ser movidas.");
+        setFormError("Only published missions can be moved.");
         return;
       }
       if (nextDay.length === 0) {
-        setFormError("Informe o dia de destino.");
+        setFormError("Enter the destination day.");
         return;
       }
       setIsSaving(true);
@@ -292,13 +296,13 @@ export function CalendarSessionProvider(
         setDay(nextDay);
       } catch (p_error: unknown) {
         if (p_error instanceof DayConflictError) {
-          setFormError("O dia de destino já está ocupado.");
+          setFormError("The destination day is already taken.");
         } else if (p_error instanceof UnpublishedScheduleError) {
           setUnpublishedTried(true);
           setPublished(null);
-          setFormError("Missão não publicada.");
+          setFormError("Mission is not published.");
         } else {
-          setFormError("Não foi possível mover.");
+          setFormError("Could not move.");
         }
       } finally {
         setIsSaving(false);

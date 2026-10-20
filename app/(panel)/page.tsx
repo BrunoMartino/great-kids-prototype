@@ -30,6 +30,8 @@ const HOME_STYLES: string = `
   color: var(--color-paper);
   font-weight: 600;
   text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
   transition: background-color 120ms ease-out, transform 120ms ease-out;
 }
 [data-panel-home] a:focus {
@@ -72,9 +74,9 @@ export default function PanelHomePage(): ReactElement {
       <style href="panel-home" precedence="medium">
         {HOME_STYLES}
       </style>
-      <h1>Equipe</h1>
-      <p>Configure o catálogo de missões. Sem o telefone da família.</p>
-      <a href="/catalog">Ir para o catálogo</a>
+      <h1>Staff</h1>
+      <p>Set up the mission catalog. No family phone.</p>
+      <a href="/catalog">Go to catalog</a>
     </section>
   );
 }

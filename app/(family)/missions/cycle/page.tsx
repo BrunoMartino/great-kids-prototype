@@ -6,7 +6,7 @@ function CycleFallback(): ReactElement {
     <div data-cycle-screen>
       <div data-cycle-scroll>
         <div aria-live="polite" aria-busy="true">
-          <h1>Carregando o ciclo</h1>
+          <h1>Loading the cycle</h1>
         </div>
       </div>
     </div>

@@ -11,7 +11,7 @@
 Staff need to see a family account, invites, and plan without impersonating incorrectly.
 
 ### Solução e trade-offs
-Panel read/manage of `family`, `family_invite`, `plan`. Trade-off: optional `plan_id`; one seeded Free plan; no payments in this prototype.
+Panel read/manage of `family`, `family_invite`, `plan` with dedicated panel screens (Famílias, Planos). Family app copy: **Alterar plano**. Trade-off: optional `plan_id`; seeded Free plus at least one extra plan; no payments in this prototype.
 
 ### Fluxo (given/when/then)
 - Dado Operator

@@ -9,6 +9,7 @@ import {
 } from "react";
 import Link from "next/link";
 import { FamilyNav } from "../../chrome/family-nav";
+import { FamilyThumbShell } from "../../chrome/family-thumb-shell";
 import { useFamilySession } from "../../context-switch/family-session-context";
 import { MascotRevealedCopy } from "../mascot/mascot-revealed-copy";
 import {
@@ -308,29 +309,68 @@ function SurpriseScreenBody(): ReactElement {
         {SCREEN_STYLES}
       </style>
       <div data-surprise-scroll>
+        <FamilyThumbShell
+          content={
+            <>
         <FamilyNav familyId={surprise.familyId} active="surprise" />
         <span data-surprise-badge data-role={role}>
-          Visão {role === "none" ? "sessão" : role}
+          View {role === "none" ? "session" : role}
         </span>
-        <form data-surprise-tools onSubmit={onApply}>
-          <label>
-            Id da família
-            <input
-              type="text"
-              name="family-id"
-              autoComplete="off"
-              autoCorrect="off"
-              autoCapitalize="off"
-              spellCheck={false}
-              value={surprise.idDraft}
-              onChange={(p_event: ChangeEvent<HTMLInputElement>): void => {
-                surprise.setIdDraft(p_event.currentTarget.value);
-              }}
+        {presentation.kind === "loading" || session.isLoading ? (
+          <div data-surprise-enter aria-live="polite" aria-busy="true">
+            <h1>Loading the surprise</h1>
+            <div data-surprise-loading-bar />
+          </div>
+        ) : null}
+        {presentation.kind === "need-family" && !session.isLoading ? (
+          <div data-surprise-enter>
+            <h1>Surprise mission</h1>
+            <p>One click picks a published mission.</p>
+          </div>
+        ) : null}
+        {presentation.kind === "idle" && !session.isLoading ? (
+          <div data-surprise-enter>
+            <h1>Surprise mission</h1>
+            <p>One click picks a published mission. With no catalog, empty is explicit.</p>
+          </div>
+        ) : null}
+        {presentation.kind === "denied" ? (
+          <div data-surprise-enter role="alert">
+            <h1>Surprise is Parent only</h1>
+            <p>Child view does not open surprise missions.</p>
+          </div>
+        ) : null}
+        {presentation.kind === "missing" ? (
+          <div data-surprise-enter>
+            <h1>Family not found</h1>
+            <p>That id does not open the surprise.</p>
+          </div>
+        ) : null}
+        {presentation.kind === "error" ? (
+          <div data-surprise-enter role="alert">
+            <h1>Surprise mission</h1>
+            <p>{presentation.message}</p>
+          </div>
+        ) : null}
+        {presentation.kind === "empty" ? (
+          <div data-surprise-enter data-surprise-empty-state="true">
+            <div data-surprise-card>
+              <h1 data-surprise-empty>No published missions.</h1>
+            </div>
+          </div>
+        ) : null}
+        {isReady && presentation.kind === "hit" ? (
+            <MascotRevealedCopy
+              title={presentation.title}
+              description={presentation.description}
+              prefersReduced={prefersReduced}
             />
-          </label>
-          <button type="submit" data-kind="ghost">
-            Abrir família
-          </button>
+        ) : null}
+            </>
+          }
+          actions={
+            <>
+        <form data-surprise-tools onSubmit={onApply}>
           <button
             type="button"
             disabled={surprise.isSaving || surprise.familyId.length === 0}
@@ -338,67 +378,20 @@ function SurpriseScreenBody(): ReactElement {
               void surprise.draw();
             }}
           >
-            Missão surpresa
+            Surprise mission
           </button>
         </form>
-        {presentation.kind === "loading" || session.isLoading ? (
-          <div data-surprise-enter aria-live="polite" aria-busy="true">
-            <h1>Carregando a surpresa</h1>
-            <div data-surprise-loading-bar />
-          </div>
-        ) : null}
-        {presentation.kind === "need-family" && !session.isLoading ? (
-          <div data-surprise-enter>
-            <h1>Missão surpresa</h1>
-            <p>Informe o id da família para um clique.</p>
-          </div>
-        ) : null}
-        {presentation.kind === "idle" && !session.isLoading ? (
-          <div data-surprise-enter>
-            <h1>Missão surpresa</h1>
-            <p>Um clique escolhe uma missão publicada. Sem catálogo, o vazio é explícito.</p>
-          </div>
-        ) : null}
-        {presentation.kind === "denied" ? (
-          <div data-surprise-enter role="alert">
-            <h1>Surpresa só para Parent</h1>
-            <p>A visão Child não abre missão surpresa.</p>
-          </div>
-        ) : null}
-        {presentation.kind === "missing" ? (
-          <div data-surprise-enter>
-            <h1>Família não encontrada</h1>
-            <p>Esse id não abre a surpresa.</p>
-          </div>
-        ) : null}
-        {presentation.kind === "error" ? (
-          <div data-surprise-enter role="alert">
-            <h1>Missão surpresa</h1>
-            <p>{presentation.message}</p>
-          </div>
-        ) : null}
-        {presentation.kind === "empty" ? (
-          <div data-surprise-enter data-surprise-empty-state="true">
-            <div data-surprise-card>
-              <h1 data-surprise-empty>Nenhuma missão publicada.</h1>
-            </div>
-          </div>
-        ) : null}
         {isReady && presentation.kind === "hit" ? (
-          <>
-            <MascotRevealedCopy
-              title={presentation.title}
-              description={presentation.description}
-              prefersReduced={prefersReduced}
-            />
             <Link
               href={`/missions/cycle?id=${encodeURIComponent(surprise.familyId)}&cycle=${encodeURIComponent(presentation.cycleId)}&title=${encodeURIComponent(presentation.title)}`}
               data-surprise-cycle
             >
-              Fazer agora
+              Do it now
             </Link>
-          </>
         ) : null}
+            </>
+          }
+        />
       </div>
     </div>
   );

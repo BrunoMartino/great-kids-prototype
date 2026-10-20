@@ -10,7 +10,7 @@
 Quiz and Say What? need a maintained list of questions, not free-form invention at runtime.
 
 ### Solução e trade-offs
-`family_quiz` rows with `kind` Family-Quiz | Say-What, weight, status, deleted. Trade-off: one table for both kinds vs two tables.
+`family_quiz` rows with `kind` Family-Quiz | Say-What, weight, status, deleted. Panel row is disabled until pencil; trash with hover tooltip (no Guardar). Dynamic search plus kind filter. Selected kind chip background `#ededed`. Trade-off: one table for both kinds vs two tables.
 
 ### Fluxo (given/when/then)
 - Dado Operator

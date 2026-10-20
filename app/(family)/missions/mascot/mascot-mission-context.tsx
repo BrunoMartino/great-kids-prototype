@@ -9,6 +9,7 @@ import {
   type ReactNode,
 } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { SEEDED_PUBLISHED_MISSIONS } from "../../chrome/seeded-family";
 import { MascotMessageDecorator } from "./mascot-message-decorator";
 import {
   PublishedMission,
@@ -83,7 +84,10 @@ export function MascotMissionProvider(
 ): ReactElement {
   const router: ReturnType<typeof useRouter> = useRouter();
   const searchParams: URLSearchParams = useSearchParams();
-  const queryId: string = searchParams.get("id") ?? "";
+  const queryId: string =
+    (searchParams.get("id") ?? "").trim() ||
+    SEEDED_PUBLISHED_MISSIONS[0]?.id ||
+    "";
   const [presentation, setPresentation] = useState<MascotPresentation>({
     kind: queryId.length > 0 ? "loading" : "unpublished",
   });

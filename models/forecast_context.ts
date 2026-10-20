@@ -45,4 +45,22 @@ export class ForecastContext {
     const first: ForecastContextRecord | undefined = rows[0];
     return first ?? null;
   }
+
+  public updateName(p_id: string, p_name: string): ForecastContextRecord | null {
+    if (p_name.trim() === "") {
+      throw new Error("name required");
+    }
+    const current: ForecastContextRecord | null = this.findById(p_id);
+    if (current === null) {
+      return null;
+    }
+    getConnection();
+    const now: string = new Date().toISOString();
+    queryRaw(`UPDATE forecast_context SET name = ?, updated_at = ? WHERE id = ?`, [
+      p_name,
+      now,
+      p_id,
+    ]);
+    return this.findById(p_id);
+  }
 }

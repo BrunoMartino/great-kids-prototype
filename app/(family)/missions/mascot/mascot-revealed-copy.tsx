@@ -117,21 +117,21 @@ export function MascotRevealedCopy(
     >
       <div data-mascot-sender>
         <span data-mascot-avatar aria-hidden="true" />
-        <span data-mascot-voice>Mascote</span>
+        <span data-mascot-voice>Mascot</span>
       </div>
       <div data-mascot-message data-mascot-bubble aria-live="polite">
         {copyIsEmpty ? (
           <>
             <h1 data-mascot-title data-mascot-empty-copy>
-              Missão vazia
+              Empty mission
             </h1>
             <p data-mascot-body data-mascot-empty-copy>
-              Sem título e sem descrição.
+              No title and no description.
             </p>
           </>
         ) : titleIsEmpty ? (
           <p data-mascot-title data-mascot-empty-copy>
-            Título vazio
+            Empty title
           </p>
         ) : (
           <p data-mascot-title>
@@ -150,7 +150,7 @@ export function MascotRevealedCopy(
         )}
         {copyIsEmpty ? null : descriptionIsEmpty ? (
           <p data-mascot-body data-mascot-empty-copy>
-            Descrição vazia
+            Empty description
           </p>
         ) : (
           <p data-mascot-body>

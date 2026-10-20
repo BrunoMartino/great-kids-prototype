@@ -97,7 +97,7 @@ export function ContextSwitchControl(): ReactElement {
       <div
         data-context-switch-track
         role="group"
-        aria-label="Trocar visão Parent ou Child"
+        aria-label="Switch Parent or Child view"
       >
         <span data-context-switch-thumb data-role={role} aria-hidden="true" />
         <button

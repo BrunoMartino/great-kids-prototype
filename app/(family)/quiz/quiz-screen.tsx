@@ -6,6 +6,7 @@ import {
   type ReactElement,
 } from "react";
 import { FamilyNav } from "../chrome/family-nav";
+import { FamilyThumbShell } from "../chrome/family-thumb-shell";
 import { useFamilySession } from "../context-switch/family-session-context";
 import type { QuizMode } from "./mode-strategy";
 import { QuizSessionProvider, useQuizSession } from "./quiz-session-context";
@@ -274,142 +275,133 @@ function QuizScreenBody(): ReactElement {
   const role: string = session.snapshot?.role ?? "none";
   const presentation = quiz.presentation;
 
-  const onApply = (p_event: FormEvent<HTMLFormElement>): void => {
-    p_event.preventDefault();
-    quiz.applyId();
-  };
-
   return (
     <div data-quiz-screen data-mode={quiz.mode}>
       <style href="quiz-screen" precedence="medium">
         {SCREEN_STYLES}
       </style>
       <div data-quiz-scroll>
-        <FamilyNav familyId={quiz.familyId} active="quiz" />
-        <span data-quiz-badge data-role={role}>
-          Visão {role === "none" ? "sessão" : role}
-        </span>
-        <form data-quiz-tools onSubmit={onApply}>
-          <label>
-            Id da família
-            <input
-              type="text"
-              name="family-id"
-              autoComplete="off"
-              autoCorrect="off"
-              autoCapitalize="off"
-              spellCheck={false}
-              value={quiz.idDraft}
-              onChange={(p_event: ChangeEvent<HTMLInputElement>): void => {
-                quiz.setIdDraft(p_event.currentTarget.value);
-              }}
-            />
-          </label>
-          <button type="submit" data-kind="apply">
-            Abrir
-          </button>
-        </form>
-        {presentation.kind === "loading" || session.isLoading ? (
-          <div data-quiz-enter aria-live="polite" aria-busy="true">
-            <h1>Carregando o quiz</h1>
-            <div data-quiz-loading-bar />
-          </div>
-        ) : null}
-        {presentation.kind === "need-family" && !session.isLoading ? (
-          <div data-quiz-enter>
-            <h1>Quiz da família</h1>
-            <p>Informe o id da família para ver as perguntas ao vivo.</p>
-          </div>
-        ) : null}
-        {presentation.kind === "denied" ? (
-          <div data-quiz-enter role="alert">
-            <h1>Quiz indisponível</h1>
-            <p>Só Parent ou Child respondem o quiz da família.</p>
-          </div>
-        ) : null}
-        {presentation.kind === "missing" ? (
-          <div data-quiz-enter>
-            <h1>Família não encontrada</h1>
-            <p>Esse id não abre um quiz.</p>
-          </div>
-        ) : null}
-        {presentation.kind === "error" ? (
-          <div data-quiz-enter role="alert">
-            <h1>Quiz da família</h1>
-            <p>{presentation.message}</p>
-          </div>
-        ) : null}
-        {presentation.kind === "ready" ? (
-          <div data-quiz-enter>
-            <h1>Quiz da família</h1>
-            <p>{quiz.modePrompt}</p>
-            <div data-quiz-modes>
-              <span data-quiz-mode-thumb data-mode={quiz.mode} aria-hidden="true" />
-              <button
-                type="button"
-                aria-pressed={quiz.mode === "solo"}
-                onClick={(): void => {
-                  quiz.setMode("solo" satisfies QuizMode);
-                }}
-              >
-                Sozinho
-              </button>
-              <button
-                type="button"
-                aria-pressed={quiz.mode === "table"}
-                onClick={(): void => {
-                  quiz.setMode("table" satisfies QuizMode);
-                }}
-              >
-                À mesa
-              </button>
-            </div>
-            {presentation.questions.length === 0 ? (
-              <div data-quiz-card>
-                <p>Nenhuma pergunta da família agora.</p>
-              </div>
-            ) : null}
-            {presentation.questions.map((p_question) => (
-              <form
-                key={p_question.id}
-                data-quiz-card
-                onSubmit={(p_event: FormEvent<HTMLFormElement>): void => {
-                  p_event.preventDefault();
-                  void quiz.submitAnswer(p_question.id);
-                }}
-              >
-                <p>{p_question.question_text}</p>
-                <label>
-                  Resposta
-                  <textarea
-                    name={`answer-${p_question.id}`}
-                    value={quiz.drafts[p_question.id] ?? ""}
-                    onChange={(p_event: ChangeEvent<HTMLTextAreaElement>): void => {
-                      quiz.setDraft(p_question.id, p_event.currentTarget.value);
+        <FamilyThumbShell
+          content={
+            <>
+              <FamilyNav familyId={quiz.familyId} active="quiz" />
+              <span data-quiz-badge data-role={role}>
+                View {role === "none" ? "session" : role}
+              </span>
+              {presentation.kind === "loading" || session.isLoading ? (
+                <div data-quiz-enter aria-live="polite" aria-busy="true">
+                  <h1>Loading the quiz</h1>
+                  <div data-quiz-loading-bar />
+                </div>
+              ) : null}
+              {presentation.kind === "need-family" && !session.isLoading ? (
+                <div data-quiz-enter>
+                  <h1>Family quiz</h1>
+                  <p>Opening the family quiz.</p>
+                </div>
+              ) : null}
+              {presentation.kind === "denied" ? (
+                <div data-quiz-enter role="alert">
+                  <h1>Quiz unavailable</h1>
+                  <p>Only Parent or Child answer the family quiz.</p>
+                </div>
+              ) : null}
+              {presentation.kind === "missing" ? (
+                <div data-quiz-enter>
+                  <h1>Family not found</h1>
+                  <p>That id does not open a quiz.</p>
+                </div>
+              ) : null}
+              {presentation.kind === "error" ? (
+                <div data-quiz-enter role="alert">
+                  <h1>Family quiz</h1>
+                  <p>{presentation.message}</p>
+                </div>
+              ) : null}
+              {presentation.kind === "ready" ? (
+                <div data-quiz-enter>
+                  <h1>Family quiz</h1>
+                  <p>{quiz.modePrompt}</p>
+                  {presentation.questions.length === 0 ? (
+                    <div data-quiz-card>
+                      <p>No family questions right now.</p>
+                    </div>
+                  ) : null}
+                  {presentation.questions.map((p_question) => (
+                    <div data-quiz-card key={p_question.id}>
+                      <p>{p_question.question_text}</p>
+                    </div>
+                  ))}
+                  {quiz.lastEnvelope !== null ? (
+                    <p data-quiz-success>
+                      {String(quiz.lastEnvelope.answers.length)} answers in GPS.
+                    </p>
+                  ) : null}
+                </div>
+              ) : null}
+            </>
+          }
+          actions={
+            presentation.kind === "ready" ? (
+              <>
+                <div data-quiz-modes>
+                  <span data-quiz-mode-thumb data-mode={quiz.mode} aria-hidden="true" />
+                  <button
+                    type="button"
+                    aria-pressed={quiz.mode === "solo"}
+                    onClick={(): void => {
+                      quiz.setMode("solo" satisfies QuizMode);
                     }}
-                  />
-                </label>
-                <button
-                  type="submit"
-                  data-kind="submit"
-                  disabled={quiz.isSubmitting}
-                >
-                  Guardar resposta
-                </button>
-              </form>
-            ))}
-            {quiz.formError !== null ? (
-              <p data-quiz-error role="alert">
-                {quiz.formError}
-              </p>
-            ) : null}
-            {quiz.lastEnvelope !== null ? (
-              <p data-quiz-success>
-                {quiz.lastEnvelope.answers.length} respostas no GPS.
-              </p>
-            ) : null}
-          </div>
-        ) : null}
+                  >
+                    Solo
+                  </button>
+                  <button
+                    type="button"
+                    aria-pressed={quiz.mode === "table"}
+                    onClick={(): void => {
+                      quiz.setMode("table" satisfies QuizMode);
+                    }}
+                  >
+                    At the table
+                  </button>
+                </div>
+                {presentation.questions.map((p_question) => (
+                  <form
+                    key={p_question.id}
+                    data-quiz-card
+                    onSubmit={(p_event: FormEvent<HTMLFormElement>): void => {
+                      p_event.preventDefault();
+                      void quiz.submitAnswer(p_question.id);
+                    }}
+                  >
+                    <label>
+                      Answer
+                      <textarea
+                        name={`answer-${p_question.id}`}
+                        value={quiz.drafts[p_question.id] ?? ""}
+                        onChange={(p_event: ChangeEvent<HTMLTextAreaElement>): void => {
+                          quiz.setDraft(p_question.id, p_event.currentTarget.value);
+                        }}
+                      />
+                    </label>
+                    <button
+                      type="submit"
+                      data-kind="submit"
+                      disabled={quiz.isSubmitting}
+                    >
+                      Save answer
+                    </button>
+                  </form>
+                ))}
+                {quiz.formError !== null ? (
+                  <p data-quiz-error role="alert">
+                    {quiz.formError}
+                  </p>
+                ) : null}
+              </>
+            ) : undefined
+          }
+        />
       </div>
     </div>
   );

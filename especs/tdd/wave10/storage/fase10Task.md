@@ -1,0 +1,32 @@
+# Phase 10 — Green
+
+- [x] `db/migrations/100100_demo_seed.sql` — idempotent demo rows, fixed UUIDs, `great-kids/` placeholders
+- [x] `models/demo-seed-factory.ts` — Factory Method + Singleton; apply if demo family missing
+- [x] `internal/db/mock-session.ts` — `familyId` default; seed on non-Vitest getMockSession
+- [x] `internal/storage/object-store.ts` — `ObjectStoreProtocol` + `ObjectStoreStrategy`
+- [x] `internal/storage/local-disk-adapter.ts` — Adapter put/delete under `great-kids/`
+- [x] `internal/storage/minio-adapter.ts` — Adapter; bucket `bd-files` only
+- [x] `internal/storage/object-store-factory.ts` — Factory from S3_* env
+- [x] `models/curated_material.ts` — Singleton CRUD + soft-delete
+- [x] `models/app_user.ts` — patch status/name; reject hard delete
+- [x] `models/plan.ts` — list/create/update status
+- [x] `models/mission.ts` — softDelete; title on update
+- [x] `models/mission_category.ts` — update name
+- [x] `models/forecast_context.ts` — update name
+- [x] `app/api/panel/users/user-write-policy.ts` — Admin-only writes
+- [x] `app/api/panel/users/route.ts` — GET envelope
+- [x] `app/api/panel/users/[id]/route.ts` — PATCH
+- [x] `app/api/panel/materials/route.ts` — GET/POST
+- [x] `app/api/panel/materials/[id]/route.ts` — GET/PATCH/DELETE
+- [x] `app/api/panel/materials/[id]/upload/route.ts` — file put
+- [x] `app/api/panel/catalog/route.ts` — POST create
+- [x] `app/api/panel/catalog/[id]/route.ts` — PATCH/DELETE
+- [x] `app/api/panel/catalog/[id]/image/route.ts` — image put
+- [x] `app/api/panel/plans/route.ts` — GET/POST
+- [x] `app/api/panel/plans/[id]/route.ts` — PATCH
+- [x] `app/api/panel/categories/route.ts` — GET
+- [x] `app/api/panel/categories/[id]/route.ts` — PATCH
+- [x] `app/api/panel/forecast-contexts/route.ts` — GET
+- [x] `app/api/panel/forecast-contexts/[id]/route.ts` — PATCH
+- [x] Phase tests pass: `npx vitest run tests/identity/demo-seed.test.ts tests/session/family-id.test.ts tests/storage/local-disk-adapter.test.ts tests/panel/users-write-policy.test.ts tests/panel/materials-api.test.ts tests/panel/catalog-mutate.test.ts tests/panel/plans-api.test.ts tests/panel/categories-contexts-patch.test.ts`
+- [x] Brownfield only: Create especs/tdd/wave10/storage/refactor-fase10.md (legacy removal playbook; do not apply it in Green)

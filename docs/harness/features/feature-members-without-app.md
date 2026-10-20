@@ -10,7 +10,7 @@
 Recommendations need who is in the family without giving children (or grandparents) an account.
 
 ### Solução e trade-offs
-Members live in `family.family_members` JSON. Schema today: user_id, user_nickname, user_role. User: real name allowed; no photo. Trade-off documented in `schema.md`: relation, age band, interests are not in the envelope yet — JSON-only, no FK. Child context is a view (feature-context-switch), not a login.
+Members live in `family.family_members` JSON. Schema today: user_id, user_nickname, user_role. User: real name allowed; no photo. Invite flow copy is **Convidar familiar**. Trade-off documented in `schema.md`: relation, age band, interests are not in the envelope yet — JSON-only, no FK. Child surface is a dedicated route (feature-context-switch), not a login.
 
 ### Fluxo (given/when/then)
 - Dado a family

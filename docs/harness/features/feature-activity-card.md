@@ -31,4 +31,4 @@ One `mission` row: title, description, `img_path`, type, format (Quick-Win, Sign
 
 ### Design Patterns (Gang of Four) Sugerido
 - Builder (optional fiche fields)
-- Adapter (later MinIO for `img_path`)
+- Adapter (`img_path` via feature-object-storage)

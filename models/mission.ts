@@ -48,6 +48,8 @@ export type MissionInsertInput = {
 };
 
 export type MissionUpdateInput = {
+  title?: string;
+  category_id?: string;
   description?: string | null;
   img_path?: string | null;
   duration_minutes?: number | null;
@@ -180,6 +182,14 @@ export class Mission {
     }
     const sets: string[] = [];
     const params: Array<string | number | null> = [];
+    if (p_input.title !== undefined) {
+      sets.push("title = ?");
+      params.push(p_input.title);
+    }
+    if (p_input.category_id !== undefined) {
+      sets.push("category_id = ?");
+      params.push(p_input.category_id);
+    }
     if (p_input.description !== undefined) {
       sets.push("description = ?");
       params.push(p_input.description);
@@ -233,6 +243,17 @@ export class Mission {
        WHERE deleted = 0 AND status = 'active' AND review_status = 'published'`,
       [],
     );
+  }
+
+  public softDelete(p_id: string): boolean {
+    getConnection();
+    const current: MissionFiche | null = this.findById(p_id);
+    if (current === null) {
+      return false;
+    }
+    const now: string = new Date().toISOString();
+    queryRaw(`UPDATE mission SET deleted = 1, updated_at = ? WHERE id = ?`, [now, p_id]);
+    return true;
   }
 
   public updateReviewStatus(p_id: string, p_reviewStatus: string): void {

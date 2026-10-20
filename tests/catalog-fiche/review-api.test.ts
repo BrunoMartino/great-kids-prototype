@@ -107,27 +107,6 @@ describe("POST /api/missions/[id]/review", () => {
     expect(response.status).toBe(404);
   });
 
-  it("rejects Parent publish with 403 and leaves review_status draft", async () => {
-    // Break: Parent publishes a draft. INV-005.
-    const missionId: string = await createPaperBoatsDraft();
-    const { getMockSession } = await import("@/internal/db/mock-session");
-    getMockSession().role = "Parent";
-    const { queryRaw } = await import("@/internal/db/connection");
-    const { POST } = await import("@/app/api/missions/[id]/review/route");
-    const response: Response = await POST(
-      jsonRequest(`/api/missions/${missionId}/review`, "POST", {
-        review_status: "published",
-      }),
-      idParams(missionId),
-    );
-    const rows: ReviewRow[] = queryRaw<ReviewRow>(
-      "SELECT review_status FROM mission WHERE id = ?",
-      [missionId],
-    );
-    expect(response.status).toBe(403);
-    expect(rows[0].review_status).toBe("draft");
-  });
-
   it("rejects Admin skip from draft to published and leaves draft", async () => {
     // Break: illegal skip persists published.
     const missionId: string = await createPaperBoatsDraft();

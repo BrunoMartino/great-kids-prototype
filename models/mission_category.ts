@@ -66,4 +66,22 @@ export class MissionCategory {
     }
     return { id, slug: p_input.slug, name: p_input.name };
   }
+
+  public updateName(p_id: string, p_name: string): MissionCategoryRecord | null {
+    if (p_name.trim() === "") {
+      throw new Error("name required");
+    }
+    const current: MissionCategoryRecord | null = this.findById(p_id);
+    if (current === null) {
+      return null;
+    }
+    getConnection();
+    const now: string = new Date().toISOString();
+    queryRaw(`UPDATE mission_category SET name = ?, updated_at = ? WHERE id = ?`, [
+      p_name,
+      now,
+      p_id,
+    ]);
+    return this.findById(p_id);
+  }
 }

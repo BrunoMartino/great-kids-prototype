@@ -10,7 +10,7 @@
 Staff need a single catalog of things a family might do, grouped the way the Idea Book speaks (Watch, Read, Make…).
 
 ### Solução e trade-offs
-Portal CRUD on `mission` + `mission_category` (seeded slugs). Trade-off: twelve fixed categories vs free tags; family app never edits the library.
+Portal CRUD on `mission` + `mission_category` (seeded slugs) plus create UI and image upload via object-storage. Trade-off: twelve fixed categories vs free tags; family app never edits the library.
 
 ### Fluxo (given/when/then)
 - Dado Operator/Admin

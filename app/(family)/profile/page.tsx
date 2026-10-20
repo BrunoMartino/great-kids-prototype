@@ -6,7 +6,7 @@ function ProfileFallback(): ReactElement {
     <div data-profile-screen>
       <div data-profile-scroll>
         <div aria-live="polite" aria-busy="true">
-          <h1>Carregando o GPS</h1>
+          <h1>Loading GPS</h1>
         </div>
       </div>
     </div>

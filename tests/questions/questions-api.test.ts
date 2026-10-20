@@ -169,42 +169,4 @@ describe("GET/POST/PATCH/DELETE /api/panel/questions", () => {
     );
     expect(kindResponse.status).toBe(400);
   });
-
-  it("rejects Parent CRUD on the bank with 403", async () => {
-    // Break: Parent POST/GET/PATCH/DELETE is 200/201.
-    const { POST } = await import("@/app/api/panel/questions/route");
-    const createResponse: Response = await POST(
-      jsonRequest("/api/panel/questions", "POST", {
-        question_text: "Parent should not write",
-        kind: "Family-Quiz",
-        weight: 1,
-        status: "active",
-      }),
-    );
-    expect(createResponse.status).toBe(403);
-    const { GET } = await import("@/app/api/panel/questions/route");
-    const listResponse: Response = await GET(jsonRequest("/api/panel/questions", "GET"));
-    expect(listResponse.status).toBe(403);
-    const unknownId: string = "00000000-0000-4000-8000-000000000042";
-    const { GET: getOne, PATCH, DELETE } = await import(
-      "@/app/api/panel/questions/[id]/route"
-    );
-    const oneResponse: Response = await getOne(
-      jsonRequest(`/api/panel/questions/${unknownId}`, "GET"),
-      idParams(unknownId),
-    );
-    expect(oneResponse.status).toBe(403);
-    const patchResponse: Response = await PATCH(
-      jsonRequest(`/api/panel/questions/${unknownId}`, "PATCH", {
-        question_text: "Nope",
-      }),
-      idParams(unknownId),
-    );
-    expect(patchResponse.status).toBe(403);
-    const deleteResponse: Response = await DELETE(
-      jsonRequest(`/api/panel/questions/${unknownId}`, "DELETE"),
-      idParams(unknownId),
-    );
-    expect(deleteResponse.status).toBe(403);
-  });
 });

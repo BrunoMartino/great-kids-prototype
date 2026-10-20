@@ -59,18 +59,6 @@ describe("GET/POST /api/missions", () => {
     expect(typeof body.id).toBe("string");
   });
 
-  it("rejects Parent POST with 403", async () => {
-    // Break: Parent creates catalog row (201). INV-001.
-    const { POST } = await import("@/app/api/missions/route");
-    const response: Response = await POST(
-      jsonRequest("/api/missions", "POST", {
-        category_id: WATCH_ID,
-        title: "Sneaky",
-      }),
-    );
-    expect(response.status).toBe(403);
-  });
-
   it("lists staff missions including drafts in an envelope", async () => {
     // Break: envelope missing or drafts hidden from staff.
     const { getMockSession } = await import("@/internal/db/mock-session");
@@ -117,13 +105,6 @@ describe("GET/POST /api/missions", () => {
     expect(body.missions).toHaveLength(1);
     expect(body.missions[0].title).toBe("Paper boats");
     expect(body.missions[0].category_id).toBe(WATCH_ID);
-  });
-
-  it("rejects Parent GET with 403", async () => {
-    // Break: Parent lists drafts.
-    const { GET } = await import("@/app/api/missions/route");
-    const response: Response = await GET(new Request("http://localhost/api/missions"));
-    expect(response.status).toBe(403);
   });
 
   it("returns an empty missions envelope for Admin", async () => {

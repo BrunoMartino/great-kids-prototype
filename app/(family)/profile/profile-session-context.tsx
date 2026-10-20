@@ -9,6 +9,7 @@ import {
   type ReactNode,
 } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { SEEDED_FAMILY_ID } from "../chrome/seeded-family";
 import { useFamilySession } from "../context-switch/family-session-context";
 import { GpsViewPolicy } from "../quiz/gps-view-policy";
 import { DeleteAnswerCommand } from "./delete-answer-command";
@@ -151,7 +152,8 @@ export function ProfileSessionProvider(
   const router: ReturnType<typeof useRouter> = useRouter();
   const searchParams: URLSearchParams = useSearchParams();
   const session: ReturnType<typeof useFamilySession> = useFamilySession();
-  const queryId: string = searchParams.get("id") ?? "";
+  const queryId: string =
+    (searchParams.get("id") ?? "").trim() || SEEDED_FAMILY_ID;
   const [presentation, setPresentation] = useState<ProfilePresentation>({
     kind: queryId.trim().length > 0 ? "loading" : "need-family",
   });
@@ -203,14 +205,14 @@ export function ProfileSessionProvider(
       if (!profileResponse.ok) {
         setPresentation({
           kind: "error",
-          message: "Não foi possível abrir o GPS.",
+          message: "Could not open GPS.",
         });
         return;
       }
       const profileBody: unknown = await profileResponse.json();
       const document: GpsDocument | null = readGpsDocument(profileBody);
       if (document === null) {
-        setPresentation({ kind: "error", message: "GPS em formato inválido." });
+        setPresentation({ kind: "error", message: "GPS in an invalid format." });
         return;
       }
       const answersResponse: Response = await fetch(
@@ -227,7 +229,7 @@ export function ProfileSessionProvider(
       if (!answersResponse.ok) {
         setPresentation({
           kind: "error",
-          message: "Não foi possível abrir o que sabemos.",
+          message: "Could not open what we know.",
         });
         return;
       }
@@ -237,7 +239,7 @@ export function ProfileSessionProvider(
       if (answersEnvelope === null) {
         setPresentation({
           kind: "error",
-          message: "Respostas em formato inválido.",
+          message: "Answers in an invalid format.",
         });
         return;
       }
@@ -256,7 +258,7 @@ export function ProfileSessionProvider(
       }
       setPresentation({
         kind: "error",
-        message: "Não foi possível abrir o GPS.",
+        message: "Could not open GPS.",
       });
     }
   };
@@ -341,7 +343,7 @@ export function ProfileSessionProvider(
       }
       const text: string = editDraft.trim();
       if (text.length === 0) {
-        setFormError("A resposta não pode ficar vazia.");
+        setFormError("The answer cannot be empty.");
         return;
       }
       setIsSaving(true);
@@ -356,7 +358,7 @@ export function ProfileSessionProvider(
         await loadGps(familyId);
       } catch (p_error: unknown) {
         void p_error;
-        setFormError("Não foi possível editar a resposta.");
+        setFormError("Could not edit the answer.");
       } finally {
         setIsSaving(false);
       }
@@ -378,7 +380,7 @@ export function ProfileSessionProvider(
         await loadGps(familyId);
       } catch (p_error: unknown) {
         void p_error;
-        setFormError("Não foi possível apagar a resposta.");
+        setFormError("Could not delete the answer.");
       } finally {
         setIsSaving(false);
       }

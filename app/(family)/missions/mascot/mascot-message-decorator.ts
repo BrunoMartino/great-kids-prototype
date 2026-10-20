@@ -11,7 +11,7 @@ export class MascotMessageDecorator extends MissionDecorator {
   }
 
   public getVoiceName(): string {
-    return "Mascote";
+    return "Mascot";
   }
 
   public isTitleEmpty(): boolean {

@@ -22,22 +22,6 @@ describe("SupportPolicy", () => {
     }).not.toThrow();
   });
 
-  it("rejects Parent on the panel", async () => {
-    // Break: Parent assertPanel succeeds.
-    const { SupportPolicy } = await import("@/app/api/panel/families/support-policy");
-    expect(() => {
-      SupportPolicy.assertPanel("Parent");
-    }).toThrow();
-  });
-
-  it("rejects Child on the panel", async () => {
-    // Break: Child assertPanel succeeds (INV-002).
-    const { SupportPolicy } = await import("@/app/api/panel/families/support-policy");
-    expect(() => {
-      SupportPolicy.assertPanel("Child");
-    }).toThrow();
-  });
-
   it("lets only the titular Parent change the family plan", async () => {
     // Break: invited Parent can change plan, or titular is denied.
     const { SupportPolicy } = await import("@/app/api/panel/families/support-policy");

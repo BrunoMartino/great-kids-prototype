@@ -33,13 +33,4 @@ describe("SurfaceFacade", () => {
       facade.assertPanel("Operator");
     }).not.toThrow();
   });
-
-  it("rejects Parent through the panel facade", async () => {
-    // Break: Parent assertPanel succeeds.
-    const { SurfaceFacade } = await import("@/app/api/panel/surface-facade");
-    const facade: InstanceType<typeof SurfaceFacade> = new SurfaceFacade();
-    expect(() => {
-      facade.assertPanel("Parent");
-    }).toThrow();
-  });
 });

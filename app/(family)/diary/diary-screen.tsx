@@ -6,6 +6,7 @@ import {
   type ReactElement,
 } from "react";
 import { FamilyNav } from "../chrome/family-nav";
+import { FamilyThumbShell } from "../chrome/family-thumb-shell";
 import { useFamilySession } from "../context-switch/family-session-context";
 import type { CompletedMissionItem } from "../missions/completed/completed-payload";
 import type { DiaryMissionNoteItem, DiaryNoteItem } from "./diary-payload";
@@ -277,11 +278,6 @@ function DiaryScreenBody(): ReactElement {
     familyNotes.length === 0 &&
     missionNotes.length === 0;
 
-  const onApply = (p_event: FormEvent<HTMLFormElement>): void => {
-    p_event.preventDefault();
-    diary.applyId();
-  };
-
   const onSubmitNote = (p_event: FormEvent<HTMLFormElement>): void => {
     p_event.preventDefault();
     void diary.submitNote();
@@ -293,80 +289,54 @@ function DiaryScreenBody(): ReactElement {
         {SCREEN_STYLES}
       </style>
       <div data-diary-scroll inert={diary.isComposerOpen}>
+        <FamilyThumbShell
+          content={
+            <>
         <FamilyNav familyId={diary.familyId} active="diary" />
         <span data-diary-badge data-role={role}>
-          Visão {role === "none" ? "sessão" : role}
+          View {role === "none" ? "session" : role}
         </span>
-        <form data-diary-tools onSubmit={onApply}>
-          <label>
-            Id da família
-            <input
-              type="text"
-              name="family-id"
-              autoComplete="off"
-              autoCorrect="off"
-              autoCapitalize="off"
-              spellCheck={false}
-              value={diary.idDraft}
-              onChange={(p_event: ChangeEvent<HTMLInputElement>): void => {
-                diary.setIdDraft(p_event.currentTarget.value);
-              }}
-            />
-          </label>
-          <button type="submit" data-kind="ghost">
-            Abrir diário
-          </button>
-        </form>
         {presentation.kind === "loading" || session.isLoading ? (
           <div data-diary-enter aria-live="polite" aria-busy="true">
-            <h1>Carregando o diário</h1>
+            <h1>Loading the diary</h1>
             <div data-diary-loading-bar />
           </div>
         ) : null}
         {presentation.kind === "need-family" && !session.isLoading ? (
           <div data-diary-enter>
-            <h1>Diário da família</h1>
-            <p>Informe o id da família para ver as histórias.</p>
+            <h1>Family diary</h1>
+            <p>Opening the family diary.</p>
           </div>
         ) : null}
         {presentation.kind === "denied" ? (
           <div data-diary-enter role="alert">
-            <h1>Diário só para a família</h1>
-            <p>Esta visão não abre as notas.</p>
+            <h1>Diary is family only</h1>
+            <p>This view does not open the notes.</p>
           </div>
         ) : null}
         {presentation.kind === "missing" ? (
           <div data-diary-enter>
-            <h1>Família não encontrada</h1>
-            <p>Esse id não abre o diário.</p>
+            <h1>Family not found</h1>
+            <p>That id does not open the diary.</p>
           </div>
         ) : null}
         {presentation.kind === "error" ? (
           <div data-diary-enter role="alert">
-            <h1>Diário da família</h1>
+            <h1>Family diary</h1>
             <p>{presentation.message}</p>
           </div>
         ) : null}
         {presentation.kind === "ready" ? (
           <div data-diary-enter data-diary-list>
-            <h1>Diário da família</h1>
-            <p>Sem foto. Só história.</p>
-            {presentation.canAuthor ? (
-              <button
-                type="button"
-                onClick={(): void => {
-                  diary.openComposer();
-                }}
-              >
-                Adicionar nota
-              </button>
-            ) : (
-              <p>A visão Child lê as histórias. Não escreve.</p>
+            <h1>Family diary</h1>
+            <p>No photo. Story only.</p>
+            {presentation.canAuthor ? null : (
+              <p>Child view reads the stories. It does not write.</p>
             )}
             {isEmpty ? (
               <div data-diary-card data-diary-empty-state="true">
-                <h2 data-diary-empty>Nenhuma história ainda.</h2>
-                <p>O envelope chega vazio. Sem foto. Só texto.</p>
+                <h2 data-diary-empty>No stories yet.</h2>
+                <p>The envelope arrives empty. No photo. Text only.</p>
               </div>
             ) : null}
             {familyNotes.map((p_note: DiaryNoteItem): ReactElement => {
@@ -393,12 +363,27 @@ function DiaryScreenBody(): ReactElement {
                     {labelForKind(p_item.note.kind)}
                   </span>
                   <p>{p_item.note.text}</p>
-                  <p>Ligada a uma missão concluída.</p>
+                  <p>Linked to a completed mission.</p>
                 </article>
               );
             })}
           </div>
         ) : null}
+            </>
+          }
+          actions={
+            presentation.kind === "ready" && presentation.canAuthor ? (
+              <button
+                type="button"
+                onClick={(): void => {
+                  diary.openComposer();
+                }}
+              >
+                Add note
+              </button>
+            ) : undefined
+          }
+        />
       </div>
       <div
         data-diary-backdrop
@@ -414,9 +399,9 @@ function DiaryScreenBody(): ReactElement {
           aria-labelledby="diary-compose-title"
           onSubmit={onSubmitNote}
         >
-          <h2 id="diary-compose-title">Nova nota</h2>
-          <p>Cinco tipos. Texto só. Sem foto.</p>
-          <div data-diary-kinds role="group" aria-label="Tipo da nota">
+          <h2 id="diary-compose-title">New note</h2>
+          <p>Five kinds. Text only. No photo.</p>
+          <div data-diary-kinds role="group" aria-label="Note kind">
             {noteKindStrategies().map(
               (p_strategy: NoteKindPresentationStrategy): ReactElement => {
                 const pressed: boolean = diary.draftKind === p_strategy.kind;
@@ -438,7 +423,7 @@ function DiaryScreenBody(): ReactElement {
             )}
           </div>
           <label>
-            História
+            Story
             <textarea
               name="diary-text"
               autoComplete="off"
@@ -450,7 +435,7 @@ function DiaryScreenBody(): ReactElement {
           </label>
           {diary.completedMissions.length > 0 ? (
             <label>
-              Ligar a uma missão concluída
+              Link to a completed mission
               <select
                 name="diary-mission"
                 value={diary.draftMissionKey}
@@ -458,7 +443,7 @@ function DiaryScreenBody(): ReactElement {
                   diary.setDraftMissionKey(p_event.currentTarget.value);
                 }}
               >
-                <option value="">Sem missão</option>
+                <option value="">No mission</option>
                 {diary.completedMissions.map(
                   (p_item: CompletedMissionItem): ReactElement => {
                     const key: string = missionKeyFor(p_item);
@@ -478,7 +463,7 @@ function DiaryScreenBody(): ReactElement {
             </p>
           ) : null}
           <button type="submit" disabled={diary.isSaving}>
-            Guardar
+            Save
           </button>
           <button
             type="button"
@@ -487,7 +472,7 @@ function DiaryScreenBody(): ReactElement {
               diary.closeComposer();
             }}
           >
-            Cancelar
+            Cancel
           </button>
         </form>
       </div>

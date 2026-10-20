@@ -5,7 +5,10 @@ import {
   useIndicatorsSession,
   type SwitchableRole,
 } from "./indicators-session-context";
-import type { PanelMockRole } from "./indicators-facade";
+import {
+  StaffSessionToolbar,
+  staffRoleLabel,
+} from "../shell/staff-session-toolbar";
 
 const SCREEN_STYLES: string = `
 [data-panel-indicators] {
@@ -76,6 +79,7 @@ const SCREEN_STYLES: string = `
   animation: panel-enter 200ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 [data-panel-loading-bar] {
+  width: 100%;
   height: 12px;
   border-radius: 999px;
   background: #eae3de;
@@ -98,11 +102,16 @@ const SCREEN_STYLES: string = `
   font: inherit;
   font-weight: 600;
   cursor: pointer;
+  -moz-appearance: none;
   -webkit-appearance: none;
   appearance: none;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
   transition: transform 120ms ease-out, opacity 120ms ease-out;
+}
+[data-panel-indicators] button::-moz-focus-inner {
+  border: 0;
+  padding: 0;
 }
 [data-panel-indicators] button[data-pressed="true"] {
   background: #efdfd8;
@@ -129,7 +138,7 @@ const SCREEN_STYLES: string = `
 }
 [data-indicator-grid] {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: minmax(0, 1fr);
   gap: 12px;
   min-width: 0;
 }
@@ -200,19 +209,6 @@ const SCREEN_STYLES: string = `
 }
 `;
 
-function roleLabel(p_role: PanelMockRole | SwitchableRole): string {
-  if (p_role === "Admin") {
-    return "Admin";
-  }
-  if (p_role === "Operator") {
-    return "Operador";
-  }
-  if (p_role === "Child") {
-    return "Criança";
-  }
-  return "Responsável";
-}
-
 export function IndicatorsScreen(): ReactElement {
   const session: ReturnType<typeof useIndicatorsSession> = useIndicatorsSession();
   const allZero: boolean =
@@ -230,62 +226,31 @@ export function IndicatorsScreen(): ReactElement {
       <style href="panel-indicators" precedence="medium">
         {SCREEN_STYLES}
       </style>
-      <div data-panel-toolbar>
-        <span data-panel-role data-role={session.activeRole}>
-          {roleLabel(session.activeRole)}
-        </span>
-        <span data-panel-toolbar-label>Sessão</span>
-        <button
-          type="button"
-          data-pressed={session.activeRole === "Admin" ? "true" : "false"}
-          aria-pressed={session.activeRole === "Admin"}
-          onClick={(): void => {
-            onSwitchRole("Admin");
-          }}
-        >
-          Admin
-        </button>
-        <button
-          type="button"
-          data-pressed={session.activeRole === "Operator" ? "true" : "false"}
-          aria-pressed={session.activeRole === "Operator"}
-          onClick={(): void => {
-            onSwitchRole("Operator");
-          }}
-        >
-          Operador
-        </button>
-        <button
-          type="button"
-          data-pressed={session.activeRole === "Parent" ? "true" : "false"}
-          aria-pressed={session.activeRole === "Parent"}
-          onClick={(): void => {
-            onSwitchRole("Parent");
-          }}
-        >
-          Responsável
-        </button>
-      </div>
+      <StaffSessionToolbar
+        activeRole={session.activeRole}
+        onSwitchRole={onSwitchRole}
+        isBusy={session.isLoading}
+      />
       {session.isLoading ? (
         <div data-panel-loading aria-live="polite" aria-busy="true">
-          <span data-panel-role>Indicadores</span>
-          <h1>Carregando os indicadores</h1>
+          <span data-panel-role>Indicators</span>
+          <h1>Loading indicators</h1>
           <div data-panel-loading-bar />
         </div>
       ) : null}
       {!session.isLoading && session.isForbidden ? (
         <div data-panel-forbidden role="alert">
-          <span data-panel-role>Indicadores</span>
-          <h1>Acesso negado</h1>
-          <p>Este painel é só para a equipe.</p>
+          <span data-panel-role>Indicators</span>
+          <h1>Access denied</h1>
+          <p>This panel is staff only.</p>
         </div>
       ) : null}
       {!session.isLoading &&
       !session.isForbidden &&
       session.errorMessage !== null ? (
         <div data-panel-error role="alert">
-          <span data-panel-role>Indicadores</span>
-          <h1>Não foi possível carregar os indicadores</h1>
+          <span data-panel-role>Indicators</span>
+          <h1>Could not load indicators</h1>
           <p>{session.errorMessage}</p>
         </div>
       ) : null}
@@ -300,27 +265,27 @@ export function IndicatorsScreen(): ReactElement {
           data-indicators-empty={allZero ? "true" : "false"}
         >
           <span data-panel-role data-role={session.role}>
-            {roleLabel(session.role)}
+            {staffRoleLabel(session.role)}
           </span>
-          <h1>Indicadores</h1>
-          <p>O que as famílias agendaram, concluíram e repetiram.</p>
+          <h1>Indicators</h1>
+          <p>What families scheduled, completed, and repeated.</p>
           <div data-indicator-grid>
             <article data-indicator-card data-indicator="scheduled">
-              <h2>Agendadas</h2>
+              <h2>Scheduled</h2>
               <p data-indicator-value>{session.counts.scheduled}</p>
             </article>
             <article data-indicator-card data-indicator="completed">
-              <h2>Concluídas</h2>
+              <h2>Completed</h2>
               <p data-indicator-value>{session.counts.completed}</p>
             </article>
             <article data-indicator-card data-indicator="repeated">
-              <h2>Repetidas</h2>
+              <h2>Repeated</h2>
               <p data-indicator-value>{session.counts.repeated}</p>
             </article>
           </div>
           {allZero ? (
             <p data-panel-empty>
-              Nenhuma atividade ainda. Os três números ficam em zero.
+              No activity yet. The three numbers stay at zero.
             </p>
           ) : null}
         </div>

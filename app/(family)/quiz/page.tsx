@@ -6,7 +6,7 @@ function QuizFallback(): ReactElement {
     <div data-quiz-screen>
       <div data-quiz-scroll>
         <div aria-live="polite" aria-busy="true">
-          <h1>Carregando o quiz</h1>
+          <h1>Loading the quiz</h1>
         </div>
       </div>
     </div>

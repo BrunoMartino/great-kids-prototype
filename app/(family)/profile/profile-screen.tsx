@@ -6,6 +6,7 @@ import {
   type ReactElement,
 } from "react";
 import { FamilyNav } from "../chrome/family-nav";
+import { FamilyThumbShell } from "../chrome/family-thumb-shell";
 import { useFamilySession } from "../context-switch/family-session-context";
 import {
   AchievementsLeaf,
@@ -218,82 +219,62 @@ function ProfileScreenBody(): ReactElement {
   const isModalOpen: boolean =
     profile.editingQuestionId !== null || profile.deletingQuestionId !== null;
 
-  const onApply = (p_event: FormEvent<HTMLFormElement>): void => {
-    p_event.preventDefault();
-    profile.applyId();
-  };
-
   return (
     <div data-profile-screen>
       <style href="profile-screen" precedence="medium">
         {SCREEN_STYLES}
       </style>
       <div data-profile-scroll inert={isModalOpen}>
+        <FamilyThumbShell
+          content={
+            <>
         <FamilyNav familyId={profile.familyId} active="profile" />
         <span data-profile-badge data-role={role}>
-          Visão {role === "none" ? "sessão" : role}
+          View {role === "none" ? "session" : role}
         </span>
-        <form data-profile-tools onSubmit={onApply}>
-          <label>
-            Id da família
-            <input
-              type="text"
-              name="family-id"
-              autoComplete="off"
-              autoCorrect="off"
-              autoCapitalize="off"
-              spellCheck={false}
-              value={profile.idDraft}
-              onChange={(p_event: ChangeEvent<HTMLInputElement>): void => {
-                profile.setIdDraft(p_event.currentTarget.value);
-              }}
-            />
-          </label>
-          <button type="submit">Abrir</button>
-        </form>
         {presentation.kind === "loading" || session.isLoading ? (
           <div data-profile-enter aria-live="polite" aria-busy="true">
-            <h1>Carregando o GPS</h1>
+            <h1>Loading GPS</h1>
             <div data-profile-loading-bar />
           </div>
         ) : null}
         {presentation.kind === "need-family" && !session.isLoading ? (
           <div data-profile-enter>
-            <h1>GPS da família</h1>
-            <p>Informe o id da família para ver o que sabemos.</p>
+            <h1>Family GPS</h1>
+            <p>Opening family GPS.</p>
           </div>
         ) : null}
         {presentation.kind === "denied" ? (
           <div data-profile-enter role="alert">
-            <h1>GPS só para Parent</h1>
-            <p>A visão Child não edita nem apaga o que sabemos sobre vocês.</p>
+            <h1>GPS is Parent only</h1>
+            <p>Child view cannot edit or delete what we know about you.</p>
           </div>
         ) : null}
         {presentation.kind === "missing" ? (
           <div data-profile-enter>
-            <h1>Família não encontrada</h1>
-            <p>Esse id não abre o GPS.</p>
+            <h1>Family not found</h1>
+            <p>That id does not open GPS.</p>
           </div>
         ) : null}
         {presentation.kind === "error" ? (
           <div data-profile-enter role="alert">
-            <h1>GPS da família</h1>
+            <h1>Family GPS</h1>
             <p>{presentation.message}</p>
           </div>
         ) : null}
         {presentation.kind === "ready" ? (
           <div data-profile-enter>
-            <h1>GPS da família</h1>
+            <h1>Family GPS</h1>
             <p>{presentation.composite.label()}</p>
             {presentation.composite.getChildren().map((p_child, p_index) => (
               <div data-profile-card key={`${p_child.label()}-${String(p_index)}`}>
                 <h2>
                   {p_child instanceof QuizAnswerLeaf
-                    ? "Respostas"
+                    ? "Answers"
                     : p_child instanceof RhythmsLeaf
-                      ? "Ritmos"
+                      ? "Rhythms"
                       : p_child instanceof AchievementsLeaf
-                        ? "Conquistas"
+                        ? "Achievements"
                         : "GPS"}
                 </h2>
                 <p>{p_child.label()}</p>
@@ -302,19 +283,19 @@ function ProfileScreenBody(): ReactElement {
             {presentation.composite.p_profileNotes !== null &&
             presentation.composite.p_profileNotes.length > 0 ? (
               <div data-profile-card>
-                <h2>Notas</h2>
+                <h2>Notes</h2>
                 <p>{presentation.composite.p_profileNotes}</p>
               </div>
             ) : null}
-            <h2>O que sabemos sobre vocês</h2>
+            <h2>What we know about you</h2>
             {presentation.answers.length === 0 ? (
               <div data-profile-card>
-                <p>Ainda não há fatos guardados.</p>
+                <p>No facts stored yet.</p>
               </div>
             ) : null}
             {presentation.answers.map((p_item) => (
               <div data-profile-card key={p_item.question_id}>
-                <p data-profile-source>Pergunta {p_item.question_id}</p>
+                <p data-profile-source>Question {p_item.question_id}</p>
                 <p>{p_item.answer_text}</p>
                 <div data-profile-actions>
                   <button
@@ -323,7 +304,7 @@ function ProfileScreenBody(): ReactElement {
                       profile.openEdit(p_item);
                     }}
                   >
-                    Editar
+                    Edit
                   </button>
                   <button
                     type="button"
@@ -332,13 +313,16 @@ function ProfileScreenBody(): ReactElement {
                       profile.openDelete(p_item);
                     }}
                   >
-                    Apagar
+                    Delete
                   </button>
                 </div>
               </div>
             ))}
           </div>
         ) : null}
+            </>
+          }
+        />
       </div>
       <div
         data-profile-backdrop
@@ -357,9 +341,9 @@ function ProfileScreenBody(): ReactElement {
             void profile.saveEdit();
           }}
         >
-          <h2 id="edit-answer-title">Editar resposta</h2>
+          <h2 id="edit-answer-title">Edit answer</h2>
           <label>
-            Resposta
+            Answer
             <textarea
               value={profile.editDraft}
               onChange={(p_event: ChangeEvent<HTMLTextAreaElement>): void => {
@@ -373,7 +357,7 @@ function ProfileScreenBody(): ReactElement {
             </p>
           ) : null}
           <button type="submit" disabled={profile.isSaving}>
-            Guardar
+            Save
           </button>
           <button
             type="button"
@@ -382,7 +366,7 @@ function ProfileScreenBody(): ReactElement {
               profile.closeModal();
             }}
           >
-            Cancelar
+            Cancel
           </button>
         </form>
       </div>
@@ -399,8 +383,8 @@ function ProfileScreenBody(): ReactElement {
           aria-modal="true"
           aria-labelledby="delete-answer-title"
         >
-          <h2 id="delete-answer-title">Apagar este fato?</h2>
-          <p>A pergunta do banco permanece. Só a resposta da família some do GPS.</p>
+          <h2 id="delete-answer-title">Delete this fact?</h2>
+          <p>The bank question stays. Only the family answer leaves GPS.</p>
           {profile.formError !== null && profile.deletingQuestionId !== null ? (
             <p data-profile-error role="alert">
               {profile.formError}
@@ -414,7 +398,7 @@ function ProfileScreenBody(): ReactElement {
               void profile.confirmDelete();
             }}
           >
-            Apagar
+            Delete
           </button>
           <button
             type="button"
@@ -423,7 +407,7 @@ function ProfileScreenBody(): ReactElement {
               profile.closeModal();
             }}
           >
-            Cancelar
+            Cancel
           </button>
         </div>
       </div>

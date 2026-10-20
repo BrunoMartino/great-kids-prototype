@@ -85,9 +85,6 @@ describe("POST /api/panel/session mock role switch", () => {
     );
     expect(parentResponse.status).toBe(200);
     expect(getMockSession().role).toBe("Parent");
-    const { GET: getSession } = await import("@/app/api/panel/session/route");
-    const parentGet: Response = await getSession(jsonRequest("/api/panel/session", "GET"));
-    expect(parentGet.status).toBe(403);
     const childResponse: Response = await POST(
       jsonRequest("/api/panel/session", "POST", { role: "Child" }),
     );

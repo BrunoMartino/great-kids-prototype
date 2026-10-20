@@ -6,6 +6,7 @@ import {
   type ReactElement,
 } from "react";
 import { FamilyNav } from "../chrome/family-nav";
+import { FamilyThumbShell } from "../chrome/family-thumb-shell";
 import { SuggestionLeaf } from "../calendar/day-composite";
 import { useFamilySession } from "../context-switch/family-session-context";
 import {
@@ -225,76 +226,50 @@ function ForecastScreenBody(): ReactElement {
         {SCREEN_STYLES}
       </style>
       <div data-forecast-scroll inert={isModalOpen}>
+        <FamilyThumbShell
+          content={
+            <>
         <FamilyNav familyId={forecast.familyId} active="forecast" />
         <span data-forecast-badge data-role={role}>
-          Visão {role === "none" ? "sessão" : role}
+          View {role === "none" ? "session" : role}
         </span>
-        <form data-forecast-tools onSubmit={onApply}>
-          <label>
-            Id da família
-            <input
-              type="text"
-              name="family-id"
-              autoComplete="off"
-              autoCorrect="off"
-              autoCapitalize="off"
-              spellCheck={false}
-              value={forecast.idDraft}
-              onChange={(p_event: ChangeEvent<HTMLInputElement>): void => {
-                forecast.setIdDraft(p_event.currentTarget.value);
-              }}
-            />
-          </label>
-          <label>
-            Dia
-            <input
-              type="date"
-              name="day"
-              value={forecast.day}
-              onChange={(p_event: ChangeEvent<HTMLInputElement>): void => {
-                forecast.setDay(p_event.currentTarget.value);
-              }}
-            />
-          </label>
-          <button type="submit">Abrir previsão</button>
-        </form>
         {presentation.kind === "loading" || session.isLoading ? (
           <div data-forecast-enter aria-live="polite" aria-busy="true">
-            <h1>Carregando a previsão</h1>
+            <h1>Loading the forecast</h1>
             <div data-forecast-loading-bar />
           </div>
         ) : null}
         {presentation.kind === "need-family" && !session.isLoading ? (
           <div data-forecast-enter>
-            <h1>Previsão da semana</h1>
-            <p>Informe o id da família para ver as sugestões.</p>
+            <h1>Week forecast</h1>
+            <p>Opening the family forecast.</p>
           </div>
         ) : null}
         {presentation.kind === "denied" ? (
           <div data-forecast-enter role="alert">
-            <h1>Previsão só para Parent</h1>
-            <p>A visão Child não coloca sugestões no calendário.</p>
+            <h1>Forecast is Parent only</h1>
+            <p>Child view does not put suggestions on the calendar.</p>
           </div>
         ) : null}
         {presentation.kind === "missing" ? (
           <div data-forecast-enter>
-            <h1>Família não encontrada</h1>
-            <p>Esse id não abre a previsão.</p>
+            <h1>Family not found</h1>
+            <p>That id does not open the forecast.</p>
           </div>
         ) : null}
         {presentation.kind === "error" ? (
           <div data-forecast-enter role="alert">
-            <h1>Previsão da semana</h1>
+            <h1>Week forecast</h1>
             <p>{presentation.message}</p>
           </div>
         ) : null}
         {presentation.kind === "ready" ? (
           <div data-forecast-enter>
-            <h1>Previsão da semana</h1>
-            <p>Lista finita. Só missões publicadas. Sem dia, não cai no calendário.</p>
+            <h1>Week forecast</h1>
+            <p>Finite list. Published missions only. Without a day, it does not go on the calendar.</p>
             {presentation.suggestions.length === 0 ? (
               <div data-forecast-card data-forecast-empty-state="true">
-                <p data-forecast-empty>Nenhuma sugestão publicada.</p>
+                <p data-forecast-empty>No published suggestions.</p>
               </div>
             ) : null}
             {presentation.suggestions.map((p_item: WeekSuggestionItem) => (
@@ -308,18 +283,18 @@ function ForecastScreenBody(): ReactElement {
                       void forecast.drop(p_item.mission_id);
                     }}
                   >
-                    Colocar neste dia
+                    Place on this day
                   </button>
                 </div>
               </div>
             ))}
             <div data-forecast-card>
-              <h2>Neste dia</h2>
+              <h2>On this day</h2>
               <p>
                 {presentation.day.p_day} · {presentation.day.statusLabel()}
               </p>
               {presentation.day.getChildren().length === 0 ? (
-                <p>Nenhuma sugestão neste dia.</p>
+                <p>No suggestions on this day.</p>
               ) : null}
               {presentation.day.getChildren().map((p_child, p_index) => {
                 if (!(p_child instanceof SuggestionLeaf)) {
@@ -342,10 +317,10 @@ function ForecastScreenBody(): ReactElement {
                             void forecast.markDone(p_child.p_item);
                           }}
                         >
-                          Marcar feita
+                          Mark done
                         </button>
                         <label>
-                          Mover para o dia
+                          Move to day
                           <input
                             type="date"
                             name="target-day"
@@ -363,7 +338,7 @@ function ForecastScreenBody(): ReactElement {
                             void forecast.moveDay(p_child.p_item);
                           }}
                         >
-                          Mover
+                          Move
                         </button>
                       </div>
                     ) : null}
@@ -378,6 +353,25 @@ function ForecastScreenBody(): ReactElement {
             ) : null}
           </div>
         ) : null}
+            </>
+          }
+          actions={
+        <form data-forecast-tools onSubmit={onApply}>
+          <label>
+            Day
+            <input
+              type="date"
+              name="day"
+              value={forecast.day}
+              onChange={(p_event: ChangeEvent<HTMLInputElement>): void => {
+                forecast.setDay(p_event.currentTarget.value);
+              }}
+            />
+          </label>
+          <button type="submit">Open forecast</button>
+        </form>
+          }
+        />
       </div>
       <div
         data-forecast-backdrop
@@ -392,10 +386,9 @@ function ForecastScreenBody(): ReactElement {
           aria-modal="true"
           aria-labelledby="rhythm-proposal-title"
         >
-          <h2 id="rhythm-proposal-title">Transformar em ritmo?</h2>
+          <h2 id="rhythm-proposal-title">Turn into a rhythm?</h2>
           <p>
-            Esta missão se repetiu. Aceitar grava o ritmo. Dispensar não escreve
-            nada.
+            This mission repeated. Accept saves the rhythm. Dismiss writes nothing.
           </p>
           {forecast.proposal !== null ? (
             <p>{forecast.proposal.weekday}</p>
@@ -412,7 +405,7 @@ function ForecastScreenBody(): ReactElement {
               void forecast.acceptProposal();
             }}
           >
-            Aceitar ritmo
+            Accept rhythm
           </button>
           <button
             type="button"
@@ -422,7 +415,7 @@ function ForecastScreenBody(): ReactElement {
               void forecast.dismissProposal();
             }}
           >
-            Dispensar
+            Dismiss
           </button>
         </div>
       </div>

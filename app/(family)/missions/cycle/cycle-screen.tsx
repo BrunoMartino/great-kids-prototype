@@ -3,12 +3,12 @@
 import {
   useEffect,
   useState,
-  type ChangeEvent,
   type FormEvent,
   type ReactElement,
 } from "react";
 import Link from "next/link";
 import { FamilyNav } from "../../chrome/family-nav";
+import { FamilyThumbShell } from "../../chrome/family-thumb-shell";
 import { useFamilySession } from "../../context-switch/family-session-context";
 import { CycleSessionProvider, useCycleSession } from "./cycle-session-context";
 import type { CycleOfferedCommand } from "./cycle-ui-state";
@@ -233,9 +233,9 @@ const SCREEN_STYLES: string = `
 
 function commandLabel(p_command: CycleOfferedCommand): string {
   if (p_command === "start") {
-    return "Começar";
+    return "Start";
   }
-  return "Concluir";
+  return "Complete";
 }
 
 function CycleScreenBody(): ReactElement {
@@ -249,11 +249,6 @@ function CycleScreenBody(): ReactElement {
     setIsReady(true);
   }, []);
 
-  const onApply = (p_event: FormEvent<HTMLFormElement>): void => {
-    p_event.preventDefault();
-    cycle.applyIds();
-  };
-
   const historyHref: string =
     cycle.familyId.length === 0
       ? "/missions/completed"
@@ -265,78 +260,46 @@ function CycleScreenBody(): ReactElement {
         {SCREEN_STYLES}
       </style>
       <div data-cycle-scroll inert={cycle.isClosingOpen}>
+        <FamilyThumbShell
+          content={
+            <>
         <FamilyNav familyId={cycle.familyId} active="cycle" />
         <span data-cycle-badge data-role={role}>
-          Visão {role === "none" ? "sessão" : role}
+          View {role === "none" ? "session" : role}
         </span>
-        <form data-cycle-tools onSubmit={onApply}>
-          <label>
-            Id da família
-            <input
-              type="text"
-              name="family-id"
-              autoComplete="off"
-              autoCorrect="off"
-              autoCapitalize="off"
-              spellCheck={false}
-              value={cycle.idDraft}
-              onChange={(p_event: ChangeEvent<HTMLInputElement>): void => {
-                cycle.setIdDraft(p_event.currentTarget.value);
-              }}
-            />
-          </label>
-          <label>
-            Id da missão aceita
-            <input
-              type="text"
-              name="cycle-id"
-              autoComplete="off"
-              autoCorrect="off"
-              autoCapitalize="off"
-              spellCheck={false}
-              value={cycle.cycleDraft}
-              onChange={(p_event: ChangeEvent<HTMLInputElement>): void => {
-                cycle.setCycleDraft(p_event.currentTarget.value);
-              }}
-            />
-          </label>
-          <button type="submit" data-kind="ghost">
-            Abrir ciclo
-          </button>
-        </form>
         {presentation.kind === "loading" || session.isLoading ? (
           <div data-cycle-enter aria-live="polite" aria-busy="true">
-            <h1>Carregando o ciclo</h1>
+            <h1>Loading the cycle</h1>
             <div data-cycle-loading-bar />
           </div>
         ) : null}
         {presentation.kind === "need-family" && !session.isLoading ? (
           <div data-cycle-enter>
-            <h1>Ciclo da missão</h1>
-            <p>Informe o id da família. A surpresa entrega o id aceito.</p>
+            <h1>Mission cycle</h1>
+            <p>Opening the accepted mission cycle.</p>
           </div>
         ) : null}
         {presentation.kind === "need-cycle" && !session.isLoading ? (
           <div data-cycle-enter>
-            <h1>Ciclo da missão</h1>
-            <p>Aceite uma surpresa para começar. Transições ilegais não aparecem.</p>
+            <h1>Mission cycle</h1>
+            <p>Accept a surprise to start. Illegal transitions are hidden.</p>
           </div>
         ) : null}
         {presentation.kind === "denied" ? (
           <div data-cycle-enter role="alert">
-            <h1>Ciclo só para Parent</h1>
-            <p>A visão Child não avança nem conclui a missão.</p>
+            <h1>Cycle is Parent only</h1>
+            <p>Child view cannot advance or complete the mission.</p>
           </div>
         ) : null}
         {presentation.kind === "missing" ? (
           <div data-cycle-enter>
-            <h1>Missão não encontrada</h1>
-            <p>Esse id não abre o ciclo.</p>
+            <h1>Mission not found</h1>
+            <p>That id does not open the cycle.</p>
           </div>
         ) : null}
         {presentation.kind === "error" ? (
           <div data-cycle-enter role="alert">
-            <h1>Ciclo da missão</h1>
+            <h1>Mission cycle</h1>
             <p>{presentation.message}</p>
           </div>
         ) : null}
@@ -344,19 +307,19 @@ function CycleScreenBody(): ReactElement {
           <div data-cycle-enter data-cycle-card data-status={presentation.status}>
             <span data-cycle-status>{presentation.status}</span>
             <h1>
-              {presentation.title.length > 0 ? presentation.title : "Missão da família"}
+              {presentation.title.length > 0 ? presentation.title : "Family mission"}
             </h1>
             {presentation.status === "Accepted" ? (
-              <p>A família aceitou. Só dá para começar — concluir agora não é oferecido.</p>
+              <p>The family accepted. You can only start — complete is not offered yet.</p>
             ) : null}
             {presentation.status === "Doing" ? (
-              <p>Estão a fazer. A pergunta de fechamento só abre ao concluir.</p>
+              <p>They are doing it. The closing question opens only when completing.</p>
             ) : null}
             {presentation.status === "Completed" && presentation.closing !== null ? (
               <p>
-                Fechamento: {presentation.closing.do_again ? "fariam de novo" : "não repetir"}
+                Closing: {presentation.closing.do_again ? "would do again" : "do not repeat"}
                 {"; "}
-                {presentation.closing.save_memory ? "guardar na memória" : "não guardar"}.
+                {presentation.closing.save_memory ? "save in memory" : "do not save"}.
               </p>
             ) : null}
             {cycle.formError !== null ? (
@@ -364,6 +327,12 @@ function CycleScreenBody(): ReactElement {
                 {cycle.formError}
               </p>
             ) : null}
+          </div>
+        ) : null}
+            </>
+          }
+          actions={
+            isReady && presentation.kind === "ready" && !session.isLoading ? (
             <div data-cycle-actions>
               {presentation.offered.map((p_command: CycleOfferedCommand) => (
                 <button
@@ -384,12 +353,13 @@ function CycleScreenBody(): ReactElement {
               ))}
               {presentation.status === "Completed" ? (
                 <Link href={historyHref} data-cycle-link data-kind="ghost">
-                  Ver completas
+                  View completed
                 </Link>
               ) : null}
             </div>
-          </div>
-        ) : null}
+            ) : undefined
+          }
+        />
       </div>
       <div
         data-cycle-backdrop
@@ -408,9 +378,9 @@ function CycleScreenBody(): ReactElement {
             void cycle.completeMission();
           }}
         >
-          <h2 id="closing-title">Fechar a missão</h2>
-          <p>As duas respostas vão com o Completed, na mesma transação.</p>
-          <p>Fariam de novo?</p>
+          <h2 id="closing-title">Close the mission</h2>
+          <p>Both answers go with Completed, in the same transaction.</p>
+          <p>Would you do it again?</p>
           <div data-cycle-pair>
             <button
               type="button"
@@ -420,7 +390,7 @@ function CycleScreenBody(): ReactElement {
                 cycle.setDoAgain(true);
               }}
             >
-              Sim
+              Yes
             </button>
             <button
               type="button"
@@ -430,10 +400,10 @@ function CycleScreenBody(): ReactElement {
                 cycle.setDoAgain(false);
               }}
             >
-              Não
+              No
             </button>
           </div>
-          <p>Vale guardar na memória?</p>
+          <p>Save this in memory?</p>
           <div data-cycle-pair>
             <button
               type="button"
@@ -443,7 +413,7 @@ function CycleScreenBody(): ReactElement {
                 cycle.setSaveMemory(true);
               }}
             >
-              Sim
+              Yes
             </button>
             <button
               type="button"
@@ -453,7 +423,7 @@ function CycleScreenBody(): ReactElement {
                 cycle.setSaveMemory(false);
               }}
             >
-              Não
+              No
             </button>
           </div>
           {cycle.formError !== null && cycle.isClosingOpen ? (
@@ -465,7 +435,7 @@ function CycleScreenBody(): ReactElement {
             type="submit"
             disabled={cycle.isSaving || cycle.doAgain === null || cycle.saveMemory === null}
           >
-            Concluir
+            Complete
           </button>
           <button
             type="button"
@@ -474,7 +444,7 @@ function CycleScreenBody(): ReactElement {
               cycle.closeClosing();
             }}
           >
-            Cancelar
+            Cancel
           </button>
         </form>
       </div>

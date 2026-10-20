@@ -1,113 +1,17 @@
 "use client";
 
-import type { ReactElement } from "react";
-import type { PanelMissionRow } from "./panel-catalog-facade";
+import type { ChangeEvent, FormEvent, ReactElement } from "react";
+import type { PanelCategoryRow, PanelMissionRow } from "./panel-catalog-facade";
 import { usePanelSession } from "./panel-session-context";
+import { TrashIcon, UploadIcon } from "../shell/panel-icons";
+import { PANEL_SCREEN_STYLES } from "../shell/panel-screen-styles";
+import {
+  StaffSessionToolbar,
+  staffRoleLabel,
+  type StaffRole,
+} from "../shell/staff-session-toolbar";
 
-const SCREEN_STYLES: string = `
-[data-panel-catalog] {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  width: 100%;
-  max-width: 1120px;
-  min-width: 0;
-}
-[data-panel-catalog] h1 {
-  margin: 0;
-  font-size: 1.5rem;
-  line-height: 1.25;
-}
-[data-panel-catalog] p {
-  margin: 0;
-  color: var(--color-muted);
-  line-height: 1.45;
-}
-[data-panel-role] {
-  display: inline-flex;
-  align-items: center;
-  align-self: flex-start;
-  min-height: 28px;
-  padding: 0 10px;
-  border-radius: 999px;
-  background: #efdfd8;
-  background: color-mix(in srgb, var(--color-primary) 14%, var(--color-paper));
-  color: var(--color-primary);
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-}
-[data-panel-loading],
-[data-panel-forbidden],
-[data-panel-error],
-[data-panel-success] {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  opacity: 1;
-  transform: translate3d(0, 0, 0);
-  animation: panel-enter 200ms cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-[data-panel-loading-bar] {
-  height: 12px;
-  border-radius: 999px;
-  background: #eae3de;
-  background: color-mix(in srgb, var(--color-ink) 10%, var(--color-paper));
-  transform-origin: left center;
-  transform: translateZ(0);
-  animation: panel-load 900ms ease-in-out infinite;
-}
-[data-panel-table-wrap] {
-  min-width: 0;
-  max-width: 100%;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  overscroll-behavior-x: contain;
-  border-radius: 16px;
-  background: var(--color-paper);
-  box-shadow: 0 1px 0 rgba(44, 42, 40, 0.08);
-  box-shadow: 0 1px 0 color-mix(in srgb, var(--color-ink) 8%, transparent);
-}
-[data-panel-table] {
-  width: 100%;
-  border-collapse: collapse;
-}
-[data-panel-table] caption {
-  padding: 16px 16px 0;
-  color: var(--color-muted);
-  font-size: 0.875rem;
-  text-align: left;
-}
-[data-panel-table] th,
-[data-panel-table] td {
-  padding: 12px 16px;
-  text-align: left;
-  vertical-align: middle;
-}
-[data-panel-table] th {
-  color: var(--color-muted);
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  border-bottom: 1px solid rgba(44, 42, 40, 0.1);
-  border-bottom: 1px solid color-mix(in srgb, var(--color-ink) 10%, transparent);
-}
-[data-panel-table] td {
-  border-bottom: 1px solid rgba(44, 42, 40, 0.08);
-  border-bottom: 1px solid color-mix(in srgb, var(--color-ink) 8%, transparent);
-}
-[data-panel-row] {
-  opacity: 1;
-  transform: translate3d(0, 0, 0);
-  animation: panel-row-enter 200ms cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-@supports (animation-delay: calc(sibling-index() * 1ms)) {
-  [data-panel-row] {
-    animation-delay: calc(sibling-index() * 40ms);
-  }
-}
+const CATALOG_EXTRAS: string = `
 [data-review-chip] {
   display: inline-flex;
   align-items: center;
@@ -130,90 +34,110 @@ const SCREEN_STYLES: string = `
   background: color-mix(in srgb, var(--color-warning) 18%, var(--color-paper));
   color: var(--color-warning);
 }
-[data-review-chip][data-review-status="draft"] {
-  background: #ece6df;
-  background: color-mix(in srgb, var(--color-muted) 16%, var(--color-paper));
-  color: var(--color-muted);
-}
-[data-panel-empty] {
-  padding: 24px 16px;
-  color: var(--color-muted);
-}
-@keyframes panel-enter {
-  from { opacity: 0; transform: translate3d(0, 4px, 0); }
-  to { opacity: 1; transform: translate3d(0, 0, 0); }
-}
-@keyframes panel-row-enter {
-  from { opacity: 0; transform: translate3d(0, 4px, 0); }
-  to { opacity: 1; transform: translate3d(0, 0, 0); }
-}
-@keyframes panel-load {
-  0% { opacity: 0.45; transform: scaleX(0.55); }
-  50% { opacity: 1; transform: scaleX(1); }
-  100% { opacity: 0.45; transform: scaleX(0.55); }
-}
-@media (prefers-reduced-motion: reduce) {
-  [data-panel-loading],
-  [data-panel-forbidden],
-  [data-panel-error],
-  [data-panel-success],
-  [data-panel-row],
-  [data-panel-loading-bar] {
-    animation: none !important;
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    opacity: 1;
-    transform: none;
+@media (min-width: 768px) {
+  [data-panel-catalog] [data-panel-form] {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr) minmax(0, 1fr) auto;
+    align-items: end;
   }
 }
 `;
 
 function reviewLabel(p_status: string): string {
   if (p_status === "draft") {
-    return "Rascunho";
+    return "Draft";
   }
   if (p_status === "in_review") {
-    return "Em revisão";
+    return "In review";
   }
   if (p_status === "published") {
-    return "Publicado";
+    return "Published";
   }
   return p_status;
 }
 
-function roleLabel(p_role: "Admin" | "Operator"): string {
-  if (p_role === "Admin") {
-    return "Admin";
+function categoryName(
+  p_categoryId: string,
+  p_categories: PanelCategoryRow[],
+): string {
+  for (let i: number = 0; i < p_categories.length; i += 1) {
+    const category: PanelCategoryRow = p_categories[i];
+    if (category.id === p_categoryId) {
+      return category.name;
+    }
   }
-  return "Operador";
+  return "Category";
 }
 
 export function CatalogScreen(): ReactElement {
   const session: ReturnType<typeof usePanelSession> = usePanelSession();
 
+  const onSwitchRole = (p_role: StaffRole): void => {
+    void session.switchRole(p_role);
+  };
+
+  const onCreateSubmit = (p_event: FormEvent<HTMLFormElement>): void => {
+    p_event.preventDefault();
+    const form: HTMLFormElement = p_event.currentTarget;
+    const data: FormData = new FormData(form);
+    const title: string = String(data.get("title") ?? "").trim();
+    const categoryId: string = String(data.get("category_id") ?? "");
+    const fileValue: FormDataEntryValue | null = data.get("file");
+    const file: File | null =
+      fileValue instanceof File && fileValue.size > 0 ? fileValue : null;
+    void session
+      .createMission({ category_id: categoryId, title, file })
+      .then((p_ok: boolean): void => {
+        if (p_ok) {
+          form.reset();
+        }
+      });
+  };
+
+  const onRowImage = (
+    p_id: string,
+    p_event: ChangeEvent<HTMLInputElement>,
+  ): void => {
+    const file: File | undefined = p_event.target.files?.[0];
+    p_event.target.value = "";
+    if (file === undefined) {
+      return;
+    }
+    void session.uploadMissionImage(p_id, file);
+  };
+
   return (
-    <div data-panel-catalog>
-      <style href="panel-catalog" precedence="medium">
-        {SCREEN_STYLES}
+    <div data-panel-page data-panel-catalog>
+      <style href="panel-page" precedence="medium">
+        {PANEL_SCREEN_STYLES}
       </style>
+      <style href="panel-catalog" precedence="medium">
+        {CATALOG_EXTRAS}
+      </style>
+      <StaffSessionToolbar
+        activeRole={session.activeRole}
+        onSwitchRole={onSwitchRole}
+        isBusy={session.isLoading}
+      />
       {session.isLoading ? (
         <div data-panel-loading aria-live="polite" aria-busy="true">
-          <span data-panel-role>Catálogo</span>
-          <h1>Carregando o catálogo</h1>
+          <span data-panel-role>Catalog</span>
+          <h1>Loading the catalog</h1>
           <div data-panel-loading-bar />
         </div>
       ) : null}
       {!session.isLoading && session.isForbidden ? (
         <div data-panel-forbidden role="alert">
-          <span data-panel-role>Catálogo</span>
-          <h1>Acesso negado</h1>
-          <p>Este catálogo é só para a equipe.</p>
+          <span data-panel-role>Catalog</span>
+          <h1>Access denied</h1>
+          <p>This catalog is staff only.</p>
         </div>
       ) : null}
-      {!session.isLoading && !session.isForbidden && session.errorMessage !== null ? (
+      {!session.isLoading &&
+      !session.isForbidden &&
+      session.errorMessage !== null ? (
         <div data-panel-error role="alert">
-          <span data-panel-role>Catálogo</span>
-          <h1>Não foi possível carregar o catálogo</h1>
+          <span data-panel-role>Catalog</span>
+          <h1>Could not load the catalog</h1>
           <p>{session.errorMessage}</p>
         </div>
       ) : null}
@@ -221,23 +145,59 @@ export function CatalogScreen(): ReactElement {
       !session.isForbidden &&
       session.errorMessage === null &&
       session.role !== null ? (
-        <div data-panel-success data-catalog-id={session.catalogId ?? ""}>
+        <div data-panel-success>
           <span data-panel-role data-role={session.role}>
-            {roleLabel(session.role)}
+            {staffRoleLabel(session.role)}
           </span>
-          <h1>Catálogo</h1>
-          <p>Missões da equipe, incluindo rascunhos e revisão.</p>
+          <h1>Catalog</h1>
+          <p>Staff missions, including drafts and review.</p>
+          <form data-panel-form onSubmit={onCreateSubmit}>
+            <label data-panel-field>
+              <span>Category</span>
+              <select name="category_id" required defaultValue="">
+                <option value="" disabled>
+                  Choose
+                </option>
+                {session.categories.map(
+                  (p_category: PanelCategoryRow): ReactElement => {
+                    return (
+                      <option key={p_category.id} value={p_category.id}>
+                        {p_category.name}
+                      </option>
+                    );
+                  },
+                )}
+              </select>
+            </label>
+            <label data-panel-field>
+              <span>Title</span>
+              <input name="title" type="text" autoComplete="off" required />
+            </label>
+            <label data-panel-field>
+              <span>Image</span>
+              <input name="file" type="file" accept="image/*" />
+            </label>
+            <button type="submit" data-variant="primary">
+              Create
+            </button>
+            {session.formError !== null ? (
+              <p data-panel-form-error role="alert">
+                {session.formError}
+              </p>
+            ) : null}
+          </form>
           <div data-panel-table-wrap>
             {session.missions.length === 0 ? (
-              <p data-panel-empty>Nenhuma missão no catálogo.</p>
+              <p data-panel-empty>No missions in the catalog.</p>
             ) : (
               <table data-panel-table>
-                <caption>Missões do catálogo</caption>
+                <caption>Catalog missions</caption>
                 <thead>
                   <tr>
-                    <th scope="col">Título</th>
-                    <th scope="col">Categoria</th>
-                    <th scope="col">Estado</th>
+                    <th scope="col">Title</th>
+                    <th scope="col">Category</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -245,7 +205,9 @@ export function CatalogScreen(): ReactElement {
                     return (
                       <tr data-panel-row key={p_mission.id}>
                         <td>{p_mission.title}</td>
-                        <td>{p_mission.category_id}</td>
+                        <td>
+                          {categoryName(p_mission.category_id, session.categories)}
+                        </td>
                         <td>
                           <span
                             data-review-chip
@@ -253,6 +215,37 @@ export function CatalogScreen(): ReactElement {
                           >
                             {reviewLabel(p_mission.review_status)}
                           </span>
+                        </td>
+                        <td>
+                          <div data-panel-row-actions>
+                            <label data-file-button data-tooltip="Upload image">
+                              <span data-sr-only>Upload image</span>
+                              <UploadIcon label="Upload image" />
+                              <input
+                                type="file"
+                                accept="image/*"
+                                aria-label="Upload image"
+                                onChange={(
+                                  p_event: ChangeEvent<HTMLInputElement>,
+                                ): void => {
+                                  onRowImage(p_mission.id, p_event);
+                                }}
+                              />
+                            </label>
+                            <button
+                              type="button"
+                              data-variant="danger"
+                              data-icon="true"
+                              data-tooltip="Delete mission"
+                              title="Delete mission"
+                              aria-label="Delete mission"
+                              onClick={(): void => {
+                                void session.deleteMission(p_mission.id);
+                              }}
+                            >
+                              <TrashIcon label="Delete mission" />
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     );

@@ -1,7 +1,7 @@
 import { ModeStrategy } from "@/app/api/families/[id]/quiz/mode-strategy";
 import { SubmitAnswerCommand } from "@/app/api/families/[id]/quiz/submit-answer-command";
 import { GpsPolicy } from "@/app/api/families/[id]/profile/gps-policy";
-import { getMockSession } from "@/internal/db/mock-session";
+import { getPresentation } from "@/app/api/session/presentation-strategy";
 import { Family } from "@/models/family";
 import { FamilyQuiz, type FamilyQuizRecord } from "@/models/family_quiz";
 import type { QuizAnswerEnvelope } from "@/models/family_profile";
@@ -32,7 +32,7 @@ export async function GET(
   const params: { id: string } = await p_context.params;
   const familyId: string = params.id;
   try {
-    GpsPolicy.assertCanAnswer(getMockSession().role);
+    GpsPolicy.assertCanAnswer(getPresentation().role);
   } catch {
     return deny();
   }
@@ -62,7 +62,7 @@ export async function POST(
   const params: { id: string } = await p_context.params;
   const familyId: string = params.id;
   try {
-    GpsPolicy.assertCanAnswer(getMockSession().role);
+    GpsPolicy.assertCanAnswer(getPresentation().role);
   } catch {
     return deny();
   }

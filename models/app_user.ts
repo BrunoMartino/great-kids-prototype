@@ -22,6 +22,20 @@ export type AppUserRecord = {
   auth_user_id: string | null;
 };
 
+export type AppUserUpdateInput = {
+  status?: string;
+  name?: string | null;
+  nick_name?: string;
+  email?: string | null;
+};
+
+export class HardDeleteForbiddenError extends Error {
+  public constructor() {
+    super("hard delete forbidden");
+    this.name = "HardDeleteForbiddenError";
+  }
+}
+
 export class DuplicateEmailError extends Error {
   public constructor() {
     super("duplicate email");
@@ -97,5 +111,32 @@ export class AppUser {
       `SELECT id, name, nick_name, email, role, status, auth_user_id FROM app_user`,
       [],
     );
+  }
+
+  public update(p_id: string, p_input: AppUserUpdateInput): AppUserRecord | null {
+    const current: AppUserRecord | null = this.findById(p_id);
+    if (current === null) {
+      return null;
+    }
+    const status: string = p_input.status ?? current.status;
+    if (
+      status !== "active" &&
+      status !== "inactive" &&
+      status !== "suspended" &&
+      status !== "blocked"
+    ) {
+      throw new Error("invalid status");
+    }
+    const name: string | null = p_input.name !== undefined ? p_input.name : current.name;
+    const nickName: string = p_input.nick_name ?? current.nick_name;
+    const email: string | null = p_input.email !== undefined ? p_input.email : current.email;
+    getConnection();
+    const now: string = new Date().toISOString();
+    queryRaw(
+      `UPDATE app_user SET status = ?, name = ?, nick_name = ?, email = ?, updated_at = ?
+       WHERE id = ?`,
+      [status, name, nickName, email, now, p_id],
+    );
+    return this.findById(p_id);
   }
 }

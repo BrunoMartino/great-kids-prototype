@@ -9,6 +9,7 @@ import {
   type ReactNode,
 } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { SEEDED_FAMILY_ID } from "../../chrome/seeded-family";
 import { useFamilySession } from "../../context-switch/family-session-context";
 import { GpsViewPolicy } from "../../quiz/gps-view-policy";
 import type { CompletedMissionItem } from "./completed-payload";
@@ -49,7 +50,8 @@ export function CompletedSessionProvider(
   const router: ReturnType<typeof useRouter> = useRouter();
   const searchParams: URLSearchParams = useSearchParams();
   const session: ReturnType<typeof useFamilySession> = useFamilySession();
-  const queryId: string = searchParams.get("id") ?? "";
+  const queryId: string =
+    (searchParams.get("id") ?? "").trim() || SEEDED_FAMILY_ID;
   const [presentation, setPresentation] = useState<CompletedPresentation>({
     kind: queryId.trim().length > 0 ? "loading" : "need-family",
   });
@@ -97,12 +99,12 @@ export function CompletedSessionProvider(
         } else if (p_error instanceof HistoryIllegalError) {
           setPresentation({
             kind: "error",
-            message: "O histórico só lista missões concluídas.",
+            message: "History only lists completed missions.",
           });
         } else {
           setPresentation({
             kind: "error",
-            message: "Não foi possível abrir o histórico.",
+            message: "Could not open history.",
           });
         }
       }

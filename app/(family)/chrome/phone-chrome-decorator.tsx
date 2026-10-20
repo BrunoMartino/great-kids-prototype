@@ -1,9 +1,12 @@
+"use client";
+
 import type { ReactNode } from "react";
 import {
   SurfaceFacade,
   type SurfaceChrome,
 } from "@/app/api/panel/surface-facade";
 import { FamilySurfaceDecorator } from "./family-surface-decorator";
+import { FamilyDrawer } from "./family-drawer";
 import type { IFamilySurface } from "./family-surface-protocol";
 
 const PHONE_CHROME_STYLES: string = `
@@ -20,24 +23,24 @@ const PHONE_CHROME_STYLES: string = `
   margin-inline: 8px;
   padding: var(--phone-bezel);
   border-radius: var(--phone-outer-radius);
-  background: #1c1a19;
-  background: linear-gradient(165deg, #2c2927 0%, var(--color-bezel, #1c1a19) 42%, #121110 100%);
+  background: #1a222c;
+  background: linear-gradient(165deg, #2a3442 0%, var(--color-bezel, #1a222c) 42%, #10151c 100%);
   box-shadow:
-    0 0 0 1px rgba(44, 42, 40, 0.4),
-    inset 0 1px 0 rgba(255, 248, 242, 0.1),
-    0 28px 56px rgba(44, 42, 40, 0.24);
+    0 0 0 1px rgba(31, 42, 55, 0.4),
+    inset 0 1px 0 rgba(243, 248, 255, 0.1),
+    0 28px 56px rgba(31, 42, 55, 0.24);
   box-shadow:
-    0 0 0 1px color-mix(in srgb, var(--color-ink, #2c2a28) 40%, transparent),
-    inset 0 1px 0 color-mix(in srgb, var(--color-paper, #fff8f2) 12%, transparent),
-    0 28px 56px color-mix(in srgb, var(--color-ink, #2c2a28) 24%, transparent);
+    0 0 0 1px color-mix(in srgb, var(--color-ink, #1f2a37) 40%, transparent),
+    inset 0 1px 0 color-mix(in srgb, var(--color-paper, #f3f8ff) 12%, transparent),
+    0 28px 56px color-mix(in srgb, var(--color-ink, #1f2a37) 24%, transparent);
   animation: family-phone-enter 280ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 [data-phone-nub] {
   position: absolute;
   z-index: 3;
   width: 4px;
-  background: #2f2c2a;
-  background: color-mix(in srgb, var(--color-bezel, #1c1a19) 55%, #5a5552);
+  background: #2a3442;
+  background: color-mix(in srgb, var(--color-bezel, #1a222c) 55%, #6a7380);
   pointer-events: none;
 }
 [data-phone-nub="silent"] {
@@ -74,16 +77,16 @@ const PHONE_CHROME_STYLES: string = `
   overscroll-behavior: contain;
   isolation: isolate;
   border-radius: var(--phone-inner-radius);
-  background: #fff8f2;
-  background: var(--color-paper, #fff8f2);
-  color: #2c2a28;
-  color: var(--color-ink, #2c2a28);
+  background: #f3f8ff;
+  background: var(--color-paper, #f3f8ff);
+  color: #1f2a37;
+  color: var(--color-ink, #1f2a37);
   transform: translateZ(0);
   box-shadow:
-    inset 0 0 0 1px rgba(255, 248, 242, 0.22),
+    inset 0 0 0 1px rgba(243, 248, 255, 0.22),
     inset 0 1px 3px rgba(0, 0, 0, 0.28);
   box-shadow:
-    inset 0 0 0 1px color-mix(in srgb, var(--color-paper, #fff8f2) 22%, transparent),
+    inset 0 0 0 1px color-mix(in srgb, var(--color-paper, #f3f8ff) 22%, transparent),
     inset 0 1px 3px color-mix(in srgb, #000 28%, transparent);
 }
 [data-phone-chrome="iphone-15-pro-max"] [data-phone-island] {
@@ -105,7 +108,7 @@ const PHONE_CHROME_STYLES: string = `
   min-height: 0;
   min-width: 0;
   overflow: hidden;
-  padding: 64px 20px 8px;
+  padding: 72px 20px 8px;
 }
 [data-phone-chrome="iphone-15-pro-max"] [data-phone-home] {
   flex: 0 0 auto;
@@ -118,8 +121,8 @@ const PHONE_CHROME_STYLES: string = `
   width: 139px;
   height: 5px;
   border-radius: 999px;
-  background: #2c2a28;
-  background: var(--color-ink, #2c2a28);
+  background: #1f2a37;
+  background: var(--color-ink, #1f2a37);
   opacity: 0.28;
 }
 @keyframes family-phone-enter {
@@ -172,6 +175,7 @@ export class PhoneChromeDecorator extends FamilySurfaceDecorator {
         <span data-phone-nub="power" aria-hidden="true" />
         <div data-phone-screen>
           <div data-phone-island aria-hidden="true" />
+          <FamilyDrawer />
           <div data-phone-body>{inner}</div>
           {this.footer}
           <div data-phone-home aria-hidden="true" />

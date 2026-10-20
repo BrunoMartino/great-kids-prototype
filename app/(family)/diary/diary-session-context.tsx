@@ -9,6 +9,7 @@ import {
   type ReactNode,
 } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { SEEDED_FAMILY_ID } from "../chrome/seeded-family";
 import { useFamilySession } from "../context-switch/family-session-context";
 import type { CompletedMissionItem } from "../missions/completed/completed-payload";
 import { ListCompletedCommand } from "../missions/completed/list-completed-command";
@@ -90,7 +91,8 @@ export function DiarySessionProvider(
   const router: ReturnType<typeof useRouter> = useRouter();
   const searchParams: URLSearchParams = useSearchParams();
   const session: ReturnType<typeof useFamilySession> = useFamilySession();
-  const queryId: string = searchParams.get("id") ?? "";
+  const queryId: string =
+    (searchParams.get("id") ?? "").trim() || SEEDED_FAMILY_ID;
   const [presentation, setPresentation] = useState<DiaryPresentation>({
     kind: queryId.trim().length > 0 ? "loading" : "need-family",
   });
@@ -142,12 +144,12 @@ export function DiarySessionProvider(
         } else if (p_error instanceof DiaryIllegalError) {
           setPresentation({
             kind: "error",
-            message: "O diário só guarda texto.",
+            message: "The diary only stores text.",
           });
         } else {
           setPresentation({
             kind: "error",
-            message: "Não foi possível abrir o diário.",
+            message: "Could not open the diary.",
           });
         }
       }
@@ -226,12 +228,12 @@ export function DiarySessionProvider(
     submitNote: async (): Promise<void> => {
       const familyId: string = queryId.trim();
       if (familyId.length === 0) {
-        setFormError("Informe o id da família.");
+        setFormError("Session family is missing.");
         return;
       }
       const text: string = draftText.trim();
       if (text.length === 0) {
-        setFormError("Escreva a história. Sem foto.");
+        setFormError("Write the story. No photo.");
         return;
       }
       const draft: AddNoteDraft = { kind: draftKind, text };
@@ -256,13 +258,13 @@ export function DiarySessionProvider(
         setDraftKind("phrase");
       } catch (p_error: unknown) {
         if (p_error instanceof DiaryForbiddenError) {
-          setFormError("Só o responsável escreve no diário.");
+          setFormError("Only the parent writes in the diary.");
         } else if (p_error instanceof DiaryMissingFamilyError) {
-          setFormError("Família não encontrada.");
+          setFormError("Family not found.");
         } else if (p_error instanceof DiaryIllegalError) {
-          setFormError("Texto vazio, tipo inválido ou missão de outra família.");
+          setFormError("Empty text, invalid type, or a mission from another family.");
         } else {
-          setFormError("Não foi possível guardar a nota.");
+          setFormError("Could not save the note.");
         }
       } finally {
         setIsSaving(false);

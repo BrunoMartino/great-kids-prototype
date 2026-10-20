@@ -7,6 +7,8 @@ import {
   type FormEvent,
   type ReactElement,
 } from "react";
+import { FamilyThumbShell } from "../../chrome/family-thumb-shell";
+import { SEEDED_PUBLISHED_MISSIONS } from "../../chrome/seeded-family";
 import { MascotRevealedCopy } from "./mascot-revealed-copy";
 import {
   MascotMissionProvider,
@@ -190,7 +192,8 @@ const SCREEN_STYLES: string = `
   color: var(--color-muted);
   font-size: 0.85rem;
 }
-[data-mascot-tools] input {
+[data-mascot-tools] input,
+[data-mascot-tools] select {
   width: 100%;
   min-height: 44px;
   box-sizing: border-box;
@@ -353,16 +356,19 @@ function MascotScreenBody(): ReactElement {
         {SCREEN_STYLES}
       </style>
       <div data-mascot-scroll>
+        <FamilyThumbShell
+          content={
+            <>
         {presentation.kind === "loading" ||
         (presentation.kind === "published" && !isReady) ? (
           <div data-mascot-loading aria-live="polite" aria-busy="true">
-            <h1>Carregando missão</h1>
+            <h1>Loading mission</h1>
             <div data-mascot-loading-bar />
           </div>
         ) : null}
         {presentation.kind === "unpublished" ? (
           <div data-mascot-empty-state>
-            <h1>Nenhuma missão publicada.</h1>
+            <h1>No published missions.</h1>
           </div>
         ) : null}
         {presentation.kind === "empty" ? (
@@ -379,24 +385,28 @@ function MascotScreenBody(): ReactElement {
             prefersReduced={prefersReduced}
           />
         ) : null}
+            </>
+          }
+          actions={
         <form data-mascot-tools onSubmit={onSubmit}>
           <label>
-            Id da missão
-            <input
-              type="text"
+            Published mission
+            <select
               name="mission-id"
-              autoComplete="off"
-              autoCorrect="off"
-              autoCapitalize="off"
-              spellCheck={false}
               value={mascot.idDraft}
-              onChange={(p_event: ChangeEvent<HTMLInputElement>): void => {
+              onChange={(p_event: ChangeEvent<HTMLSelectElement>): void => {
                 mascot.setIdDraft(p_event.currentTarget.value);
               }}
-            />
+            >
+              {SEEDED_PUBLISHED_MISSIONS.map((p_mission) => (
+                <option key={p_mission.id} value={p_mission.id}>
+                  {p_mission.title}
+                </option>
+              ))}
+            </select>
           </label>
           <div data-mascot-actions>
-            <button type="submit">Abrir</button>
+            <button type="submit">Open</button>
             <button
               type="button"
               data-kind="empty"
@@ -404,7 +414,7 @@ function MascotScreenBody(): ReactElement {
                 mascot.showEmptyPreview();
               }}
             >
-              Ver vazio
+              View empty
             </button>
             <button
               type="button"
@@ -413,10 +423,12 @@ function MascotScreenBody(): ReactElement {
                 mascot.showUnpublishedPreview();
               }}
             >
-              Ver não publicada
+              View unpublished
             </button>
           </div>
         </form>
+          }
+        />
       </div>
     </div>
   );

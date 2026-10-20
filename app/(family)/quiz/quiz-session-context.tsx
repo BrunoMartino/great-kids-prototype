@@ -9,6 +9,7 @@ import {
   type ReactNode,
 } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { SEEDED_FAMILY_ID } from "../chrome/seeded-family";
 import { useFamilySession } from "../context-switch/family-session-context";
 import { GpsViewPolicy } from "./gps-view-policy";
 import {
@@ -85,7 +86,8 @@ export function QuizSessionProvider(
   const router: ReturnType<typeof useRouter> = useRouter();
   const searchParams: URLSearchParams = useSearchParams();
   const session: ReturnType<typeof useFamilySession> = useFamilySession();
-  const queryId: string = searchParams.get("id") ?? "";
+  const queryId: string =
+    (searchParams.get("id") ?? "").trim() || SEEDED_FAMILY_ID;
   const [presentation, setPresentation] = useState<QuizPresentation>({
     kind: queryId.trim().length > 0 ? "loading" : "need-family",
   });
@@ -133,7 +135,7 @@ export function QuizSessionProvider(
         return;
       }
       if (!response.ok) {
-        setPresentation({ kind: "error", message: "Não foi possível abrir o quiz." });
+        setPresentation({ kind: "error", message: "Could not open the quiz." });
         return;
       }
       const body: unknown = await response.json();
@@ -142,7 +144,7 @@ export function QuizSessionProvider(
       }
       const questions: QuizQuestion[] | null = readQuestions(body);
       if (questions === null) {
-        setPresentation({ kind: "error", message: "Oferta do quiz inválida." });
+        setPresentation({ kind: "error", message: "Invalid quiz offer." });
         return;
       }
       setPresentation({ kind: "ready", questions });
@@ -154,7 +156,7 @@ export function QuizSessionProvider(
       if (p_error instanceof DOMException && p_error.name === "AbortError") {
         return;
       }
-      setPresentation({ kind: "error", message: "Não foi possível abrir o quiz." });
+      setPresentation({ kind: "error", message: "Could not open the quiz." });
     }
   };
 
@@ -222,7 +224,7 @@ export function QuizSessionProvider(
       }
       const text: string = (drafts[p_questionId] ?? "").trim();
       if (text.length === 0) {
-        setFormError("Escreva uma resposta.");
+        setFormError("Write an answer.");
         return;
       }
       let resolved: QuizMode;
@@ -230,7 +232,7 @@ export function QuizSessionProvider(
         resolved = new ModeStrategy(mode).resolve(mode);
       } catch (p_error: unknown) {
         void p_error;
-        setFormError("Modo inválido.");
+        setFormError("Invalid mode.");
         return;
       }
       setIsSubmitting(true);
@@ -250,7 +252,7 @@ export function QuizSessionProvider(
         }));
       } catch (p_error: unknown) {
         void p_error;
-        setFormError("Não foi possível guardar a resposta.");
+        setFormError("Could not save the answer.");
       } finally {
         setIsSubmitting(false);
       }

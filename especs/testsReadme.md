@@ -128,3 +128,11 @@
 | NoteKindStrategy whitelist | Five kinds; unknown/empty/injection kind rejected | `tests/diary/kind-strategy.test.ts` | `npx vitest run tests/diary/kind-strategy.test.ts` |
 | GET/POST family diary | Envelope `{ id, notes }`; five kinds; empty/photo 422; deleted hide; mission_note; foreign 422; Child 403; injection id | `tests/diary/diary-api.test.ts` | `npx vitest run tests/diary/diary-api.test.ts` |
 | GET panel indicators | Zeros empty; completed SQL match; scheduled items; repeated ≥2; no table; Parent/Child 403 | `tests/indicators/indicators-api.test.ts` | `npx vitest run tests/indicators/indicators-api.test.ts` |
+| demo seed 100100 | Demo family envelope + Plus; Child not app_user; idempotent apply | `tests/identity/demo-seed.test.ts` | `npx vitest run tests/identity/demo-seed.test.ts` |
+| getMockSession familyId | Defaults to demo family UUID; survives Admin switch | `tests/session/family-id.test.ts` | `npx vitest run tests/session/family-id.test.ts` |
+| LocalDiskAdapter | put/delete `great-kids/`; empty reject; factory when S3 unset; dbruns forbidden | `tests/storage/local-disk-adapter.test.ts` | `npx vitest run tests/storage/local-disk-adapter.test.ts` |
+| panel users Policy | Admin block persists; Operator GET 200 PATCH 403; deleted body 400 | `tests/panel/users-write-policy.test.ts` | `npx vitest run tests/panel/users-write-policy.test.ts` |
+| panel materials CRUD | Create Book; soft-delete; upload `great-kids/`; empty upload no path | `tests/panel/materials-api.test.ts` | `npx vitest run tests/panel/materials-api.test.ts` |
+| panel catalog mutate | POST draft; DELETE soft; image prefix; unknown category 400 | `tests/panel/catalog-mutate.test.ts` | `npx vitest run tests/panel/catalog-mutate.test.ts` |
+| panel plans | GET includes Free; POST; PATCH inactive | `tests/panel/plans-api.test.ts` | `npx vitest run tests/panel/plans-api.test.ts` |
+| panel categories/contexts PATCH | Watch name; Rain name | `tests/panel/categories-contexts-patch.test.ts` | `npx vitest run tests/panel/categories-contexts-patch.test.ts` |

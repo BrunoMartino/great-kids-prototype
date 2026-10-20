@@ -10,7 +10,7 @@
 Families need to see what they already did (and staff need the same for indicators).
 
 ### Solução e trade-offs
-History = `family_mission` where status Completed, plus `missions_completed` on `family`. Trade-off: counter on hub vs COUNT; hub counter must stay in sync on complete.
+History = `family_mission` where status Completed, plus `missions_completed` on `family`. Child route `/child` shows this history plus notes. Trade-off: counter on hub vs COUNT; hub counter must stay in sync on complete.
 
 ### Fluxo (given/when/then)
 - Dado a family with Completed rows

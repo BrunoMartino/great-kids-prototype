@@ -1,4 +1,3 @@
-export type PanelStaffRole = "Admin" | "Operator";
 export type PanelMockRole = "Admin" | "Operator" | "Parent" | "Child";
 
 export type IndicatorsCounts = {
@@ -9,7 +8,7 @@ export type IndicatorsCounts = {
 };
 
 export type PanelSessionResult =
-  | { ok: true; role: PanelStaffRole }
+  | { ok: true; role: PanelMockRole }
   | { ok: false; status: number; error: string };
 
 export type PanelSetRoleResult =
@@ -31,13 +30,6 @@ async function readJsonBody(p_response: Response): Promise<unknown> {
 
 function isRecord(p_value: unknown): p_value is Record<string, unknown> {
   return p_value !== null && typeof p_value === "object";
-}
-
-function readStaffRole(p_value: unknown): PanelStaffRole | null {
-  if (p_value !== "Admin" && p_value !== "Operator") {
-    return null;
-  }
-  return p_value;
 }
 
 function readMockRole(p_value: unknown): PanelMockRole | null {
@@ -63,11 +55,11 @@ function readErrorBody(p_value: unknown): string {
   return error;
 }
 
-function readSessionBody(p_value: unknown): { role: PanelStaffRole } | null {
+function readSessionBody(p_value: unknown): { role: PanelMockRole } | null {
   if (!isRecord(p_value)) {
     return null;
   }
-  const parsedRole: PanelStaffRole | null = readStaffRole(
+  const parsedRole: PanelMockRole | null = readMockRole(
     Reflect.get(p_value, "role"),
   );
   if (parsedRole === null) {
@@ -170,7 +162,7 @@ export class IndicatorsPanelFacade {
           error: readErrorBody(body),
         };
       }
-      const parsed: { role: PanelStaffRole } | null = readSessionBody(body);
+      const parsed: { role: PanelMockRole } | null = readSessionBody(body);
       if (parsed === null) {
         return {
           ok: false,

@@ -1,9 +1,10 @@
 "use client";
 
 import { useState, type ReactElement } from "react";
+import { FamilyThumbShell } from "../chrome/family-thumb-shell";
 import { useFamilySession } from "./family-session-context";
 
-type TitularAction = "plan" | "invite";
+type HolderAction = "plan" | "invite";
 
 const SCREEN_STYLES: string = `
 [data-context-switch-screen] {
@@ -263,31 +264,31 @@ const SCREEN_STYLES: string = `
 }
 `;
 
-function denyCopy(p_action: TitularAction): string {
+function denyCopy(p_action: HolderAction): string {
   if (p_action === "plan") {
-    return "A visão Child não altera o plano. Você continua na visão da criança.";
+    return "Child view cannot change the plan. You stay in the child view.";
   }
-  return "A visão Child não convida adultos. Você continua na visão da criança.";
+  return "Child view cannot invite adults. You stay in the child view.";
 }
 
-function parentCopy(p_action: TitularAction): string {
+function parentCopy(p_action: HolderAction): string {
   if (p_action === "plan") {
-    return "Visão Parent: alterar o plano está disponível para o titular.";
+    return "Parent view: changing the plan is available to the account holder.";
   }
-  return "Visão Parent: convidar adultos está disponível para o titular.";
+  return "Parent view: inviting adults is available to the account holder.";
 }
 
 export function ContextSwitchScreen(): ReactElement {
   const session: ReturnType<typeof useFamilySession> = useFamilySession();
-  const [denyAction, setDenyAction] = useState<TitularAction | null>(null);
-  const [lastDenyAction, setLastDenyAction] = useState<TitularAction>("plan");
-  const [parentAction, setParentAction] = useState<TitularAction | null>(null);
+  const [denyAction, setDenyAction] = useState<HolderAction | null>(null);
+  const [lastDenyAction, setLastDenyAction] = useState<HolderAction>("plan");
+  const [parentAction, setParentAction] = useState<HolderAction | null>(null);
   const role: "Parent" | "Child" | null = session.snapshot?.role ?? null;
   const isParent: boolean = role === "Parent";
   const isChild: boolean = role === "Child";
   const isDenyOpen: boolean = denyAction !== null && isChild;
 
-  const onTitularAction = (p_action: TitularAction): void => {
+  const onHolderAction = (p_action: HolderAction): void => {
     if (session.snapshot === null) {
       return;
     }
@@ -311,24 +312,27 @@ export function ContextSwitchScreen(): ReactElement {
         {SCREEN_STYLES}
       </style>
       <div data-context-switch-scroll inert={isDenyOpen}>
+        <FamilyThumbShell
+          content={
+            <>
       {session.isLoading ? (
         <div data-session-loading aria-live="polite" aria-busy="true">
-          <span data-session-badge>Sessão</span>
-          <h1>Carregando a visão da família</h1>
+          <span data-session-badge>Session</span>
+          <h1>Loading the family view</h1>
           <div data-session-loading-bar />
         </div>
       ) : null}
       {!session.isLoading && session.snapshot === null ? (
         <div data-session-error role="alert">
-          <span data-session-badge>Sessão</span>
-          <h1>Sem sessão mock</h1>
+          <span data-session-badge>Session</span>
+          <h1>No mock session</h1>
           <p>{session.errorMessage}</p>
         </div>
       ) : null}
       {session.snapshot !== null ? (
         <>
           <span data-session-badge data-role={session.snapshot.role}>
-            Visão {session.snapshot.role}
+            View {session.snapshot.role}
           </span>
           <div data-family-views>
             <section
@@ -337,40 +341,16 @@ export function ContextSwitchScreen(): ReactElement {
               aria-hidden={!isParent}
               inert={!isParent}
             >
-              <h1>Casa da família</h1>
+              <h1>Family home</h1>
               <p>
-                Sessão mock padrão: Parent. A criança não é uma conta e não
-                tem foto.
+                Default mock session: Parent. A child is not an account and has no photo.
               </p>
-              <div data-family-card>
-                <p>Ações do titular</p>
-                <div data-family-actions>
-                  <button
-                    type="button"
-                    data-kind="plan"
-                    onClick={(): void => {
-                      onTitularAction("plan");
-                    }}
-                  >
-                    Alterar plano
-                  </button>
-                  <button
-                    type="button"
-                    data-kind="invite"
-                    onClick={(): void => {
-                      onTitularAction("invite");
-                    }}
-                  >
-                    Convidar adulto
-                  </button>
-                </div>
-                <p
+              <p
                   data-family-notice
                   data-open={parentAction !== null && isParent ? "true" : "false"}
                 >
                   {parentAction !== null ? parentCopy(parentAction) : ""}
                 </p>
-              </div>
             </section>
             <section
               data-family-view="child"
@@ -378,38 +358,41 @@ export function ContextSwitchScreen(): ReactElement {
               aria-hidden={!isChild}
               inert={!isChild}
             >
-              <h1>Visão da criança</h1>
+              <h1>Child view</h1>
               <p>
-                Troca de contexto apenas. Nenhum login Child é criado. Plano e
-                convites ficam bloqueados.
+                Context switch only. No Child login is created. Plan and invites stay locked.
               </p>
-              <div data-family-card>
-                <p>Tentativas de titular</p>
+            </section>
+          </div>
+        </>
+      ) : null}
+            </>
+          }
+          actions={
+            session.snapshot !== null ? (
                 <div data-family-actions>
                   <button
                     type="button"
                     data-kind="plan"
                     onClick={(): void => {
-                      onTitularAction("plan");
+                      onHolderAction("plan");
                     }}
                   >
-                    Alterar plano
+                    Change plan
                   </button>
                   <button
                     type="button"
                     data-kind="invite"
                     onClick={(): void => {
-                      onTitularAction("invite");
+                      onHolderAction("invite");
                     }}
                   >
-                    Convidar adulto
+                    Invite family member
                   </button>
                 </div>
-              </div>
-            </section>
-          </div>
-        </>
-      ) : null}
+            ) : undefined
+          }
+        />
       </div>
       <div
         data-deny-backdrop
@@ -424,7 +407,7 @@ export function ContextSwitchScreen(): ReactElement {
           aria-modal="true"
           aria-labelledby="child-deny-title"
         >
-          <h2 id="child-deny-title">Ação bloqueada</h2>
+          <h2 id="child-deny-title">Action blocked</h2>
           <p>{denyCopy(lastDenyAction)}</p>
           <button
             type="button"
@@ -432,7 +415,7 @@ export function ContextSwitchScreen(): ReactElement {
               setDenyAction(null);
             }}
           >
-            Continuar na visão Child
+            Stay in Child view
           </button>
         </div>
       </div>

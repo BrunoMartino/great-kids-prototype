@@ -9,10 +9,10 @@ export class NoteKindPresentationStrategy {
 
 export function noteKindStrategies(): NoteKindPresentationStrategy[] {
   return [
-    new NoteKindPresentationStrategy("phrase", "Frase"),
-    new NoteKindPresentationStrategy("first_time", "Primeira vez"),
-    new NoteKindPresentationStrategy("funny", "Momento engraçado"),
-    new NoteKindPresentationStrategy("learned", "Algo aprendido"),
+    new NoteKindPresentationStrategy("phrase", "Phrase"),
+    new NoteKindPresentationStrategy("first_time", "First time"),
+    new NoteKindPresentationStrategy("funny", "Funny moment"),
+    new NoteKindPresentationStrategy("learned", "Something learned"),
     new NoteKindPresentationStrategy("family_fail", "Family Fail"),
   ];
 }

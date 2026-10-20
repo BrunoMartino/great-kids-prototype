@@ -10,7 +10,7 @@
 The commissioner needs a high-fidelity family app to click through without a native mobile build.
 
 ### Solução e trade-offs
-HTML phone chrome (iPhone 15 Pro Max, tall and wide) around the Parent app. No React Native/Expo. Trade-off: pixel-true to a frame, not a device OS (gestures, notifications, install).
+HTML phone chrome (iPhone 15 Pro Max, tall and wide) around the Parent app. Outer frame scales to fit 100dvh. Hamburger top-right opens an animated drawer (pages + Perfil / Plano / Sair). No React Native/Expo. Trade-off: pixel-true to a frame, not a device OS.
 
 ### Fluxo (given/when/then)
 - Dado the prototype URL
@@ -18,7 +18,8 @@ HTML phone chrome (iPhone 15 Pro Max, tall and wide) around the Parent app. No R
 - Então they see the app inside the iPhone frame and can navigate as Parent
 
 ### Casos de erro (explícitos, não deixar implícito)
-- Viewport smaller than the frame → frame stays, inner app scrolls; do not drop to a native-looking full-bleed without chrome
+- Viewport smaller than the frame → scale the outer chrome to fit **100dvh** (user override this conversation); inner screen still scrolls; do not drop chrome or full-bleed
+- Missing hamburger → Parent cannot reach Perfil / Plano / Sair
 - Missing frame asset → do not render the family UI unframed as if it were the panel
 
 ### Critério de aceite (o que prova que está pronto)

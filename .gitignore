@@ -4,6 +4,6 @@ my_docs
 !.env.example
 node_modules
 .next
-data
+data/
 *.sqlite
 graphify-out/

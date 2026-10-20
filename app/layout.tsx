@@ -46,7 +46,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout(p_props: RootLayoutProps): ReactElement {
   return (
-    <html lang="pt-BR">
+    <html lang="en">
       <body>
         <style href="root-document" precedence="high">
           {ROOT_DOCUMENT_STYLES}

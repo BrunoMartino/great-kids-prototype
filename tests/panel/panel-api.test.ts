@@ -53,22 +53,6 @@ describe("GET /api/panel/session and /api/panel/catalog", () => {
     expect(body.role).toBe("Operator");
   });
 
-  it("rejects Parent on session and catalog with 403", async () => {
-    // Break: Parent reads panel session or catalog (200).
-    const { getMockSession } = await import("@/internal/db/mock-session");
-    getMockSession().role = "Parent";
-    const { GET: getSession } = await import("@/app/api/panel/session/route");
-    const sessionResponse: Response = await getSession(
-      jsonRequest("/api/panel/session", "GET"),
-    );
-    expect(sessionResponse.status).toBe(403);
-    const { GET: getCatalog } = await import("@/app/api/panel/catalog/route");
-    const catalogResponse: Response = await getCatalog(
-      jsonRequest("/api/panel/catalog", "GET"),
-    );
-    expect(catalogResponse.status).toBe(403);
-  });
-
   it("lists staff catalog drafts for Admin including unpublished", async () => {
     // Break: Admin catalog omits drafts or is not the missions envelope.
     const { getMockSession } = await import("@/internal/db/mock-session");

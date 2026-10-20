@@ -4,6 +4,8 @@
 - feature-activity-library
 - feature-review-flow
 - feature-families-subscriptions
+- feature-admin-users
+- feature-object-storage
 
 ### Descrição
 > "um portal web para a equipe da plataforma (configuração e gestão)"
@@ -19,7 +21,7 @@ Web panel (Admin, Operator) on the same Next app and API as the family UI. Trade
 ### Fluxo (given/when/then)
 - Dado mock Admin or Operator
 - Quando they open the panel
-- Então they manage catalog, questions, contexts, families/plans, indicators — not the iPhone frame
+- Então they manage catalog, curated materials, questions, contexts, families, plans, users, indicators — not the iPhone frame. Nav has no Responsável.
 
 ### Casos de erro (explícitos, não deixar implícito)
 - Parent mock hits panel admin routes → 403

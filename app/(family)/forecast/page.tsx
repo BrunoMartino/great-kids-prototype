@@ -6,7 +6,7 @@ function ForecastFallback(): ReactElement {
     <div data-forecast-screen>
       <div data-forecast-scroll>
         <div aria-live="polite" aria-busy="true">
-          <h1>Carregando a previsão</h1>
+          <h1>Loading the forecast</h1>
         </div>
       </div>
     </div>

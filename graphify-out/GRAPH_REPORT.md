@@ -1,61 +1,101 @@
-# Graph Report - great-kids  (2026-10-19)
+# Graph Report - great-kids  (2026-10-20)
 
 ## Corpus Check
-- cluster-only mode — file stats not available
+- 604 files · ~373,831 words
+- Verdict: corpus is large enough that graph structure adds value.
+- Unclassified: 27 file(s) not represented in the graph (top: .mdc 9, .toml 5, (none) 5)
 
 ## Summary
-- 3020 nodes · 4286 edges · 226 communities (192 shown, 34 thin omitted)
-- Extraction: 97% EXTRACTED · 3% INFERRED · 0% AMBIGUOUS · INFERRED: 143 edges (avg confidence: 0.92)
+- 4862 nodes · 8788 edges · 306 communities (265 shown, 41 thin omitted)
+- Extraction: 96% EXTRACTED · 4% INFERRED · 0% AMBIGUOUS · INFERRED: 321 edges (avg confidence: 0.92)
 - Token cost: 0 input · 0 output
 
+## Graph Freshness
+- Built from commit: `fdae1bc8`
+- Run `git rev-parse HEAD` and compare to check if the graph is stale.
+- Run `graphify update .` after code changes (no API cost).
+
 ## Community Hubs (Navigation)
+- getMockSession
+- diary-session-context.tsx
+- vitest
+- forecast-session-context.tsx
+- search.go
+- upload/route.ts
 - questions-facade.ts
-- mascot-mission-context.tsx
+- SurfaceFacade
+- profile-session-context.tsx
+- queryRaw
+- calendar-session-context.tsx
 - .claude/skills/babylon-gardens/scripts/setup.sh
 - .cursor/skills/babylon-gardens/scripts/setup.sh
-- search.go
-- vitest
-- getMockSession
+- mission.ts
+- quiz-session-context.tsx
+- QuizAnswerEnvelope
+- index.ts
 - Examples for legacy explainer
 - Examples for legacy explainer
 - Code commenter
-- Sistina Arch
-- package.json
-- husk-service.ts
-- queryRaw
+- useFamilySession
+- IMissionMessage
+- surprise-session-context.tsx
+- users/[id]/route.ts
+- panel-catalog-facade.ts
+- completed-session-context.tsx
 - invites/route.ts
+- panel-staff-facade.ts
+- isRecord
+- catalog-pick-strategy.ts
+- react
 - SwiftUI Graphics
-- api/missions/[id]/route.ts
-- panel-session-context.tsx
-- presentation-writes.test.ts
-- family.ts
-- members/route.ts
+- family-session-context.tsx
+- indicators-session-context.tsx
+- ProductComponent
+- package.json
+- profile-composite.ts
+- IllegalCycleTransitionError
+- Handoff to Pittore — Wave 10
+- questions/route.ts
+- IllegalCycleTransitionError
 - Compose Graphics
 - SwiftUI Motion
-- app-users/route.ts
+- [id]/diary/add-note-command.ts
+- presentation-strategy.ts
 - Coupling Analysis Skill
 - Coupling Analysis Skill
+- pick/route.ts
+- family.ts
+- DayDocument
+- mascot-revealed-copy.tsx
 - Technical Design Doc Creator
-- getConnection
-- Mission
+- Technical Design Doc Creator
+- notes-composite.ts
+- panel/families/route.ts
+- materials/[id]/route.ts
+- (family)/calendar/day-composite.ts
+- pick/helpers.ts
 - Tester (TDD)
 - Compose Motion
 - Tester (TDD)
+- diary-screen.tsx
 - Compose Multiplatform
-- mission_forecast_context.ts
-- panel/families/route.ts
+- patch-suggestion-command.ts
+- Phase 2 — catalog-fiche (activity-card + review-flow) Green
+- Refactor phase 10 — brownfield playbook (do not apply in Green)
+- Implementation Waves
 - compilerOptions
-- presentation-strategy.ts
-- react
+- [id]/calendar/day-composite.ts
+- FamilyMission
+- cycle/complete-mission-command.ts
 - .claude/skills/babylon-gardens/templates/biome.json
 - .cursor/skills/babylon-gardens/templates/biome.json
-- Technical Design Doc Creator
 - TDD — Family diary
-- questions/[id]/route.ts
+- Green steps
+- .assertCanEdit
+- family-missions/complete-mission-command.ts
 - .claude/skills/babylon-gardens/templates/scripts/quality/run.sh
-- Framer Motion / Motion
 - .cursor/skills/babylon-gardens/templates/scripts/quality/run.sh
-- TDD — Completed missions history
+- implementation.md
 - TDD — Family calendar
 - TDD — Indicators panel
 - TDD — Mascot mission message
@@ -64,14 +104,23 @@
 - TDD — Reminders and follow-up
 - TDD — Surprise mission
 - TDD — Weekly suggestion
-- connection.ts
-- mock-session.ts
-- SurfaceFacade
-- family-session-context.tsx
+- [sid]/route.ts
+- DayComposite
+- Sistina Arch
+- Sistina Arch — reference
+- FamilyProfile
+- [id]/quiz/submit-answer-command.ts
+- forecast-screen.tsx
+- Phase 2 signal — family brownfield playbook (do not apply)
+- IndicatorsFacade
+- Green steps
+- week/route.ts
+- materials-session-context.tsx
+- .claude/skills/tester/SKILL.md
 - Pipeline
 - CSS Native
+- Three.js & R3F
 - Amaterasu Paint — Master Painter
-- Implementation Waves
 - TDD — Admin / Operator web panel
 - TDD — Adult titular
 - TDD — Adult invite
@@ -80,37 +129,55 @@
 - TDD — Family address
 - TDD — Members without app access
 - TDD — Parent phone shell
-- FicheBuilder
-- mission-factory.ts
+- family_diary.ts
+- DayComposite
+- [id]/missions/route.ts
+- mascot-mission-context.tsx
+- PublishedMission
 - Motion Principles
-- Three.js & R3F
-- Handoff to Scultore — Wave 3
-- InvitePolicy
-- IllegalReviewTransitionError
+- Handoff to Pittore — Wave 2
+- Handoff to Scultore — Wave 5
+- Handoff to Scultore — Wave 7
+- Handoff to Scultore — Wave 8
+- FamilyCalendar
+- family-missions/[id]/route.ts
+- FicheBuilder
+- cycle-session-context.tsx
+- contexts-session-context.tsx
+- mascot-screen.tsx
 - Design Audit
-- Handoff to Scultore — Wave 2
-- Handoff to Pittore — Wave 0
-- kind-strategy.test.ts
 - Sistina Arch
+- Handoff to Scultore — Wave 2
+- Phase 3 — forecast (forecast-contexts) Green
+- Handoff to Scultore — Wave 4
+- Phase 2 signal — family Green (presentation ContextPolicy)
+- Handoff to Pittore — Wave 0
+- api/missions/[id]/route.ts
+- families-session-context.tsx
 - Desktop Principles
 - Mobile Principles
 - domain_invariantes.md
-- Phase 0 — Green (platform)
+- Feature: Object storage
+- Handoff to Scultore — Wave 9
+- next
 - Technical Design Doc Creator
-- testing_expectation.md
+- Framer Motion / Motion
+- GSAP
 - Technical Design Doc Creator
+- TDD: Family profile (Family GPS)
+- TDD: Family quiz
+- Handoff to Scultore — Wave 11
+- diary/route.ts
 - .claude/agents/scultore.md
-- .claude/skills/tester/SKILL.md
 - Babylon Gardens
-- Sistina Arch — reference
 - .cursor/agents/scultore.md
 - Canvas Generative
-- GSAP
 - Babylon Gardens
 - architecture_rules.md
 - Feature: Activity card
 - Feature: Activity library by category
 - Feature: Admin / Operator web panel
+- Feature: Admin users
 - Feature: Adult titular
 - Feature: Adult invite
 - Feature: Mission pick rules
@@ -122,6 +189,8 @@
 - Feature: Family diary
 - Feature: Family profile (Family GPS)
 - Feature: Family quiz
+- reminders-patch.test.ts
+- jsonRequest
 - Feature: Forecast contexts
 - Feature: Indicators panel
 - Feature: Mascot mission message
@@ -140,76 +209,96 @@
 - TDD: Activity card
 - TDD: Activity library by category
 - TDD: Mission pick rules
-- TDD: Family profile (Family GPS)
-- TDD: Family quiz
 - TDD: Forecast contexts
 - TDD: Question bank
 - TDD: Quiz answer modes
+- TDD: Activity review flow
 - TDD: What we know about you
 - Handoff to Scultore — Wave 0
-- mission_category.ts
+- Handoff to Scultore — Wave 12
+- Handoff to Scultore — Wave 3
+- Phase 6 — pick (ai-mission-rules) Green
+- FamilyMissionCycle
+- IllegalReviewTransitionError
 - .claude/agents/pittore.md
 - Tester skill — supplementary examples
 - .cursor/agents/pittore.md
 - Web Styling
 - Tester skill — supplementary examples
 - operational_constraints.md
-- TDD: Activity review flow
-- fiche-api.test.ts
+- Green steps
 - MealBuilderProtocol
-- InReview
 - ReviewState
+- FamilyMissionCycle
 - .claude/agents/ingegnere.md
 - .cursor/agents/ingegnere.md
 - deployment_rules.md
-- Phase 2 signal — session brownfield playbook (do not apply)
 - Handoff to Pittore — Wave 3
-- address/route.ts
-- Published
-- Phase 2 signal — family brownfield playbook (do not apply)
-- Handoff to Pittore — Wave 2
+- Handoff to Scultore — Wave 6
+- Great Kids — Design system
+- family-published.test.ts
+- InReview
+- family_profile.ts
+- ref_mascot_mission_context
+- ref_mission_copy_decorator
+- ref_mission_copy_protocol
+- Phase 2 signal — session brownfield playbook (do not apply)
 - Phase 3 — panel (admin-panel) Green
 - Handoff to Pittore — Wave 4
-- Great Kids — Design system
+- [day]/route.ts
+- Handoff to Pittore — Wave 5
+- Handoff to Pittore — Wave 7
+- Handoff to Pittore — Wave 8
+- Handoff to Pittore — Wave 9
+- proposal/route.ts
 - weather-adapter.ts
 - fiche-builder.ts
-- image-adapter.ts
-- Wave 3 — Frontend verification (panel)
-- questions/route.ts
-- context-switch-screen.tsx
+- Published
+- Layout recipes
 - Sistina Arch — SVG shape examples
+- testing_expectation.md
 - Phase 1 — catalog (activity-library) Green
 - Phase 1 — identity (adult-holder) Green
 - Phase 2 — session (context-switch) Green
 - Phase 2 signal — session Green (Child 403 / mock align)
-- Phase 4 — questions (question-bank) Green
-- family_quiz.ts
-- ShoppingOrderState
+- Phase 7 — surprise (surprise-mission) Green
+- Phase 8 — mission-play (mission-cycle + completed-missions) Green
+- Phase 9 — diary (note-types + family-diary) Green
+- review-state.ts
+- FamilyMissionCycleState
 - All for Harness
 - Babylon Gate
-- Layout recipes
+- Recipes
 - UI/UX Pro Max
 - Wave 0 — Frontend verification (platform)
 - Wave 2 — Frontend verification (session)
 - Phase 3 — family-shell (parent-shell) Green
-- Phase 3 — forecast (forecast-contexts) Green
-- mission-categories.test.ts
+- Wave 4 — Frontend verification (questions)
+- Wave 5 — Frontend verification (calendar)
+- Wave 5 — Frontend verification (gps)
+- Handoff to Pittore — Wave 6
+- Wave 7 — Frontend verification (calendar-ops)
+- Wave 8 — Frontend verification (mission-play)
+- Wave 9 — Frontend verification (diary)
+- Wave 9 — Frontend verification (indicators)
 - Enforces English
 - Graphify First
 - .claude/skills/babylon-gardens/templates/scripts/quality/aggregate.sh
 - Design Patterns Coder
 - .cursor/skills/babylon-gardens/templates/scripts/quality/aggregate.sh
 - Design Patterns Coder
+- Wave 11 — Frontend verification (panel)
 - Phase 2 — session Green
 - Phase 3 — family-shell Green
-- Wave 3 — Frontend verification (family-shell)
+- Wave 4 — Frontend verification (mascot)
 - Phase 4 — mascot (mascot-mission) Frontend
-- member-policy.ts
-- Interactive Workflow
 - .claude/skills/sistina-arch/scripts/inject.sh
 - .cursor/skills/sistina-arch/scripts/inject.sh
 - Phase 3 — panel Green
 - Phase 4 — questions Green
+- Phase 5 — calendar Green
+- Phase 5 — gps Green
+- Phase 9 — Green
 - dont-write-env.md
 - llm-payloads-toon.md
 - .claude/skills/babylon-gardens/scripts/check.sh
@@ -219,832 +308,1124 @@
 - .cursor/skills/babylon-gardens/scripts/check.sh
 - .cursor/skills/sistina-arch/scripts/check.sh
 - fase0Task.md
+- wave12/frontend-verification.md
 - catalog/fase1Task.md
 - wave1/handoff-to-pittore.md
 - catalog-fiche/fase2Task.md
 - mascot/fase4Task.md
 - next-env.d.ts
 - github.com/michelangelo/amaterasu-ui
-- ref_mascot_mission_context
-- ref_mission_copy_decorator
-- ref_mission_copy_protocol
+- Wave 7 — Frontend verification (surprise)
+- PublishedMission
 
 ## God Nodes (most connected - your core abstractions)
-1. `queryRaw()` - 100 edges
-2. `getConnection()` - 67 edges
-3. `getMockSession()` - 60 edges
-4. `vitest` - 48 edges
-5. `arrangeTestSqlitePath()` - 43 edges
-6. `react` - 24 edges
-7. `SurfaceFacade` - 18 edges
-8. `Family` - 17 edges
-9. `assertStaffOrDeny()` - 17 edges
-10. `compilerOptions` - 17 edges
+1. `queryRaw()` - 158 edges
+2. `getMockSession()` - 139 edges
+3. `getConnection()` - 101 edges
+4. `vitest` - 85 edges
+5. `react` - 78 edges
+6. `arrangeTestSqlitePath()` - 78 edges
+7. `SurfaceFacade` - 46 edges
+8. `useFamilySession()` - 43 edges
+9. `jsonRequest()` - 40 edges
+10. `familyRouteParams` - 28 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `Context` --references--> `ContextPolicy`  [INFERRED]
-  especs/tdd/wave2/family/fase2-signal.md → policies/role.ts
-- `Context` --references--> `ContextPolicy`  [INFERRED]
-  especs/tdd/wave2/family/refactor-fase2-signal.md → policies/role.ts
-- `Lane session — has Frontend` --references--> `ContextPolicy`  [INFERRED]
-  especs/tdd/wave2/handoff-to-pittore.md → policies/role.ts
-- `Data Flow` --references--> `queryRaw()`  [INFERRED]
-  docs/harness/architecture_rules.md → internal/db/connection.ts
-- `Default Architecture` --references--> `queryRaw()`  [INFERRED]
-  docs/harness/architecture_rules.md → internal/db/connection.ts
+- `Files written` --references--> `MascotRevealedCopy()`  [INFERRED]
+  especs/tdd/wave7/surprise/frontend-verification.md → app/(family)/missions/mascot/mascot-revealed-copy.tsx
+- `Files written` --references--> `IMissionMessage`  [INFERRED]
+  especs/tdd/wave4/mascot/frontend-verification.md → app/(family)/missions/mascot/mission-message-protocol.ts
+- `Lane: indicators (indicators-panel)` --references--> `IndicatorsFacade`  [INFERRED]
+  especs/tdd/wave9/handoff-to-pittore.md → app/api/panel/indicators/indicators-facade.ts
+- `Manual: acceptance` --references--> `alignFamilyMock()`  [INFERRED]
+  especs/tdd/wave9/diary/frontend-verification.md → app/api/session/presentation-strategy.ts
+- `Panel Admin blocks family diary GET while family presentation stays Parent` --references--> `alignFamilyMock()`  [INFERRED]
+  especs/tdd/wave9/handoff-to-scultore.md → app/api/session/presentation-strategy.ts
 
 ## Import Cycles
 - None detected.
 
-## Communities (226 total, 34 thin omitted)
+## Communities (306 total, 41 thin omitted)
 
-### Community 0 - "questions-facade.ts"
-Cohesion: 0.07
-Nodes (44): FamilyQuizKindFilter, kindFilterFor(), KindFilterStrategy, SayWhatKindFilter, isRecord(), PanelDeleteResult, PanelMockRole, PanelQuestionDraft (+36 more)
+### Community 0 - "getMockSession"
+Cohesion: 0.04
+Nodes (62): isRecord(), MissionRouteContext, PUT(), GET(), GET(), CategoryPostBody, GET(), POST() (+54 more)
 
-### Community 1 - "mascot-mission-context.tsx"
-Cohesion: 0.06
-Nodes (25): InstantRevealStrategy, MascotMessageDecorator, isRecord(), MascotMissionContext, MascotMissionContextValue, MascotMissionProvider(), MascotMissionProviderProps, MascotPresentation (+17 more)
+### Community 1 - "diary-session-context.tsx"
+Cohesion: 0.11
+Nodes (22): ChildPresentation, ChildSessionContext, ChildSessionContextValue, ChildSessionProvider(), ChildSessionProviderProps, ChosenMission, AddDiaryNoteCommand, DiaryCommand (+14 more)
 
-### Community 2 - ".claude/skills/babylon-gardens/scripts/setup.sh"
-Cohesion: 0.09
-Nodes (44): arch_name(), baseline_value(), composer_tool(), download(), ensure_gitignore(), fail(), go_tool(), has_go() (+36 more)
+### Community 2 - "vitest"
+Cohesion: 0.05
+Nodes (42): QueryParam, ref_node_fs, vitest, MissionRow, ValuesEnvelope, AddressObject, AddressRow, FamilyMembersRow (+34 more)
 
-### Community 3 - ".cursor/skills/babylon-gardens/scripts/setup.sh"
-Cohesion: 0.09
-Nodes (44): arch_name(), baseline_value(), composer_tool(), download(), ensure_gitignore(), fail(), go_tool(), has_go() (+36 more)
+### Community 3 - "forecast-session-context.tsx"
+Cohesion: 0.12
+Nodes (16): SuggestionItem, ForecastPresentation, ForecastSessionContext, ForecastSessionContextValue, ForecastSessionProvider(), ForecastSessionProviderProps, labelForProposal(), todayStamp() (+8 more)
 
 ### Community 4 - "search.go"
 Cohesion: 0.09
 Nodes (39): checkDef, Finding, Result, ScoredDoc, checks(), discoverRoots(), mergeExts(), Run() (+31 more)
 
-### Community 5 - "vitest"
+### Community 5 - "upload/route.ts"
 Cohesion: 0.08
-Nodes (25): ref_node_os, ref_node_path, vitest, AddressObject, AddressRow, FamilyMembersRow, InviteRecord, MembersEnvelope (+17 more)
+Nodes (31): assertStaff(), POST(), RouteContext, assertStaff(), MaterialJson, POST(), RouteContext, toMaterialJson() (+23 more)
 
-### Community 6 - "getMockSession"
-Cohesion: 0.10
-Nodes (28): isRecord(), MissionRouteContext, PUT(), GET(), CategoryPostBody, GET(), POST(), POST() (+20 more)
+### Community 6 - "questions-facade.ts"
+Cohesion: 0.07
+Nodes (42): FamilyQuizKindFilter, kindFilterFor(), KindFilterStrategy, SayWhatKindFilter, isRecord(), PanelDeleteResult, PanelMockRole, PanelQuestionDraft (+34 more)
 
-### Community 7 - "Examples for legacy explainer"
+### Community 7 - "SurfaceFacade"
+Cohesion: 0.07
+Nodes (39): assertStaff(), CatalogPatchBody, DELETE(), notFound(), PATCH(), RouteContext, assertStaff(), CategoryPatchBody (+31 more)
+
+### Community 8 - "profile-session-context.tsx"
+Cohesion: 0.06
+Nodes (28): DeleteAnswerCommand, isRecord(), readEnvelope(), EditAnswerCommand, isRecord(), readEnvelope(), AchievementsEnvelope, AchievementsLeaf (+20 more)
+
+### Community 9 - "queryRaw"
+Cohesion: 0.04
+Nodes (25): ContextFilterStrategy, PublishedIdRow, Context, Phase 1 — identity Green, Green steps, Brownfield — catalog-fiche [id] routes (phase 2), Red command, Green steps (+17 more)
+
+### Community 10 - "calendar-session-context.tsx"
+Cohesion: 0.13
+Nodes (11): CalendarPresentation, CalendarSessionContext, CalendarSessionContextValue, CalendarSessionProvider(), CalendarSessionProviderProps, todayStamp(), MoveSuggestionCommand, DayConflictError (+3 more)
+
+### Community 11 - ".claude/skills/babylon-gardens/scripts/setup.sh"
+Cohesion: 0.09
+Nodes (44): arch_name(), baseline_value(), composer_tool(), download(), ensure_gitignore(), fail(), go_tool(), has_go() (+36 more)
+
+### Community 12 - ".cursor/skills/babylon-gardens/scripts/setup.sh"
+Cohesion: 0.09
+Nodes (44): arch_name(), baseline_value(), composer_tool(), download(), ensure_gitignore(), fail(), go_tool(), has_go() (+36 more)
+
+### Community 13 - "mission.ts"
+Cohesion: 0.15
+Nodes (15): DraftMissionFactory, MissionCreateInput, MissionFactory, assertStaff(), GET(), MissionPostBody, POST(), MissionFicheRow (+7 more)
+
+### Community 14 - "quiz-session-context.tsx"
+Cohesion: 0.08
+Nodes (22): ModeStrategy, modeStrategyFor(), QuizMode, SoloModeStrategy, TableModeStrategy, QuizAnswerEnvelope, QuizAnswerItem, QuizCommand (+14 more)
+
+### Community 15 - "QuizAnswerEnvelope"
+Cohesion: 0.17
+Nodes (6): DeleteAnswerCommand, EditAnswerCommand, QuizAnswerLeaf, QuizCommand, QuizAnswerEnvelope, QuizAnswerItem
+
+### Community 16 - "index.ts"
+Cohesion: 0.11
+Nodes (21): FamilyAppView, DrawerItem, FamilyDrawer(), PARENT_ITEMS, FamilySurfaceDecorator, IFamilySurface, PhoneChromeDecorator, PhoneChromeFrame() (+13 more)
+
+### Community 17 - "Examples for legacy explainer"
 Cohesion: 0.05
 Nodes (37): Guardrails, Harness Create, Language, Source templates, Step 1 — Extract known context, Step 2 — Ask only the gaps, Step 3 — Generate docs one at a time, Step 3b — Map features (critical harness) (+29 more)
 
-### Community 8 - "Examples for legacy explainer"
+### Community 18 - "Examples for legacy explainer"
 Cohesion: 0.05
 Nodes (37): Guardrails, Harness Create, Language, Source templates, Step 1 — Extract known context, Step 2 — Ask only the gaps, Step 3 — Generate docs one at a time, Step 3b — Map features (critical harness) (+29 more)
 
-### Community 9 - "Code commenter"
+### Community 19 - "Code commenter"
 Cohesion: 0.05
 Nodes (33): Bad: complex ZIP builder with no top-level explanation, Examples (guides only), Good: ZIP entry point documented + shared helper, Pattern: auth helper — params + call sites, Pattern: orchestration controller (Portuguese corpus example), Block shape (language-agnostic), Code commenter, Harness docs first (+25 more)
 
-### Community 10 - "Sistina Arch"
-Cohesion: 0.05
-Nodes (35): Architecture fragment, Default map fragment (files + visible complex excerpts), Sequence fragment, Sistina Arch — SVG shape examples, Animation, Architecture (default mirror), Cards, Data flow (+27 more)
-
-### Community 11 - "package.json"
+### Community 20 - "useFamilySession"
 Cohesion: 0.06
-Nodes (31): metadata, RootLayoutProps, viewport, nextConfig, dependencies, better-sqlite3, next, react (+23 more)
+Nodes (33): CalendarScreen(), CalendarScreenBody(), useCalendarSession(), ChildScreen(), ChildScreenBody(), useChildSession(), FamilyNav(), FamilyNavArea (+25 more)
 
-### Community 12 - "husk-service.ts"
-Cohesion: 0.07
-Nodes (21): createFamilyHusk(), FamilyHuskInput, AddressObject, FamilyPostBody, MembersEnvelope, POST(), FamilyDiary, FamilyDiaryRecord (+13 more)
+### Community 21 - "IMissionMessage"
+Cohesion: 0.18
+Nodes (4): MissionDecorator, IMissionMessage, PublishedMissionPayload, UnpublishedMissionError
 
-### Community 13 - "queryRaw"
+### Community 22 - "surprise-session-context.tsx"
+Cohesion: 0.16
+Nodes (14): PostSurpriseCommand, SurpriseForbiddenError, SurpriseMissingFamilyError, hasInventedCopy(), isRecord(), readSurprisePayload(), SurpriseHit, SurpriseMiss (+6 more)
+
+### Community 23 - "users/[id]/route.ts"
+Cohesion: 0.20
+Nodes (9): PATCH(), RouteContext, toUserJson(), UserJson, UserPatchBody, UserWriteDeniedError, UserWritePolicy, AppUserUpdateInput (+1 more)
+
+### Community 24 - "panel-catalog-facade.ts"
+Cohesion: 0.12
+Nodes (27): isRecord(), PanelCatalogFacade, PanelCatalogResult, PanelCategoriesResult, PanelCategoryRow, PanelDeleteResult, PanelMissionResult, PanelMissionRow (+19 more)
+
+### Community 25 - "completed-session-context.tsx"
+Cohesion: 0.15
+Nodes (15): CompletedCommand, CompletedClosing, CompletedEnvelope, CompletedMissionItem, isRecord(), readClosing(), readCompletedEnvelope(), readItem() (+7 more)
+
+### Community 26 - "invites/route.ts"
+Cohesion: 0.08
+Nodes (25): AcceptInvite, FamilyInviteCommand, hashToken(), InviteAdult, RevokeInvite, assertTitularInvite(), denyFamilyWrite(), FamilyRouteContext (+17 more)
+
+### Community 27 - "panel-staff-facade.ts"
 Cohesion: 0.11
-Nodes (12): Phase 1 — identity Green, Brownfield, Context, Frontend, Green steps, Phase 2 — family (wave 2) Green, Red command, Verification (+4 more)
+Nodes (26): PanelPlanResult, PanelPlanRow, PanelPlansResult, PlansFacade, PlansSessionContext, PlansSessionContextValue, PlansSessionProvider(), PlansSessionProviderProps (+18 more)
 
-### Community 14 - "invites/route.ts"
-Cohesion: 0.14
-Nodes (14): AcceptInvite, FamilyInviteCommand, hashToken(), InviteAdult, RevokeInvite, denyFamilyWrite(), FamilyRouteContext, isRecord() (+6 more)
+### Community 28 - "isRecord"
+Cohesion: 0.20
+Nodes (11): readContext(), MaterialsFacade, readListBody(), readMaterialRow(), readOneBody(), readPlan(), failResponse(), isRecord() (+3 more)
 
-### Community 15 - "SwiftUI Graphics"
+### Community 29 - "catalog-pick-strategy.ts"
+Cohesion: 0.16
+Nodes (16): WEEK_LIST_CAP, WeekListStrategy, WeekSuggestion, SurpriseSelectionStrategy, Lane: surprise (surprise-mission), ageMatches(), agesFromAnswers(), CatalogPickStrategy (+8 more)
+
+### Community 30 - "react"
+Cohesion: 0.09
+Nodes (29): CatalogScreen(), categoryName(), reviewLabel(), usePanelSession(), ContextsScreen(), submitHtmlForm(), useContextsSession(), FamiliesScreen() (+21 more)
+
+### Community 31 - "SwiftUI Graphics"
 Cohesion: 0.07
 Nodes (29): 1. Ripple (layerEffect), 2. Holographic (colorEffect), 3. CRT (layerEffect for true chromatic), 4. Glow halo (colorEffect), 5. Heat haze (distortionEffect), 6. Film grain (colorEffect), Anti-patterns, API pick (+21 more)
 
-### Community 16 - "api/missions/[id]/route.ts"
+### Community 32 - "family-session-context.tsx"
+Cohesion: 0.09
+Nodes (24): SEEDED_ACCEPTED_CYCLE_ID, SEEDED_ACCEPTED_TITLE, SEEDED_FAMILY_ID, SEEDED_PLANS, SEEDED_TITULAR_USER_ID, SeededPublishedMission, ContextSwitchControl(), FamilySessionContext (+16 more)
+
+### Community 33 - "indicators-session-context.tsx"
+Cohesion: 0.14
+Nodes (20): IndicatorsCounts, IndicatorsPanelFacade, IndicatorsResult, isRecord(), PanelMockRole, PanelSessionResult, PanelSetRoleResult, readCountsBody() (+12 more)
+
+### Community 34 - "ProductComponent"
+Cohesion: 0.13
+Nodes (5): FamilyMembersComposite, parseMembersEnvelope(), ProductComponent, ProductComposite, ProductLeaf
+
+### Community 35 - "package.json"
+Cohesion: 0.07
+Nodes (26): dependencies, better-sqlite3, next, react, react-dom, @types/better-sqlite3, @types/node, @types/react (+18 more)
+
+### Community 36 - "profile-composite.ts"
+Cohesion: 0.14
+Nodes (6): AchievementsLeaf, GpsComponent, ProfileComposite, RhythmsLeaf, AchievementsEnvelope, RhythmsEnvelope
+
+### Community 37 - "IllegalCycleTransitionError"
 Cohesion: 0.11
-Nodes (20): ReviewPolicy, ficheEnvelope(), FichePatchBody, GET(), MISSION_FORMATS, MISSION_SETTINGS, MISSION_TYPES, notFound() (+12 more)
+Nodes (5): AcceptedState, CompletedState, DoingState, FamilyMissionCycleState, IllegalCycleTransitionError
 
-### Community 17 - "panel-session-context.tsx"
-Cohesion: 0.15
-Nodes (20): CatalogScreen(), reviewLabel(), roleLabel(), isRecord(), PanelCatalogFacade, PanelCatalogResult, PanelMissionRow, PanelSessionResult (+12 more)
-
-### Community 18 - "presentation-writes.test.ts"
-Cohesion: 0.15
-Nodes (21): PUT(), GET(), AddressObject, ArrangedFamily, arrangeFamilyViaApi(), arrangeSecondParent(), familyRouteParams, FREE_PLAN_ID (+13 more)
-
-### Community 19 - "family.ts"
+### Community 38 - "Handoff to Pittore — Wave 10"
 Cohesion: 0.11
-Nodes (10): FamilyAddress, FamilyInsertInput, FamilyMemberRecord, FamilyMembersComposite, isRecord(), parseAddress(), parseMembersEnvelope(), ProductComponent (+2 more)
+Nodes (15): StaffPolicy, PanelPolicy, After paint, Backend contracts (panel), Handoff to Pittore — Wave 10, Open questions, Rules of execution (Frontend), Seed UUIDs (+7 more)
 
-### Community 20 - "members/route.ts"
-Cohesion: 0.17
-Nodes (16): FamilyRouteContext, FamilyRouteContext, isRecord(), PATCH(), ContextPostBody, POST(), clearPresentation(), getPresentation() (+8 more)
+### Community 39 - "questions/route.ts"
+Cohesion: 0.08
+Nodes (33): assertStaff(), DELETE(), GET(), notFound(), PATCH(), QuestionJson, QuestionPatchBody, RouteContext (+25 more)
 
-### Community 21 - "Compose Graphics"
+### Community 40 - "IllegalCycleTransitionError"
+Cohesion: 0.11
+Nodes (5): AcceptedState, CompletedState, CycleOfferedCommand, DoingState, IllegalCycleTransitionError
+
+### Community 41 - "Compose Graphics"
 Cohesion: 0.08
 Nodes (24): AGSL (API 33+), AGSL shader catalog (folded), Animated sine wave, Anti-patterns, API pick, Canvas / DrawScope, Canvas recipes (folded), Canvas state / allocation (+16 more)
 
-### Community 22 - "SwiftUI Motion"
+### Community 42 - "SwiftUI Motion"
 Cohesion: 0.08
 Nodes (24): Animatable / @Animatable, Anti-patterns, API pick, Common patterns, Conflict resolution, Deprecated implicit animation, Frame animation, Gesture recipes (folded) (+16 more)
 
-### Community 23 - "app-users/route.ts"
+### Community 43 - "[id]/diary/add-note-command.ts"
+Cohesion: 0.13
+Nodes (12): assertNoPhoto(), assertOwnedMission(), DiaryNotFoundError, EmptyNoteTextError, ForeignMissionError, isRecord(), PhotoPayloadError, DiaryCommand (+4 more)
+
+### Community 44 - "presentation-strategy.ts"
+Cohesion: 0.07
+Nodes (39): InvitePolicy, isRecord(), MemberPolicy, FamilyRouteContext, PUT(), FamilyRouteContext, isRecord(), PATCH() (+31 more)
+
+### Community 45 - "Coupling Analysis Skill"
+Cohesion: 0.08
+Nodes (23): 6.1 Executive Summary, 6.2 Dependency Map, 6.3 Identified Issues (by severity), 6.4 Positive Patterns Found, 6.5 Prioritized Recommendations, Book References, CONTRACT COUPLING (Weakest — Ideal), Coupling Analysis Skill (+15 more)
+
+### Community 46 - "Coupling Analysis Skill"
+Cohesion: 0.08
+Nodes (23): 6.1 Executive Summary, 6.2 Dependency Map, 6.3 Identified Issues (by severity), 6.4 Positive Patterns Found, 6.5 Prioritized Recommendations, Book References, CONTRACT COUPLING (Weakest — Ideal), Coupling Analysis Skill (+15 more)
+
+### Community 47 - "pick/route.ts"
 Cohesion: 0.14
-Nodes (15): HolderPolicy, AppUserPostBody, GET(), isAppUserRole(), isAppUserStatus(), POST(), createTitular(), app_api_app_users_titular_service_duplicateemailerror (+7 more)
+Nodes (16): deny(), FamilyRouteContext, isRecord(), noCandidate(), PickPostBody, POST(), rankerDiscarded(), Lane: pick (ai-mission-rules) (+8 more)
 
-### Community 24 - "Coupling Analysis Skill"
-Cohesion: 0.08
-Nodes (23): 6.1 Executive Summary, 6.2 Dependency Map, 6.3 Identified Issues (by severity), 6.4 Positive Patterns Found, 6.5 Prioritized Recommendations, Book References, CONTRACT COUPLING (Weakest — Ideal), Coupling Analysis Skill (+15 more)
+### Community 48 - "family.ts"
+Cohesion: 0.05
+Nodes (44): HolderPolicy, AppUserPostBody, GET(), isAppUserRole(), isAppUserStatus(), POST(), createTitular(), app_api_app_users_titular_service_duplicateemailerror (+36 more)
 
-### Community 25 - "Coupling Analysis Skill"
-Cohesion: 0.08
-Nodes (23): 6.1 Executive Summary, 6.2 Dependency Map, 6.3 Identified Issues (by severity), 6.4 Positive Patterns Found, 6.5 Prioritized Recommendations, Book References, CONTRACT COUPLING (Weakest — Ideal), Coupling Analysis Skill (+15 more)
+### Community 49 - "DayDocument"
+Cohesion: 0.16
+Nodes (7): CalendarCommand, DayDocument, MarkDone, SuggestionNotFoundError, MissingTargetDayError, MoveDay, Lane: calendar-ops (weekly-suggestion, reminders)
 
-### Community 26 - "Technical Design Doc Creator"
+### Community 50 - "mascot-revealed-copy.tsx"
+Cohesion: 0.24
+Nodes (8): InstantRevealStrategy, MascotRevealedCopy(), MascotRevealedCopyProps, selectRevealStrategy(), RevealStrategy, RevealTick, splitRevealUnits(), TypewriterRevealStrategy
+
+### Community 51 - "Technical Design Doc Creator"
 Cohesion: 0.09
 Nodes (23): After Creating a TDD, Architecture-first, not implementation, Confluence, Critical sections by project type, Example Output Structure, Examples, Integration with External Tools, Interactive Workflow (+15 more)
 
-### Community 27 - "getConnection"
-Cohesion: 0.17
-Nodes (4): GET(), getConnection(), AppUser, FamilyQuiz
+### Community 52 - "Technical Design Doc Creator"
+Cohesion: 0.09
+Nodes (23): After Creating a TDD, Architecture-first, not implementation, Confluence, Critical sections by project type, Example Output Structure, Examples, Integration with External Tools, Interactive Workflow (+15 more)
 
-### Community 28 - "Mission"
-Cohesion: 0.11
-Nodes (11): StaffPolicy, Brownfield only — post-Green playbook, Context, Frontend, Green steps, ImageAdapter doubles, Phase 2 — catalog-fiche (activity-card + review-flow) Green, Red command (+3 more)
+### Community 53 - "notes-composite.ts"
+Cohesion: 0.14
+Nodes (7): DiaryComponent, MissionNoteLeaf, MissionNotesComposite, NotesComposite, Lane: diary (note-types, family-diary), MissionNoteItem, MissionNotesEnvelope
 
-### Community 29 - "Tester (TDD)"
+### Community 54 - "panel/families/route.ts"
+Cohesion: 0.09
+Nodes (22): FamilyRouteContext, isRecord(), PATCH(), GET(), PanelFamily, PanelInvite, PanelPlan, SupportPolicy (+14 more)
+
+### Community 55 - "materials/[id]/route.ts"
+Cohesion: 0.12
+Nodes (23): assertStaff(), DELETE(), GET(), MaterialJson, MaterialPatchBody, notFound(), PATCH(), RouteContext (+15 more)
+
+### Community 56 - "(family)/calendar/day-composite.ts"
+Cohesion: 0.15
+Nodes (11): CalendarCommand, DayDocument, SuggestionsEnvelope, SuggestionStatus, isRecord(), isStatus(), readDayDocument(), DropOnDayCommand (+3 more)
+
+### Community 57 - "pick/helpers.ts"
+Cohesion: 0.06
+Nodes (56): AcceptedFamilyMission, AcceptedFamilyMissionFactory, FamilyMissionFactory, UnpublishedCatalogError, deny(), FamilyRouteContext, POST(), DiaryBody (+48 more)
+
+### Community 58 - "Tester (TDD)"
 Cohesion: 0.09
 Nodes (22): Anti-patterns, Brownfield refactor playbook (post-Green), `fase{N}.md` — minimum content, `fase{N}Task.md` — minimum content, Gate Function, Gate Function, Green handoff docs (mandatory after Red), Harness docs first (+14 more)
 
-### Community 30 - "Compose Motion"
+### Community 59 - "Compose Motion"
 Cohesion: 0.09
 Nodes (21): Animatable, animate*AsState, AnimatedContent, AnimatedContent per row, AnimatedVisibility, Anti-patterns, API pick, Compose Motion (+13 more)
 
-### Community 31 - "Tester (TDD)"
+### Community 60 - "Tester (TDD)"
 Cohesion: 0.09
 Nodes (22): Anti-patterns, Brownfield refactor playbook (post-Green), `fase{N}.md` — minimum content, `fase{N}Task.md` — minimum content, Gate Function, Gate Function, Green handoff docs (mandatory after Red), Harness docs first (+14 more)
 
-### Community 32 - "Compose Multiplatform"
+### Community 61 - "diary-screen.tsx"
+Cohesion: 0.15
+Nodes (19): DiaryMissionNoteItem, DiaryMissionNotesEnvelope, DiaryNoteItem, DiaryNotesEnvelope, isRecord(), NoteKind, readDiaryPayload(), readMissionNoteItem() (+11 more)
+
+### Community 62 - "Compose Multiplatform"
 Cohesion: 0.10
 Nodes (20): Animation cross-platform, Anti-patterns, Build, Common errors, Compose Multiplatform, Compose Resources, Cross-platform APIs, Entry points (+12 more)
 
-### Community 33 - "mission_forecast_context.ts"
-Cohesion: 0.11
-Nodes (7): Green steps, ForecastContext, ForecastContextRecord, DuplicateContextPairError, MissionForecastContext, UnknownContextError, ForecastContextRecord
+### Community 63 - "patch-suggestion-command.ts"
+Cohesion: 0.13
+Nodes (10): isRecord(), MarkDoneCommand, MissingTargetDayError, MoveDayCommand, PatchSuggestionResult, readPatchResult(), isRecord(), ProposalListener (+2 more)
 
-### Community 34 - "panel/families/route.ts"
-Cohesion: 0.15
-Nodes (11): FamilyRouteContext, isRecord(), PATCH(), PanelFamily, PanelInvite, PanelPlan, SupportPolicy, FamilyListRow (+3 more)
+### Community 64 - "Phase 2 — catalog-fiche (activity-card + review-flow) Green"
+Cohesion: 0.25
+Nodes (7): Brownfield only — post-Green playbook, Context, Frontend, ImageAdapter doubles, Phase 2 — catalog-fiche (activity-card + review-flow) Green, Red command, Verification
 
-### Community 35 - "compilerOptions"
+### Community 65 - "Refactor phase 10 — brownfield playbook (do not apply in Green)"
+Cohesion: 0.13
+Nodes (11): ImageAdapter, ImageObjectKeyInput, ImagePathFnProtocol, ImagePathProtocol, Context, Do not touch, Obsolete tests, Refactor phase 10 — brownfield playbook (do not apply in Green) (+3 more)
+
+### Community 66 - "Implementation Waves"
+Cohesion: 0.10
+Nodes (20): Blocked items, Dependency graph, Feature index, Implementation Waves, Rules of execution, Status (2026-10-20), Wave 0 — Platform prerequisites (not a feature), Wave 10 — Seeds, object store, catalog and admin APIs (+12 more)
+
+### Community 67 - "compilerOptions"
 Cohesion: 0.10
 Nodes (19): compilerOptions, allowJs, esModuleInterop, incremental, isolatedModules, jsx, lib, module (+11 more)
 
-### Community 36 - "presentation-strategy.ts"
-Cohesion: 0.16
-Nodes (12): alignFamilyMock(), applyRole(), ChildPresentationStrategy, ParentPresentationStrategy, PresentationStore, PresentationStrategy, SessionPresentation, store (+4 more)
+### Community 68 - "[id]/calendar/day-composite.ts"
+Cohesion: 0.44
+Nodes (6): isRecord(), isStatus(), parseSuggestion(), parseSuggestionsEnvelope(), FamilyCalendarInsert, FamilyCalendarRow
 
-### Community 37 - "react"
-Cohesion: 0.29
-Nodes (7): FamilyAppView, FamilySurfaceDecorator, IFamilySurface, PhoneChromeDecorator, PhoneChromeFrame(), PhoneChromeFrameProps, react
+### Community 69 - "FamilyMission"
+Cohesion: 0.19
+Nodes (6): Frontend (Pittore), Phase 7 — surprise Green, Green steps, Frontend (Pittore), Phase 8 — Green, FamilyMission
 
-### Community 38 - ".claude/skills/babylon-gardens/templates/biome.json"
+### Community 70 - "cycle/complete-mission-command.ts"
+Cohesion: 0.25
+Nodes (8): CycleCommand, CyclePayload, isRecord(), readClosing(), readCyclePayload(), CycleForbiddenError, CycleIllegalError, CycleMissingError
+
+### Community 71 - ".claude/skills/babylon-gardens/templates/biome.json"
 Cohesion: 0.11
 Nodes (18): source, assist, actions, enabled, files, includes, formatter, enabled (+10 more)
 
-### Community 39 - ".cursor/skills/babylon-gardens/templates/biome.json"
+### Community 72 - ".cursor/skills/babylon-gardens/templates/biome.json"
 Cohesion: 0.11
 Nodes (18): source, assist, actions, enabled, files, includes, formatter, enabled (+10 more)
 
-### Community 40 - "Technical Design Doc Creator"
-Cohesion: 0.11
-Nodes (19): After Creating a TDD, Architecture-first, not implementation, Confluence, Example Output Structure, Examples, Integration with External Tools, Jira / Linear, Migration project (large) (+11 more)
-
-### Community 41 - "TDD — Family diary"
+### Community 73 - "TDD — Family diary"
 Cohesion: 0.11
 Nodes (18): Context, Context Pillars, Descrição, Exemplo / contexto, Future (V2+), Header & Metadata, Implementation Plan, In Scope (V1) (+10 more)
 
-### Community 42 - "questions/[id]/route.ts"
-Cohesion: 0.18
-Nodes (14): assertStaff(), DELETE(), GET(), notFound(), PATCH(), QuestionJson, QuestionPatchBody, RouteContext (+6 more)
+### Community 74 - "Green steps"
+Cohesion: 0.24
+Nodes (9): FamilyFailKindStrategy, FirstTimeKindStrategy, FunnyKindStrategy, LearnedKindStrategy, NoteKindStrategy, PhraseKindStrategy, resolveNoteKind(), UnknownNoteKindError (+1 more)
 
-### Community 43 - ".claude/skills/babylon-gardens/templates/scripts/quality/run.sh"
+### Community 75 - ".assertCanEdit"
+Cohesion: 0.38
+Nodes (8): AnswersBody, badRequest(), DELETE(), deny(), FamilyRouteContext, GET(), notFound(), PATCH()
+
+### Community 76 - "family-missions/complete-mission-command.ts"
+Cohesion: 0.18
+Nodes (9): CompleteMissionCommand, isRecord(), MissingClosingError, parseClosing(), MissionCommand, assertSecondCycleAllowed(), CycleNotFoundError, NonRepeatableCycleError (+1 more)
+
+### Community 77 - ".claude/skills/babylon-gardens/templates/scripts/quality/run.sh"
 Cohesion: 0.24
 Nodes (17): baseline(), emit(), emit_text(), has_go(), has_js(), has_php(), has_python(), join_by() (+9 more)
 
-### Community 44 - "Framer Motion / Motion"
-Cohesion: 0.11
-Nodes (17): AnimatePresence, AnimatePresence Props, Animation, DO NOT, Framer Motion / Motion, Gestures, Gestures, Hooks (+9 more)
-
-### Community 45 - ".cursor/skills/babylon-gardens/templates/scripts/quality/run.sh"
+### Community 78 - ".cursor/skills/babylon-gardens/templates/scripts/quality/run.sh"
 Cohesion: 0.24
 Nodes (17): baseline(), emit(), emit_text(), has_go(), has_js(), has_php(), has_python(), join_by() (+9 more)
 
-### Community 46 - "TDD — Completed missions history"
+### Community 79 - "implementation.md"
 Cohesion: 0.11
 Nodes (17): Context, Context Pillars, Descrição, Exemplo / contexto, Future (V2+), Header & Metadata, Implementation Plan, In Scope (V1) (+9 more)
 
-### Community 47 - "TDD — Family calendar"
+### Community 80 - "TDD — Family calendar"
 Cohesion: 0.11
 Nodes (17): Context, Context Pillars, Descrição, Exemplo / contexto, Future (V2+), Header & Metadata, Implementation Plan, In Scope (V1) (+9 more)
 
-### Community 48 - "TDD — Indicators panel"
+### Community 81 - "TDD — Indicators panel"
 Cohesion: 0.11
 Nodes (17): Context, Context Pillars, Descrição, Exemplo / contexto, Future (V2+), Header & Metadata, Implementation Plan, In Scope (V1) (+9 more)
 
-### Community 49 - "TDD — Mascot mission message"
+### Community 82 - "TDD — Mascot mission message"
 Cohesion: 0.11
 Nodes (17): Context, Context Pillars, Descrição, Exemplo / contexto, Future (V2+), Header & Metadata, Implementation Plan, In Scope (V1) (+9 more)
 
-### Community 50 - "TDD — Mission cycle"
+### Community 83 - "TDD — Mission cycle"
 Cohesion: 0.11
 Nodes (17): Context, Context Pillars, Descrição, Exemplo / contexto, Future (V2+), Header & Metadata, Implementation Plan, In Scope (V1) (+9 more)
 
-### Community 51 - "TDD — Note types and mission link"
+### Community 84 - "TDD — Note types and mission link"
 Cohesion: 0.11
 Nodes (17): Context, Context Pillars, Descrição, Exemplo / contexto, Future (V2+), Header & Metadata, Implementation Plan, In Scope (V1) (+9 more)
 
-### Community 52 - "TDD — Reminders and follow-up"
+### Community 85 - "TDD — Reminders and follow-up"
 Cohesion: 0.11
 Nodes (17): Context, Context Pillars, Descrição, Exemplo / contexto, Future (V2+), Header & Metadata, Implementation Plan, In Scope (V1) (+9 more)
 
-### Community 53 - "TDD — Surprise mission"
+### Community 86 - "TDD — Surprise mission"
 Cohesion: 0.11
 Nodes (17): Context, Context Pillars, Descrição, Exemplo / contexto, Future (V2+), Header & Metadata, Implementation Plan, In Scope (V1) (+9 more)
 
-### Community 54 - "TDD — Weekly suggestion"
+### Community 87 - "TDD — Weekly suggestion"
 Cohesion: 0.11
 Nodes (17): Context, Context Pillars, Descrição, Exemplo / contexto, Future (V2+), Header & Metadata, Implementation Plan, In Scope (V1) (+9 more)
 
-### Community 55 - "connection.ts"
+### Community 88 - "[sid]/route.ts"
 Cohesion: 0.13
-Nodes (9): ContextFilterStrategy, PublishedIdRow, Phase 3 — forecast Green, QueryParam, ref_node_fs, PlanNameRow, TableNameRow, CountRow (+1 more)
+Nodes (12): deny(), isRecord(), PATCH(), propose(), SuggestionRouteContext, Observable, Observer, RepeatCountObservable (+4 more)
 
-### Community 56 - "mock-session.ts"
-Cohesion: 0.16
-Nodes (10): isMockRole(), POST(), SessionPostBody, MockRole, MockSession, store, CatalogEnvelope, SessionBody (+2 more)
-
-### Community 57 - "SurfaceFacade"
-Cohesion: 0.22
-Nodes (8): GET(), PanelPolicy, GET(), SurfaceChrome, SurfaceFacade, PanelLayout(), PanelLayoutProps, Green steps
-
-### Community 58 - "family-session-context.tsx"
-Cohesion: 0.19
-Nodes (12): ContextSwitchControl(), FamilySessionContext, FamilySessionContextValue, FamilySessionProvider(), FamilySessionProviderProps, readSessionBody(), SessionPresentationKind, SessionRole (+4 more)
-
-### Community 59 - "Pipeline"
-Cohesion: 0.12
-Nodes (15): 1. SCAN, 2. DESIGN BRIEF (web only), 3. DISCOVER (if vague), 4. SCOPE, 5. THESIS, 6. LOAD, 7. IMPLEMENT, 8. AUDIT (+7 more)
-
-### Community 60 - "CSS Native"
-Cohesion: 0.12
-Nodes (15): Anchor + Popover Tooltip, Anchor Positioning, Browser Support, Container Queries, CSS Native, DO NOT, Fallback Patterns, Layered Animation Strategy (+7 more)
-
-### Community 61 - "Amaterasu Paint — Master Painter"
-Cohesion: 0.12
-Nodes (15): Amaterasu Paint — Master Painter, Decision tree, Existing project, Iron Rules, Light scope, Module base, Phase 1 — BRAINSTORM, Phase 2 — THESIS (+7 more)
-
-### Community 62 - "Implementation Waves"
-Cohesion: 0.12
-Nodes (16): Blocked items, Dependency graph, Feature index, Implementation Waves, Rules of execution, Wave 0 — Platform prerequisites (not a feature), Wave 1 — Titular and catalog seeds, Wave 2 — Session, family document, catalog fiche (+8 more)
-
-### Community 63 - "TDD — Admin / Operator web panel"
-Cohesion: 0.12
-Nodes (15): Context, Context Pillars, Descrição, Exemplo / contexto, Header & Metadata, Implementation Plan, Problem Statement & Motivation, Problema (+7 more)
-
-### Community 64 - "TDD — Adult titular"
-Cohesion: 0.12
-Nodes (15): Context, Context Pillars, Descrição, Exemplo / contexto, Header & Metadata, Implementation Plan, Problem Statement & Motivation, Problema (+7 more)
-
-### Community 65 - "TDD — Adult invite"
-Cohesion: 0.12
-Nodes (15): Context, Context Pillars, Descrição, Exemplo / contexto, Header & Metadata, Implementation Plan, Problem Statement & Motivation, Problema (+7 more)
-
-### Community 66 - "TDD — Mock session and context switch"
-Cohesion: 0.12
-Nodes (15): Context, Context Pillars, Descrição, Exemplo / contexto, Header & Metadata, Implementation Plan, Problem Statement & Motivation, Problema (+7 more)
-
-### Community 67 - "TDD — Families and subscriptions (support)"
-Cohesion: 0.12
-Nodes (15): Context, Context Pillars, Descrição, Exemplo / contexto, Header & Metadata, Implementation Plan, Problem Statement & Motivation, Problema (+7 more)
-
-### Community 68 - "TDD — Family address"
-Cohesion: 0.12
-Nodes (15): Context, Context Pillars, Descrição, Exemplo / contexto, Header & Metadata, Implementation Plan, Problem Statement & Motivation, Problema (+7 more)
-
-### Community 69 - "TDD — Members without app access"
-Cohesion: 0.12
-Nodes (15): Context, Context Pillars, Descrição, Exemplo / contexto, Header & Metadata, Implementation Plan, Problem Statement & Motivation, Problema (+7 more)
-
-### Community 70 - "TDD — Parent phone shell"
-Cohesion: 0.12
-Nodes (15): Context, Context Pillars, Descrição, Exemplo / contexto, Header & Metadata, Implementation Plan, Problem Statement & Motivation, Problema (+7 more)
-
-### Community 71 - "FicheBuilder"
-Cohesion: 0.23
-Nodes (3): FicheBuilder, FicheBuildError, Step 0 — Evidence lock
-
-### Community 72 - "mission-factory.ts"
-Cohesion: 0.19
-Nodes (10): DraftMissionFactory, MissionCreateInput, MissionFactory, MissionListItem, createPaperBoatsDraft(), MissionRow, ValuesEnvelope, createPaperBoatsDraft() (+2 more)
-
-### Community 73 - "Motion Principles"
-Cohesion: 0.13
-Nodes (14): CSS keywords & recipes, Designer weighting, Easing, Enter/exit recipes, GSAP / Framer decision matrix, Iron rules (never break), Load sub-skills, Motion Principles (+6 more)
-
-### Community 74 - "Three.js & R3F"
-Cohesion: 0.13
-Nodes (14): Camera, Controls, Drei Essentials, Hooks, Lighting Rigs, Loading Models, Performance, Postprocessing (+6 more)
-
-### Community 75 - "Handoff to Scultore — Wave 3"
-Cohesion: 0.13
-Nodes (14): Backend signals, Canva, family-shell, FE checkboxes, Files written per lane, forecast, Graph, Handoff to Scultore — Wave 3 (+6 more)
-
-### Community 76 - "InvitePolicy"
-Cohesion: 0.18
-Nodes (9): InvitePolicy, assertTitularInvite(), readActorUserId(), Brownfield, Context, Green steps, Phase 2 signal — family Green (presentation ContextPolicy), Red command (+1 more)
-
-### Community 77 - "IllegalReviewTransitionError"
-Cohesion: 0.18
-Nodes (4): Draft, IllegalReviewTransitionError, setReviewStatus(), publishMission()
-
-### Community 78 - "Design Audit"
-Cohesion: 0.14
-Nodes (13): Automated checks (evidence checklist), Compose, Critical (ship blocker), Design Audit, Important (current sprint), Load sub-skills, Nice-to-have (backlog), Output severity buckets (+5 more)
-
-### Community 79 - "Handoff to Scultore — Wave 2"
-Cohesion: 0.14
-Nodes (13): Backend signals, Canva, catalog-fiche, family, FE checkboxes, Files written per lane, Graph, Handoff to Scultore — Wave 2 (+5 more)
-
-### Community 80 - "Handoff to Pittore — Wave 0"
+### Community 89 - "DayComposite"
 Cohesion: 0.15
-Nodes (12): HealthEnvelope, After you finish, Approved Frontend plan, Backend contract (health), Blocked items (do not implement), Env (names only), Frontend owned paths (Wave 0), Handoff to Pittore — Wave 0 (+4 more)
+Nodes (3): DayComponent, DayComposite, SuggestionLeaf
 
-### Community 81 - "kind-strategy.test.ts"
-Cohesion: 0.29
-Nodes (7): FamilyQuizKindStrategy, KindStrategy, SayWhatKindStrategy, strategyFor(), Green steps, FamilyQuizRecord, QuizRow
+### Community 90 - "Sistina Arch"
+Cohesion: 0.05
+Nodes (35): Architecture fragment, Default map fragment (files + visible complex excerpts), Sequence fragment, Sistina Arch — SVG shape examples, Animation, Architecture (default mirror), Cards, Data flow (+27 more)
 
-### Community 82 - "Sistina Arch"
-Cohesion: 0.15
-Nodes (13): Execution order (mandatory), Language, Libs, Output contract, Sistina Arch, Step 0b — Inventory, Step 0c — Depth AskQuestion, Step 1 — Type router (+5 more)
-
-### Community 83 - "Desktop Principles"
-Cohesion: 0.15
-Nodes (12): Anti-patterns, Chords & conflicts, Desktop Principles, Discoverability, Focus management, Hover — mandatory, Information density, Keyboard shortcuts — first-class (+4 more)
-
-### Community 84 - "Mobile Principles"
-Cohesion: 0.15
-Nodes (12): Accessibility (mobile), Anti-patterns, Canonical gestures, Conflict resolution, Load sub-skills, Mobile Principles, No-hover doctrine, Performance budgets (+4 more)
-
-### Community 85 - "domain_invariantes.md"
-Cohesion: 0.15
-Nodes (11): Agent Rules, Common MVC Enforcement Points, Concurrency Rules, INV-001: Catalog missions only, INV-002: Child is not an account; no child photo, INV-003: Mission cycle, INV-004: JSON envelopes, INV-005: Review before family use (+3 more)
-
-### Community 86 - "Phase 0 — Green (platform)"
-Cohesion: 0.17
-Nodes (8): Context, Do not implement, Frontend (Pittore only — do not implement here), Green steps, Phase 0 — Green (platform), Red command, Verification, Connection
-
-### Community 87 - "Technical Design Doc Creator"
-Cohesion: 0.17
-Nodes (12): Anti-patterns, Core principle: architecture, not implementation, Criticality matrix, Implementation Plan uses TDD Red/Green, Interactive workflow, Language, Multi-feature mode — `especs/design-docs/implementation.md`, Output location (+4 more)
-
-### Community 88 - "testing_expectation.md"
-Cohesion: 0.18
-Nodes (6): Agent Rules, Design Pattern Test Expectations, Minimum Requirements, MVC Test Expectations, Purpose, Testing Philosophy
-
-### Community 89 - "Technical Design Doc Creator"
-Cohesion: 0.17
-Nodes (12): Anti-patterns, Core principle: architecture, not implementation, Criticality matrix, Implementation Plan uses TDD Red/Green, Interactive workflow, Language, Multi-feature mode — `especs/design-docs/implementation.md`, Output location (+4 more)
-
-### Community 90 - ".claude/agents/scultore.md"
-Cohesion: 0.18
-Nodes (10): Cinzels (parallel lanes), Flow modes, Handoff folder per wave, `implementation.md` format (always this shape), Inputs, Output format, Pittore handoff loop, Test suite between waves (+2 more)
-
-### Community 91 - ".claude/skills/tester/SKILL.md"
-Cohesion: 0.20
-Nodes (5): Exceções, Exemplo, Persisted Tester, Quando a mudança exige cobertura, Tests
-
-### Community 92 - "Babylon Gardens"
-Cohesion: 0.18
-Nodes (10): Babylon Gardens, Do not, Generated `lefthook.yml`, Non-negotiables, Quality Run (`scripts/quality/run.sh`), Repo files (skipped if present unless `--force`), Report (`.quality/report.json`), RUN (+2 more)
-
-### Community 93 - "Sistina Arch — reference"
+### Community 91 - "Sistina Arch — reference"
 Cohesion: 0.18
 Nodes (11): Animation, Cards, Edges (`a-*`) + markers (`m-*`), Guided views JSON, Nodes (`c-*`), Presets, Semantic classes, Sistina Arch — reference (+3 more)
 
-### Community 94 - ".cursor/agents/scultore.md"
-Cohesion: 0.18
-Nodes (10): Cinzels (parallel lanes), Flow modes, Handoff folder per wave, `implementation.md` format (always this shape), Inputs, Output format, Pittore handoff loop, Test suite between waves (+2 more)
+### Community 92 - "FamilyProfile"
+Cohesion: 0.19
+Nodes (7): Brownfield, Context, Frontend, Green steps, Phase 5 — gps (family-quiz, quiz-modes, family-profile, what-we-know) Green, Verification, FamilyProfile
 
-### Community 95 - "Canvas Generative"
-Cohesion: 0.18
-Nodes (10): Canvas Generative, DO NOT, Double Buffer, Flow Field, Full Loop Example, L-Systems, Lorenz Attractor, Noise (+2 more)
+### Community 93 - "[id]/quiz/submit-answer-command.ts"
+Cohesion: 0.23
+Nodes (4): GpsObserver, ProfileWriteObserver, QuizAnswerSubject, SubmitAnswerCommand
 
-### Community 96 - "GSAP"
-Cohesion: 0.18
-Nodes (10): Core API, GSAP, Plugins, Recipes, Recipes, ScrollTrigger, Setup, Timeline (+2 more)
+### Community 94 - "forecast-screen.tsx"
+Cohesion: 0.21
+Nodes (8): ForecastScreen(), ForecastScreenBody(), useForecastSession(), isRecord(), readWeekEnvelope(), WEEK_LIST_CAP, WeekSuggestionEnvelope, WeekSuggestionItem
 
-### Community 97 - "Babylon Gardens"
-Cohesion: 0.18
-Nodes (10): Babylon Gardens, Do not, Generated `lefthook.yml`, Non-negotiables, Quality Run (`scripts/quality/run.sh`), Repo files (skipped if present unless `--force`), Report (`.quality/report.json`), RUN (+2 more)
-
-### Community 98 - "architecture_rules.md"
-Cohesion: 0.18
-Nodes (9): Architectural Principles, Data Flow, DDD And Clean Architecture Usage, Default Architecture, Dependency Rules, Design Patterns, MCP Rules, Multi-Agent Rules (+1 more)
-
-### Community 99 - "Feature: Activity card"
-Cohesion: 0.18
-Nodes (10): Casos de erro (explícitos, não deixar implícito), Critério de aceite (o que prova que está pronto), Depende de, Descrição, Design Patterns (Gang of Four) Sugerido, Exemplo / contexto, Feature: Activity card, Fluxo (given/when/then) (+2 more)
-
-### Community 100 - "Feature: Activity library by category"
-Cohesion: 0.18
-Nodes (10): Casos de erro (explícitos, não deixar implícito), Critério de aceite (o que prova que está pronto), Depende de, Descrição, Design Patterns (Gang of Four) Sugerido, Exemplo / contexto, Feature: Activity library by category, Fluxo (given/when/then) (+2 more)
-
-### Community 101 - "Feature: Admin / Operator web panel"
-Cohesion: 0.18
-Nodes (10): Casos de erro (explícitos, não deixar implícito), Critério de aceite (o que prova que está pronto), Depende de, Descrição, Design Patterns (Gang of Four) Sugerido, Exemplo / contexto, Feature: Admin / Operator web panel, Fluxo (given/when/then) (+2 more)
-
-### Community 102 - "Feature: Adult titular"
-Cohesion: 0.18
-Nodes (10): Casos de erro (explícitos, não deixar implícito), Critério de aceite (o que prova que está pronto), Depende de, Descrição, Design Patterns (Gang of Four) Sugerido, Exemplo / contexto, Feature: Adult titular, Fluxo (given/when/then) (+2 more)
-
-### Community 103 - "Feature: Adult invite"
-Cohesion: 0.18
-Nodes (10): Casos de erro (explícitos, não deixar implícito), Critério de aceite (o que prova que está pronto), Depende de, Descrição, Design Patterns (Gang of Four) Sugerido, Exemplo / contexto, Feature: Adult invite, Fluxo (given/when/then) (+2 more)
-
-### Community 104 - "Feature: Mission pick rules"
-Cohesion: 0.18
-Nodes (10): Casos de erro (explícitos, não deixar implícito), Critério de aceite (o que prova que está pronto), Depende de, Descrição, Design Patterns (Gang of Four) Sugerido, Exemplo / contexto, Feature: Mission pick rules, Fluxo (given/when/then) (+2 more)
-
-### Community 105 - "Feature: Completed missions history"
-Cohesion: 0.18
-Nodes (10): Casos de erro (explícitos, não deixar implícito), Critério de aceite (o que prova que está pronto), Depende de, Descrição, Design Patterns (Gang of Four) Sugerido, Exemplo / contexto, Feature: Completed missions history, Fluxo (given/when/then) (+2 more)
-
-### Community 106 - "Feature: Mock session and context switch"
-Cohesion: 0.18
-Nodes (10): Casos de erro (explícitos, não deixar implícito), Critério de aceite (o que prova que está pronto), Depende de, Descrição, Design Patterns (Gang of Four) Sugerido, Exemplo / contexto, Feature: Mock session and context switch, Fluxo (given/when/then) (+2 more)
-
-### Community 107 - "Feature: Families and subscriptions (support)"
-Cohesion: 0.18
-Nodes (10): Casos de erro (explícitos, não deixar implícito), Critério de aceite (o que prova que está pronto), Depende de, Descrição, Design Patterns (Gang of Four) Sugerido, Exemplo / contexto, Feature: Families and subscriptions (support), Fluxo (given/when/then) (+2 more)
-
-### Community 108 - "Feature: Family address"
-Cohesion: 0.18
-Nodes (10): Casos de erro (explícitos, não deixar implícito), Critério de aceite (o que prova que está pronto), Depende de, Descrição, Design Patterns (Gang of Four) Sugerido, Exemplo / contexto, Feature: Family address, Fluxo (given/when/then) (+2 more)
-
-### Community 109 - "Feature: Family calendar"
-Cohesion: 0.18
-Nodes (10): Casos de erro (explícitos, não deixar implícito), Critério de aceite (o que prova que está pronto), Depende de, Descrição, Design Patterns (Gang of Four) Sugerido, Exemplo / contexto, Feature: Family calendar, Fluxo (given/when/then) (+2 more)
-
-### Community 110 - "Feature: Family diary"
-Cohesion: 0.18
-Nodes (10): Casos de erro (explícitos, não deixar implícito), Critério de aceite (o que prova que está pronto), Depende de, Descrição, Design Patterns (Gang of Four) Sugerido, Exemplo / contexto, Feature: Family diary, Fluxo (given/when/then) (+2 more)
-
-### Community 111 - "Feature: Family profile (Family GPS)"
-Cohesion: 0.18
-Nodes (10): Casos de erro (explícitos, não deixar implícito), Critério de aceite (o que prova que está pronto), Depende de, Descrição, Design Patterns (Gang of Four) Sugerido, Exemplo / contexto, Feature: Family profile (Family GPS), Fluxo (given/when/then) (+2 more)
-
-### Community 112 - "Feature: Family quiz"
-Cohesion: 0.18
-Nodes (10): Casos de erro (explícitos, não deixar implícito), Critério de aceite (o que prova que está pronto), Depende de, Descrição, Design Patterns (Gang of Four) Sugerido, Exemplo / contexto, Feature: Family quiz, Fluxo (given/when/then) (+2 more)
-
-### Community 113 - "Feature: Forecast contexts"
-Cohesion: 0.18
-Nodes (10): Casos de erro (explícitos, não deixar implícito), Critério de aceite (o que prova que está pronto), Depende de, Descrição, Design Patterns (Gang of Four) Sugerido, Exemplo / contexto, Feature: Forecast contexts, Fluxo (given/when/then) (+2 more)
-
-### Community 114 - "Feature: Indicators panel"
-Cohesion: 0.18
-Nodes (10): Casos de erro (explícitos, não deixar implícito), Critério de aceite (o que prova que está pronto), Depende de, Descrição, Design Patterns (Gang of Four) Sugerido, Exemplo / contexto, Feature: Indicators panel, Fluxo (given/when/then) (+2 more)
-
-### Community 115 - "Feature: Mascot mission message"
-Cohesion: 0.18
-Nodes (10): Casos de erro (explícitos, não deixar implícito), Critério de aceite (o que prova que está pronto), Depende de, Descrição, Design Patterns (Gang of Four) Sugerido, Exemplo / contexto, Feature: Mascot mission message, Fluxo (given/when/then) (+2 more)
-
-### Community 116 - "Feature: Members without app access"
-Cohesion: 0.18
-Nodes (10): Casos de erro (explícitos, não deixar implícito), Critério de aceite (o que prova que está pronto), Depende de, Descrição, Design Patterns (Gang of Four) Sugerido, Exemplo / contexto, Feature: Members without app access, Fluxo (given/when/then) (+2 more)
-
-### Community 117 - "Feature: Mission cycle"
-Cohesion: 0.18
-Nodes (10): Casos de erro (explícitos, não deixar implícito), Critério de aceite (o que prova que está pronto), Depende de, Descrição, Design Patterns (Gang of Four) Sugerido, Exemplo / contexto, Feature: Mission cycle, Fluxo (given/when/then) (+2 more)
-
-### Community 118 - "Feature: Note types and mission link"
-Cohesion: 0.18
-Nodes (10): Casos de erro (explícitos, não deixar implícito), Critério de aceite (o que prova que está pronto), Depende de, Descrição, Design Patterns (Gang of Four) Sugerido, Exemplo / contexto, Feature: Note types and mission link, Fluxo (given/when/then) (+2 more)
-
-### Community 119 - "Feature: Parent phone shell"
-Cohesion: 0.18
-Nodes (10): Casos de erro (explícitos, não deixar implícito), Critério de aceite (o que prova que está pronto), Depende de, Descrição, Design Patterns (Gang of Four) Sugerido, Exemplo / contexto, Feature: Parent phone shell, Fluxo (given/when/then) (+2 more)
-
-### Community 120 - "Feature: Question bank"
-Cohesion: 0.18
-Nodes (10): Casos de erro (explícitos, não deixar implícito), Critério de aceite (o que prova que está pronto), Depende de, Descrição, Design Patterns (Gang of Four) Sugerido, Exemplo / contexto, Feature: Question bank, Fluxo (given/when/then) (+2 more)
-
-### Community 121 - "Feature: Quiz answer modes"
-Cohesion: 0.18
-Nodes (10): Casos de erro (explícitos, não deixar implícito), Critério de aceite (o que prova que está pronto), Depende de, Descrição, Design Patterns (Gang of Four) Sugerido, Exemplo / contexto, Feature: Quiz answer modes, Fluxo (given/when/then) (+2 more)
-
-### Community 122 - "Feature: Reminders and follow-up"
-Cohesion: 0.18
-Nodes (10): Casos de erro (explícitos, não deixar implícito), Critério de aceite (o que prova que está pronto), Depende de, Descrição, Design Patterns (Gang of Four) Sugerido, Exemplo / contexto, Feature: Reminders and follow-up, Fluxo (given/when/then) (+2 more)
-
-### Community 123 - "Feature: Activity review flow"
-Cohesion: 0.18
-Nodes (10): Casos de erro (explícitos, não deixar implícito), Critério de aceite (o que prova que está pronto), Depende de, Descrição, Design Patterns (Gang of Four) Sugerido, Exemplo / contexto, Feature: Activity review flow, Fluxo (given/when/then) (+2 more)
-
-### Community 124 - "Feature: Surprise mission"
-Cohesion: 0.18
-Nodes (10): Casos de erro (explícitos, não deixar implícito), Critério de aceite (o que prova que está pronto), Depende de, Descrição, Design Patterns (Gang of Four) Sugerido, Exemplo / contexto, Feature: Surprise mission, Fluxo (given/when/then) (+2 more)
-
-### Community 125 - "Feature: Weekly suggestion"
-Cohesion: 0.18
-Nodes (10): Casos de erro (explícitos, não deixar implícito), Critério de aceite (o que prova que está pronto), Depende de, Descrição, Design Patterns (Gang of Four) Sugerido, Exemplo / contexto, Feature: Weekly suggestion, Fluxo (given/when/then) (+2 more)
-
-### Community 126 - "Feature: What we know about you"
-Cohesion: 0.18
-Nodes (10): Casos de erro (explícitos, não deixar implícito), Critério de aceite (o que prova que está pronto), Depende de, Descrição, Design Patterns (Gang of Four) Sugerido, Exemplo / contexto, Feature: What we know about you, Fluxo (given/when/then) (+2 more)
-
-### Community 127 - "forbidden_patterns.md"
-Cohesion: 0.18
-Nodes (9): Forbidden Abstraction Patterns, Forbidden Agent Patterns, Forbidden Architectures By Default, Forbidden Data Flow Patterns, Forbidden Data Patterns, Forbidden Error Patterns, Forbidden MVC Violations, Forbidden TypeScript / Naming Patterns (+1 more)
-
-### Community 128 - "TDD: Activity card"
-Cohesion: 0.18
-Nodes (10): 1. Header & Metadata, 2. Technical Solution, 3. Context Pillars, 4. Context, 5. Problem Statement & Motivation, 6. Scope, 7. Risks, 8. Implementation Plan (+2 more)
-
-### Community 129 - "TDD: Activity library by category"
-Cohesion: 0.18
-Nodes (10): 1. Header & Metadata, 2. Technical Solution, 3. Context Pillars, 4. Context, 5. Problem Statement & Motivation, 6. Scope, 7. Risks, 8. Implementation Plan (+2 more)
-
-### Community 130 - "TDD: Mission pick rules"
-Cohesion: 0.18
-Nodes (10): 1. Header & Metadata, 2. Technical Solution, 3. Context Pillars, 4. Context, 5. Problem Statement & Motivation, 6. Scope, 7. Risks, 8. Implementation Plan (+2 more)
-
-### Community 131 - "TDD: Family profile (Family GPS)"
-Cohesion: 0.18
-Nodes (11): 10. Testing Strategy, 1. Header & Metadata, 2. Technical Solution, 3. Context Pillars, 4. Context, 5. Problem Statement & Motivation, 6. Scope, 7. Risks (+3 more)
-
-### Community 132 - "TDD: Family quiz"
-Cohesion: 0.18
-Nodes (11): 10. Testing Strategy, 1. Header & Metadata, 2. Technical Solution, 3. Context Pillars, 4. Context, 5. Problem Statement & Motivation, 6. Scope, 7. Risks (+3 more)
-
-### Community 133 - "TDD: Forecast contexts"
-Cohesion: 0.18
-Nodes (10): 1. Header & Metadata, 2. Technical Solution, 3. Context Pillars, 4. Context, 5. Problem Statement & Motivation, 6. Scope, 7. Risks, 8. Implementation Plan (+2 more)
-
-### Community 134 - "TDD: Question bank"
-Cohesion: 0.18
-Nodes (10): 1. Header & Metadata, 2. Technical Solution, 3. Context Pillars, 4. Context, 5. Problem Statement & Motivation, 6. Scope, 7. Risks, 8. Implementation Plan (+2 more)
-
-### Community 135 - "TDD: Quiz answer modes"
-Cohesion: 0.18
-Nodes (10): 1. Header & Metadata, 2. Technical Solution, 3. Context Pillars, 4. Context, 5. Problem Statement & Motivation, 6. Scope, 7. Risks, 8. Implementation Plan (+2 more)
-
-### Community 136 - "TDD: What we know about you"
-Cohesion: 0.18
-Nodes (11): 10. Testing Strategy, 1. Header & Metadata, 2. Technical Solution, 3. Context Pillars, 4. Context, 5. Problem Statement & Motivation, 6. Scope, 7. Risks (+3 more)
-
-### Community 137 - "Handoff to Scultore — Wave 0"
-Cohesion: 0.18
-Nodes (10): 1 — Next cannot load `next.config.ts` on TypeScript 7, Backend signals, Canva, FE checkboxes, Files written per lane (platform), Graph (scribe), Handoff to Scultore — Wave 0, Not done (+2 more)
-
-### Community 138 - "mission_category.ts"
-Cohesion: 0.20
-Nodes (4): DuplicateSlugError, MissionCategory, MissionCategoryCreateInput, MissionCategoryRecord
-
-### Community 139 - ".claude/agents/pittore.md"
-Cohesion: 0.20
-Nodes (9): Audit (structure and finish), Brushes (parallel frontend work), Canva (performance + browser compatibility), Inputs, Modes, Output format, Scribe (graph keeper), Wave handoff loop (+1 more)
-
-### Community 140 - "Tester skill — supplementary examples"
-Cohesion: 0.20
-Nodes (10): AAA boilerplate, Bad example: integration test (order-dependent), Bad example: unit test (never call subject, never assert), Good example: integration tests (TypeORMBookingRepository), Good example: unit tests (Booking Entity), Principle 1: mirror assertion vs hand-derived literal, Principle 2: mock at the right level, Principle 2: real behavior vs mock existence (+2 more)
-
-### Community 141 - ".cursor/agents/pittore.md"
-Cohesion: 0.20
-Nodes (9): Audit (structure and finish), Brushes (parallel frontend work), Canva (performance + browser compatibility), Inputs, Modes, Output format, Scribe (graph keeper), Wave handoff loop (+1 more)
-
-### Community 142 - "Web Styling"
-Cohesion: 0.20
-Nodes (9): BAD / GOOD, Breakpoints, Design brief (orchestrator runs this), Detect, Font self-host, Iron: breakpoints + 1920 container, Tailwind ↔ Bootstrap 5 parity (dense), Token wiring recipes (+1 more)
-
-### Community 143 - "Tester skill — supplementary examples"
-Cohesion: 0.20
-Nodes (10): AAA boilerplate, Bad example: integration test (order-dependent), Bad example: unit test (never call subject, never assert), Good example: integration tests (TypeORMBookingRepository), Good example: unit tests (Booking Entity), Principle 1: mirror assertion vs hand-derived literal, Principle 2: mock at the right level, Principle 2: real behavior vs mock existence (+2 more)
-
-### Community 144 - "operational_constraints.md"
-Cohesion: 0.20
-Nodes (8): Data Constraints, External Service Constraints, Multi-Agent Constraints, MVC Operational Constraints, Observability, Purpose, Runtime Constraints, Security Constraints
-
-### Community 145 - "TDD: Activity review flow"
-Cohesion: 0.20
-Nodes (10): 1. Header & Metadata, 2. Technical Solution, 3. Context Pillars, 4. Context, 5. Problem Statement & Motivation, 6. Scope, 7. Risks, 8. Implementation Plan (+2 more)
-
-### Community 146 - "fiche-api.test.ts"
-Cohesion: 0.22
-Nodes (8): createPaperBoatsDraft(), FicheEnvelope, FicheMission, jsonRequest(), MissionAgeRow, MissionCreated, RouteContext, ValuesEnvelope
-
-### Community 148 - "InReview"
-Cohesion: 0.28
-Nodes (3): InReview, DO NOT, DO NOT
-
-### Community 150 - ".claude/agents/ingegnere.md"
-Cohesion: 0.22
-Nodes (8): Dead code and obsolete tests, Fix rules, Inputs, Output format, Skills (load lazily — read each one right before the first step that needs it, never all upfront), Squadre (parallel audits), Toolchain, Quality Run and Lefthook, Workflow (per invocation)
-
-### Community 151 - ".cursor/agents/ingegnere.md"
-Cohesion: 0.22
-Nodes (8): Dead code and obsolete tests, Fix rules, Inputs, Output format, Skills (load lazily — read each one right before the first step that needs it, never all upfront), Squadre (parallel audits), Toolchain, Quality Run and Lefthook, Workflow (per invocation)
-
-### Community 152 - "deployment_rules.md"
-Cohesion: 0.22
-Nodes (7): Agent Rules, Database Rules, MVC Deployment Considerations, Pre-Deployment Checklist, Purpose, Release Principles, Rollback Rules
-
-### Community 153 - "Phase 2 signal — session brownfield playbook (do not apply)"
-Cohesion: 0.22
-Nodes (8): Context, Do not touch, Legacy inventory, Obsolete tests, Phase 2 signal — session brownfield playbook (do not apply), Removal steps, Replacement map, Verification
-
-### Community 154 - "Handoff to Pittore — Wave 3"
-Cohesion: 0.22
-Nodes (8): After paint, DB / Backend status, Handoff to Pittore — Wave 3, Lane: family-shell (parent-shell), Lane: forecast, Lane: panel (admin-panel), Open questions, Rules of execution (Frontend)
-
-### Community 155 - "address/route.ts"
-Cohesion: 0.32
-Nodes (4): AddressPolicy, FamilyRouteContext, PUT(), Legacy inventory
-
-### Community 157 - "Phase 2 signal — family brownfield playbook (do not apply)"
+### Community 95 - "Phase 2 signal — family brownfield playbook (do not apply)"
 Cohesion: 0.25
 Nodes (7): Context, Do not touch, Obsolete tests, Phase 2 signal — family brownfield playbook (do not apply), Removal steps, Replacement map, Verification
 
-### Community 158 - "Handoff to Pittore — Wave 2"
+### Community 96 - "IndicatorsFacade"
+Cohesion: 0.21
+Nodes (8): IndicatorsFacade, Brownfield, Context, Frontend, Green steps, Phase 9 — indicators (indicators-panel) Green, Red command, Verification
+
+### Community 97 - "Green steps"
+Cohesion: 0.12
+Nodes (10): MoveSuggestion, Brownfield, Context, Frontend, Green steps, Phase 7 — calendar-ops (weekly-suggestion + reminders) Green, Red command, Verification (+2 more)
+
+### Community 98 - "week/route.ts"
+Cohesion: 0.23
+Nodes (7): DropOnDay, MissingDayError, deny(), FamilyRouteContext, GET(), isRecord(), POST()
+
+### Community 99 - "materials-session-context.tsx"
+Cohesion: 0.18
+Nodes (13): MATERIAL_TYPES, PanelMaterialResult, PanelMaterialRow, PanelMaterialsResult, fileLabel(), MaterialsScreen(), makeMaterials(), makeStaff() (+5 more)
+
+### Community 100 - ".claude/skills/tester/SKILL.md"
+Cohesion: 0.15
+Nodes (5): Exceções, Exemplo, Persisted Tester, Quando a mudança exige cobertura, Tests
+
+### Community 101 - "Pipeline"
+Cohesion: 0.12
+Nodes (15): 1. SCAN, 2. DESIGN BRIEF (web only), 3. DISCOVER (if vague), 4. SCOPE, 5. THESIS, 6. LOAD, 7. IMPLEMENT, 8. AUDIT (+7 more)
+
+### Community 102 - "CSS Native"
+Cohesion: 0.12
+Nodes (15): Anchor + Popover Tooltip, Anchor Positioning, Browser Support, Container Queries, CSS Native, DO NOT, Fallback Patterns, Layered Animation Strategy (+7 more)
+
+### Community 103 - "Three.js & R3F"
+Cohesion: 0.12
+Nodes (15): Camera, Controls, DO NOT, Drei Essentials, Hooks, Lighting Rigs, Loading Models, Performance (+7 more)
+
+### Community 104 - "Amaterasu Paint — Master Painter"
+Cohesion: 0.12
+Nodes (15): Amaterasu Paint — Master Painter, Decision tree, Existing project, Iron Rules, Light scope, Module base, Phase 1 — BRAINSTORM, Phase 2 — THESIS (+7 more)
+
+### Community 105 - "TDD — Admin / Operator web panel"
+Cohesion: 0.12
+Nodes (15): Context, Context Pillars, Descrição, Exemplo / contexto, Header & Metadata, Implementation Plan, Problem Statement & Motivation, Problema (+7 more)
+
+### Community 106 - "TDD — Adult titular"
+Cohesion: 0.12
+Nodes (15): Context, Context Pillars, Descrição, Exemplo / contexto, Header & Metadata, Implementation Plan, Problem Statement & Motivation, Problema (+7 more)
+
+### Community 107 - "TDD — Adult invite"
+Cohesion: 0.12
+Nodes (15): Context, Context Pillars, Descrição, Exemplo / contexto, Header & Metadata, Implementation Plan, Problem Statement & Motivation, Problema (+7 more)
+
+### Community 108 - "TDD — Mock session and context switch"
+Cohesion: 0.12
+Nodes (15): Context, Context Pillars, Descrição, Exemplo / contexto, Header & Metadata, Implementation Plan, Problem Statement & Motivation, Problema (+7 more)
+
+### Community 109 - "TDD — Families and subscriptions (support)"
+Cohesion: 0.12
+Nodes (15): Context, Context Pillars, Descrição, Exemplo / contexto, Header & Metadata, Implementation Plan, Problem Statement & Motivation, Problema (+7 more)
+
+### Community 110 - "TDD — Family address"
+Cohesion: 0.12
+Nodes (15): Context, Context Pillars, Descrição, Exemplo / contexto, Header & Metadata, Implementation Plan, Problem Statement & Motivation, Problema (+7 more)
+
+### Community 111 - "TDD — Members without app access"
+Cohesion: 0.12
+Nodes (15): Context, Context Pillars, Descrição, Exemplo / contexto, Header & Metadata, Implementation Plan, Problem Statement & Motivation, Problema (+7 more)
+
+### Community 112 - "TDD — Parent phone shell"
+Cohesion: 0.12
+Nodes (15): Context, Context Pillars, Descrição, Exemplo / contexto, Header & Metadata, Implementation Plan, Problem Statement & Motivation, Problema (+7 more)
+
+### Community 113 - "family_diary.ts"
+Cohesion: 0.21
+Nodes (10): Frontend (Pittore), Phase 9 — Green, DiaryRow, FamilyDiary, FamilyDiaryRecord, isRecord(), parseMissionNoteItem(), parseMissionNotesEnvelope() (+2 more)
+
+### Community 114 - "DayComposite"
+Cohesion: 0.18
+Nodes (3): DayComponent, DayComposite, SuggestionLeaf
+
+### Community 115 - "[id]/missions/route.ts"
+Cohesion: 0.20
+Nodes (12): deny(), FamilyRouteContext, GET(), HistoryItem, isRecord(), parseStoredClosing(), toHistoryItem(), ColumnRow (+4 more)
+
+### Community 116 - "mascot-mission-context.tsx"
+Cohesion: 0.26
+Nodes (7): MascotMessageDecorator, isRecord(), MascotMissionContext, MascotMissionContextValue, MascotMissionProvider(), MascotMissionProviderProps, readMissionPayload()
+
+### Community 117 - "PublishedMission"
+Cohesion: 0.25
+Nodes (5): isRecord(), PublishedMission, PublishedMissionPayload, readPublishedMission(), UnpublishedMissionError
+
+### Community 118 - "Motion Principles"
+Cohesion: 0.13
+Nodes (14): CSS keywords & recipes, Designer weighting, Easing, Enter/exit recipes, GSAP / Framer decision matrix, Iron rules (never break), Load sub-skills, Motion Principles (+6 more)
+
+### Community 119 - "Handoff to Pittore — Wave 2"
 Cohesion: 0.25
 Nodes (7): Backend test gate (already run), Handoff to Pittore — Wave 2, Lane catalog-fiche — no Frontend (`FE: —`), Lane family — no Frontend (`FE: —`), Lane session — has Frontend, Open questions for the user (Frontend), Rules of execution (Frontend)
 
-### Community 159 - "Phase 3 — panel (admin-panel) Green"
-Cohesion: 0.25
-Nodes (7): Brownfield, Context, Frontend, Increment — mock role switch (Pittore signal), Phase 3 — panel (admin-panel) Green, Red command, Verification
+### Community 120 - "Handoff to Scultore — Wave 5"
+Cohesion: 0.13
+Nodes (14): Backend signals, calendar, Calendar move cannot update the source day, Canva, FE checkboxes, Files written per lane, gps, Graph (+6 more)
 
-### Community 160 - "Handoff to Pittore — Wave 4"
-Cohesion: 0.25
-Nodes (7): After paint, DB / Backend status, Handoff to Pittore — Wave 4, Lane: mascot (mascot-mission), Lane: questions (question-bank), Open questions, Rules of execution (Frontend)
+### Community 121 - "Handoff to Scultore — Wave 7"
+Cohesion: 0.13
+Nodes (14): Backend signals, calendar-ops, Canva, FE checkboxes, Files written per lane, Graph, Handoff to Scultore — Wave 7, Live catalog cannot produce surprise miss (+6 more)
 
-### Community 161 - "Great Kids — Design system"
-Cohesion: 0.25
-Nodes (7): Chrome (iPhone 15 Pro Max), Do not, Great Kids — Design system, Interaction thesis, Product, Tokens, Visual thesis
+### Community 122 - "Handoff to Scultore — Wave 8"
+Cohesion: 0.13
+Nodes (14): Backend signals, Canva, FE checkboxes, Files written per lane, Graph, Handoff to Scultore — Wave 8, mission-play, No GET for a cycle row (+6 more)
 
-### Community 162 - "weather-adapter.ts"
-Cohesion: 0.33
-Nodes (4): PreviousWeatherInput, WeatherAdapter, WeatherPathFnProtocol, WeatherPathProtocol
+### Community 123 - "FamilyCalendar"
+Cohesion: 0.14
+Nodes (9): Brownfield, Context, Frontend, Green steps, Phase 5 — calendar (family-calendar) Green, Red command, Verification, FamilyCalendar (+1 more)
 
-### Community 163 - "fiche-builder.ts"
-Cohesion: 0.29
-Nodes (5): FicheBuildInput, FicheBuilt, FicheValuesEnvelope, FicheBuildInput, FicheBuilt
+### Community 124 - "family-missions/[id]/route.ts"
+Cohesion: 0.31
+Nodes (8): CycleRouteContext, deny(), isRecord(), parseStoredClosing(), PATCH(), toPayload(), unprocessable(), StartDoingCommand
 
-### Community 164 - "image-adapter.ts"
-Cohesion: 0.33
-Nodes (4): ImageAdapter, ImageObjectKeyInput, ImagePathFnProtocol, ImagePathProtocol
+### Community 126 - "cycle-session-context.tsx"
+Cohesion: 0.18
+Nodes (9): CompleteMissionCommand, CycleClosing, CycleGateKind, CyclePresentation, CycleSessionContext, CycleSessionContextValue, CycleSessionProvider(), CycleSessionProviderProps (+1 more)
 
-### Community 165 - "Wave 3 — Frontend verification (panel)"
-Cohesion: 0.29
-Nodes (5): Acceptance, Commands, Files written, Manual: acceptance, Wave 3 — Frontend verification (panel)
+### Community 127 - "contexts-session-context.tsx"
+Cohesion: 0.27
+Nodes (8): ContextsFacade, PanelContextResult, PanelContextRow, PanelContextsResult, ContextsSessionContext, ContextsSessionContextValue, ContextsSessionProvider(), ContextsSessionProviderProps
 
-### Community 166 - "questions/route.ts"
-Cohesion: 0.48
-Nodes (6): assertStaff(), GET(), POST(), QuestionJson, QuestionPostBody, toQuestionJson()
+### Community 128 - "mascot-screen.tsx"
+Cohesion: 0.31
+Nodes (5): MascotPresentation, useMascotMission(), MascotScreen(), MascotScreenBody(), revealAttr()
 
-### Community 167 - "context-switch-screen.tsx"
-Cohesion: 0.43
-Nodes (4): ContextSwitchScreen(), denyCopy(), parentCopy(), TitularAction
+### Community 129 - "Design Audit"
+Cohesion: 0.14
+Nodes (13): Automated checks (evidence checklist), Compose, Critical (ship blocker), Design Audit, Important (current sprint), Load sub-skills, Nice-to-have (backlog), Output severity buckets (+5 more)
 
-### Community 168 - "Sistina Arch — SVG shape examples"
-Cohesion: 0.29
-Nodes (4): Architecture fragment, Default map fragment (files + visible complex excerpts), Sequence fragment, Sistina Arch — SVG shape examples
+### Community 130 - "Sistina Arch"
+Cohesion: 0.14
+Nodes (14): Execution order (mandatory), Language, Libs, Output contract, Sistina Arch, Step 0 — Evidence lock, Step 0b — Inventory, Step 0c — Depth AskQuestion (+6 more)
 
-### Community 169 - "Phase 1 — catalog (activity-library) Green"
-Cohesion: 0.29
-Nodes (6): Context, Frontend, Green steps, Phase 1 — catalog (activity-library) Green, Red command, Verification
+### Community 131 - "Handoff to Scultore — Wave 2"
+Cohesion: 0.20
+Nodes (9): Backend signals, Canva, FE checkboxes, Graph, Handoff to Scultore — Wave 2, Not done, Router blocks merged, Type-check / lint / build (+1 more)
 
-### Community 170 - "Phase 1 — identity (adult-holder) Green"
-Cohesion: 0.29
-Nodes (6): Context, Frontend, Green steps, Phase 1 — identity (adult-holder) Green, Red command, Verification
-
-### Community 171 - "Phase 2 — session (context-switch) Green"
-Cohesion: 0.29
-Nodes (6): Brownfield — post-Green playbook, Context, Frontend verification, Phase 2 — session (context-switch) Green, Red command, Verification
-
-### Community 172 - "Phase 2 signal — session Green (Child 403 / mock align)"
-Cohesion: 0.29
-Nodes (6): Brownfield, Context, Green steps, Phase 2 signal — session Green (Child 403 / mock align), Red command, Verification
-
-### Community 173 - "Phase 4 — questions (question-bank) Green"
-Cohesion: 0.29
-Nodes (6): Brownfield, Context, Frontend, Phase 4 — questions (question-bank) Green, Red command, Verification
-
-### Community 174 - "family_quiz.ts"
-Cohesion: 0.29
-Nodes (6): FamilyQuizCreateInput, FamilyQuizKind, FamilyQuizStatus, FamilyQuizUpdateInput, isKind(), isStatus()
-
-### Community 176 - "All for Harness"
-Cohesion: 0.33
-Nodes (5): All for Harness, Camadas (docs → especs → código), Enforcement, Plan mode — escrita de features, Workflow (docs → especs → código → graphify)
-
-### Community 177 - "Babylon Gate"
-Cohesion: 0.33
-Nodes (5): Babylon Gate, Counts as bypass or alteration, Do not, Protected, When the user explicitly asks for an override
-
-### Community 178 - "Layout recipes"
-Cohesion: 0.33
-Nodes (6): Architecture (default mirror), Data flow, Layout recipes, Lifecycle, Sequence, Workflow
-
-### Community 179 - "UI/UX Pro Max"
-Cohesion: 0.33
-Nodes (5): CLI, Persist, Priority rules (short), UI/UX Pro Max, When
-
-### Community 180 - "Wave 0 — Frontend verification (platform)"
-Cohesion: 0.33
-Nodes (5): Acceptance, Commands, Files written, Manual: empty group layouts, Wave 0 — Frontend verification (platform)
-
-### Community 181 - "Wave 2 — Frontend verification (session)"
-Cohesion: 0.33
-Nodes (5): Acceptance, Commands, Files written, Manual: acceptance, Wave 2 — Frontend verification (session)
-
-### Community 182 - "Phase 3 — family-shell (parent-shell) Green"
-Cohesion: 0.33
-Nodes (5): Context, Green steps, Phase 3 — family-shell (parent-shell) Green, Red command, Verification
-
-### Community 183 - "Phase 3 — forecast (forecast-contexts) Green"
+### Community 132 - "Phase 3 — forecast (forecast-contexts) Green"
 Cohesion: 0.33
 Nodes (5): Brownfield, Context, Phase 3 — forecast (forecast-contexts) Green, Red command, Verification
 
-### Community 184 - "mission-categories.test.ts"
-Cohesion: 0.33
-Nodes (4): CategoriesEnvelope, CategoryCreated, CategoryItem, SEEDED_SLUGS
+### Community 133 - "Handoff to Scultore — Wave 4"
+Cohesion: 0.14
+Nodes (13): Backend signals, Canva, FE checkboxes, Files written per lane, Graph, Handoff to Scultore — Wave 4, mascot, Mock session store is per Route Handler bundle (+5 more)
 
-### Community 185 - "Enforces English"
+### Community 134 - "Phase 2 signal — family Green (presentation ContextPolicy)"
+Cohesion: 0.33
+Nodes (5): Brownfield, Context, Phase 2 signal — family Green (presentation ContextPolicy), Red command, Verification
+
+### Community 135 - "Handoff to Pittore — Wave 0"
+Cohesion: 0.15
+Nodes (12): HealthEnvelope, After you finish, Approved Frontend plan, Backend contract (health), Blocked items (do not implement), Env (names only), Frontend owned paths (Wave 0), Handoff to Pittore — Wave 0 (+4 more)
+
+### Community 136 - "api/missions/[id]/route.ts"
+Cohesion: 0.20
+Nodes (12): ReviewPolicy, ficheEnvelope(), FichePatchBody, GET(), MISSION_FORMATS, MISSION_SETTINGS, MISSION_TYPES, notFound() (+4 more)
+
+### Community 137 - "families-session-context.tsx"
+Cohesion: 0.19
+Nodes (12): FamiliesFacade, PanelFamiliesResult, PanelFamilyInvite, PanelFamilyPlan, PanelFamilyRow, readFamily(), readInvite(), readPlan() (+4 more)
+
+### Community 138 - "Desktop Principles"
+Cohesion: 0.15
+Nodes (12): Anti-patterns, Chords & conflicts, Desktop Principles, Discoverability, Focus management, Hover — mandatory, Information density, Keyboard shortcuts — first-class (+4 more)
+
+### Community 139 - "Mobile Principles"
+Cohesion: 0.15
+Nodes (12): Accessibility (mobile), Anti-patterns, Canonical gestures, Conflict resolution, Load sub-skills, Mobile Principles, No-hover doctrine, Performance budgets (+4 more)
+
+### Community 140 - "domain_invariantes.md"
+Cohesion: 0.15
+Nodes (11): Agent Rules, Common MVC Enforcement Points, Concurrency Rules, INV-001: Catalog missions only, INV-002: Child is not an account; no child photo, INV-003: Mission cycle, INV-004: JSON envelopes, INV-005: Review before family use (+3 more)
+
+### Community 141 - "Feature: Object storage"
+Cohesion: 0.18
+Nodes (10): Casos de erro (explícitos, não deixar implícito), Critério de aceite (o que prova que está pronto), Depende de, Descrição, Design Patterns (Gang of Four) Sugerido, Exemplo / contexto, Feature: Object storage, Fluxo (given/when/then) (+2 more)
+
+### Community 142 - "Handoff to Scultore — Wave 9"
+Cohesion: 0.17
+Nodes (11): Backend signals, Canva, diary, FE checkboxes, Files written per lane, Handoff to Scultore — Wave 9, indicators, Not done (+3 more)
+
+### Community 143 - "next"
+Cohesion: 0.25
+Nodes (5): metadata, RootLayoutProps, viewport, nextConfig, next
+
+### Community 144 - "Technical Design Doc Creator"
+Cohesion: 0.17
+Nodes (12): Anti-patterns, Core principle: architecture, not implementation, Criticality matrix, Implementation Plan uses TDD Red/Green, Interactive workflow, Language, Multi-feature mode — `especs/design-docs/implementation.md`, Output location (+4 more)
+
+### Community 145 - "Framer Motion / Motion"
+Cohesion: 0.17
+Nodes (11): AnimatePresence Props, Animation, DO NOT, Framer Motion / Motion, Gestures, Hooks, Layout, motion Props (+3 more)
+
+### Community 146 - "GSAP"
+Cohesion: 0.17
+Nodes (11): Core API, DO NOT, GSAP, Plugins, Recipes, Recipes, ScrollTrigger, Setup (+3 more)
+
+### Community 147 - "Technical Design Doc Creator"
+Cohesion: 0.17
+Nodes (12): Anti-patterns, Core principle: architecture, not implementation, Criticality matrix, Implementation Plan uses TDD Red/Green, Interactive workflow, Language, Multi-feature mode — `especs/design-docs/implementation.md`, Output location (+4 more)
+
+### Community 148 - "TDD: Family profile (Family GPS)"
+Cohesion: 0.17
+Nodes (11): 10. Testing Strategy, 1. Header & Metadata, 2. Technical Solution, 3. Context Pillars, 4. Context, 5. Problem Statement & Motivation, 6. Scope, 7. Risks (+3 more)
+
+### Community 149 - "TDD: Family quiz"
+Cohesion: 0.17
+Nodes (11): 10. Testing Strategy, 1. Header & Metadata, 2. Technical Solution, 3. Context Pillars, 4. Context, 5. Problem Statement & Motivation, 6. Scope, 7. Risks (+3 more)
+
+### Community 150 - "Handoff to Scultore — Wave 11"
+Cohesion: 0.17
+Nodes (11): Backend signals, Canva, FE checkboxes, Files written per lane, Graph, Handoff to Scultore — Wave 11, Not done, Router blocks merged (+3 more)
+
+### Community 151 - "diary/route.ts"
+Cohesion: 0.33
+Nodes (8): AddNoteCommand, deny(), DiaryRouteContext, GET(), notFound(), POST(), toPayload(), unprocessable()
+
+### Community 152 - ".claude/agents/scultore.md"
+Cohesion: 0.18
+Nodes (10): Cinzels (parallel lanes), Flow modes, Handoff folder per wave, `implementation.md` format (always this shape), Inputs, Output format, Pittore handoff loop, Test suite between waves (+2 more)
+
+### Community 153 - "Babylon Gardens"
+Cohesion: 0.18
+Nodes (10): Babylon Gardens, Do not, Generated `lefthook.yml`, Non-negotiables, Quality Run (`scripts/quality/run.sh`), Repo files (skipped if present unless `--force`), Report (`.quality/report.json`), RUN (+2 more)
+
+### Community 154 - ".cursor/agents/scultore.md"
+Cohesion: 0.18
+Nodes (10): Cinzels (parallel lanes), Flow modes, Handoff folder per wave, `implementation.md` format (always this shape), Inputs, Output format, Pittore handoff loop, Test suite between waves (+2 more)
+
+### Community 155 - "Canvas Generative"
+Cohesion: 0.18
+Nodes (10): Canvas Generative, DO NOT, Double Buffer, Flow Field, Full Loop Example, L-Systems, Lorenz Attractor, Noise (+2 more)
+
+### Community 156 - "Babylon Gardens"
+Cohesion: 0.18
+Nodes (10): Babylon Gardens, Do not, Generated `lefthook.yml`, Non-negotiables, Quality Run (`scripts/quality/run.sh`), Repo files (skipped if present unless `--force`), Report (`.quality/report.json`), RUN (+2 more)
+
+### Community 157 - "architecture_rules.md"
+Cohesion: 0.18
+Nodes (9): Architectural Principles, Data Flow, DDD And Clean Architecture Usage, Default Architecture, Dependency Rules, Design Patterns, MCP Rules, Multi-Agent Rules (+1 more)
+
+### Community 158 - "Feature: Activity card"
+Cohesion: 0.18
+Nodes (10): Casos de erro (explícitos, não deixar implícito), Critério de aceite (o que prova que está pronto), Depende de, Descrição, Design Patterns (Gang of Four) Sugerido, Exemplo / contexto, Feature: Activity card, Fluxo (given/when/then) (+2 more)
+
+### Community 159 - "Feature: Activity library by category"
+Cohesion: 0.18
+Nodes (10): Casos de erro (explícitos, não deixar implícito), Critério de aceite (o que prova que está pronto), Depende de, Descrição, Design Patterns (Gang of Four) Sugerido, Exemplo / contexto, Feature: Activity library by category, Fluxo (given/when/then) (+2 more)
+
+### Community 160 - "Feature: Admin / Operator web panel"
+Cohesion: 0.18
+Nodes (10): Casos de erro (explícitos, não deixar implícito), Critério de aceite (o que prova que está pronto), Depende de, Descrição, Design Patterns (Gang of Four) Sugerido, Exemplo / contexto, Feature: Admin / Operator web panel, Fluxo (given/when/then) (+2 more)
+
+### Community 161 - "Feature: Admin users"
+Cohesion: 0.18
+Nodes (10): Casos de erro (explícitos, não deixar implícito), Critério de aceite (o que prova que está pronto), Depende de, Descrição, Design Patterns (Gang of Four) Sugerido, Exemplo / contexto, Feature: Admin users, Fluxo (given/when/then) (+2 more)
+
+### Community 162 - "Feature: Adult titular"
+Cohesion: 0.18
+Nodes (10): Casos de erro (explícitos, não deixar implícito), Critério de aceite (o que prova que está pronto), Depende de, Descrição, Design Patterns (Gang of Four) Sugerido, Exemplo / contexto, Feature: Adult titular, Fluxo (given/when/then) (+2 more)
+
+### Community 163 - "Feature: Adult invite"
+Cohesion: 0.18
+Nodes (10): Casos de erro (explícitos, não deixar implícito), Critério de aceite (o que prova que está pronto), Depende de, Descrição, Design Patterns (Gang of Four) Sugerido, Exemplo / contexto, Feature: Adult invite, Fluxo (given/when/then) (+2 more)
+
+### Community 164 - "Feature: Mission pick rules"
+Cohesion: 0.18
+Nodes (10): Casos de erro (explícitos, não deixar implícito), Critério de aceite (o que prova que está pronto), Depende de, Descrição, Design Patterns (Gang of Four) Sugerido, Exemplo / contexto, Feature: Mission pick rules, Fluxo (given/when/then) (+2 more)
+
+### Community 165 - "Feature: Completed missions history"
+Cohesion: 0.18
+Nodes (10): Casos de erro (explícitos, não deixar implícito), Critério de aceite (o que prova que está pronto), Depende de, Descrição, Design Patterns (Gang of Four) Sugerido, Exemplo / contexto, Feature: Completed missions history, Fluxo (given/when/then) (+2 more)
+
+### Community 166 - "Feature: Mock session and context switch"
+Cohesion: 0.18
+Nodes (10): Casos de erro (explícitos, não deixar implícito), Critério de aceite (o que prova que está pronto), Depende de, Descrição, Design Patterns (Gang of Four) Sugerido, Exemplo / contexto, Feature: Mock session and context switch, Fluxo (given/when/then) (+2 more)
+
+### Community 167 - "Feature: Families and subscriptions (support)"
+Cohesion: 0.18
+Nodes (10): Casos de erro (explícitos, não deixar implícito), Critério de aceite (o que prova que está pronto), Depende de, Descrição, Design Patterns (Gang of Four) Sugerido, Exemplo / contexto, Feature: Families and subscriptions (support), Fluxo (given/when/then) (+2 more)
+
+### Community 168 - "Feature: Family address"
+Cohesion: 0.18
+Nodes (10): Casos de erro (explícitos, não deixar implícito), Critério de aceite (o que prova que está pronto), Depende de, Descrição, Design Patterns (Gang of Four) Sugerido, Exemplo / contexto, Feature: Family address, Fluxo (given/when/then) (+2 more)
+
+### Community 169 - "Feature: Family calendar"
+Cohesion: 0.18
+Nodes (10): Casos de erro (explícitos, não deixar implícito), Critério de aceite (o que prova que está pronto), Depende de, Descrição, Design Patterns (Gang of Four) Sugerido, Exemplo / contexto, Feature: Family calendar, Fluxo (given/when/then) (+2 more)
+
+### Community 170 - "Feature: Family diary"
+Cohesion: 0.18
+Nodes (10): Casos de erro (explícitos, não deixar implícito), Critério de aceite (o que prova que está pronto), Depende de, Descrição, Design Patterns (Gang of Four) Sugerido, Exemplo / contexto, Feature: Family diary, Fluxo (given/when/then) (+2 more)
+
+### Community 171 - "Feature: Family profile (Family GPS)"
+Cohesion: 0.18
+Nodes (10): Casos de erro (explícitos, não deixar implícito), Critério de aceite (o que prova que está pronto), Depende de, Descrição, Design Patterns (Gang of Four) Sugerido, Exemplo / contexto, Feature: Family profile (Family GPS), Fluxo (given/when/then) (+2 more)
+
+### Community 172 - "Feature: Family quiz"
+Cohesion: 0.18
+Nodes (10): Casos de erro (explícitos, não deixar implícito), Critério de aceite (o que prova que está pronto), Depende de, Descrição, Design Patterns (Gang of Four) Sugerido, Exemplo / contexto, Feature: Family quiz, Fluxo (given/when/then) (+2 more)
+
+### Community 173 - "reminders-patch.test.ts"
+Cohesion: 0.13
+Nodes (28): GET(), DayDocument, SuggestionItem, arrangeCalendarFamily(), tests_calendar_helpers_arrangedfamily, arrangeDraftMission(), arrangePublishedMission(), calendarRouteParams (+20 more)
+
+### Community 174 - "jsonRequest"
+Cohesion: 0.07
+Nodes (43): ModeStrategy, QuizMode, SoloModeStrategy, TableModeStrategy, badRequest(), deny(), FamilyRouteContext, GET() (+35 more)
+
+### Community 175 - "Feature: Forecast contexts"
+Cohesion: 0.18
+Nodes (10): Casos de erro (explícitos, não deixar implícito), Critério de aceite (o que prova que está pronto), Depende de, Descrição, Design Patterns (Gang of Four) Sugerido, Exemplo / contexto, Feature: Forecast contexts, Fluxo (given/when/then) (+2 more)
+
+### Community 176 - "Feature: Indicators panel"
+Cohesion: 0.18
+Nodes (10): Casos de erro (explícitos, não deixar implícito), Critério de aceite (o que prova que está pronto), Depende de, Descrição, Design Patterns (Gang of Four) Sugerido, Exemplo / contexto, Feature: Indicators panel, Fluxo (given/when/then) (+2 more)
+
+### Community 177 - "Feature: Mascot mission message"
+Cohesion: 0.18
+Nodes (10): Casos de erro (explícitos, não deixar implícito), Critério de aceite (o que prova que está pronto), Depende de, Descrição, Design Patterns (Gang of Four) Sugerido, Exemplo / contexto, Feature: Mascot mission message, Fluxo (given/when/then) (+2 more)
+
+### Community 178 - "Feature: Members without app access"
+Cohesion: 0.18
+Nodes (10): Casos de erro (explícitos, não deixar implícito), Critério de aceite (o que prova que está pronto), Depende de, Descrição, Design Patterns (Gang of Four) Sugerido, Exemplo / contexto, Feature: Members without app access, Fluxo (given/when/then) (+2 more)
+
+### Community 179 - "Feature: Mission cycle"
+Cohesion: 0.18
+Nodes (10): Casos de erro (explícitos, não deixar implícito), Critério de aceite (o que prova que está pronto), Depende de, Descrição, Design Patterns (Gang of Four) Sugerido, Exemplo / contexto, Feature: Mission cycle, Fluxo (given/when/then) (+2 more)
+
+### Community 180 - "Feature: Note types and mission link"
+Cohesion: 0.18
+Nodes (10): Casos de erro (explícitos, não deixar implícito), Critério de aceite (o que prova que está pronto), Depende de, Descrição, Design Patterns (Gang of Four) Sugerido, Exemplo / contexto, Feature: Note types and mission link, Fluxo (given/when/then) (+2 more)
+
+### Community 181 - "Feature: Parent phone shell"
+Cohesion: 0.18
+Nodes (10): Casos de erro (explícitos, não deixar implícito), Critério de aceite (o que prova que está pronto), Depende de, Descrição, Design Patterns (Gang of Four) Sugerido, Exemplo / contexto, Feature: Parent phone shell, Fluxo (given/when/then) (+2 more)
+
+### Community 182 - "Feature: Question bank"
+Cohesion: 0.18
+Nodes (10): Casos de erro (explícitos, não deixar implícito), Critério de aceite (o que prova que está pronto), Depende de, Descrição, Design Patterns (Gang of Four) Sugerido, Exemplo / contexto, Feature: Question bank, Fluxo (given/when/then) (+2 more)
+
+### Community 183 - "Feature: Quiz answer modes"
+Cohesion: 0.18
+Nodes (10): Casos de erro (explícitos, não deixar implícito), Critério de aceite (o que prova que está pronto), Depende de, Descrição, Design Patterns (Gang of Four) Sugerido, Exemplo / contexto, Feature: Quiz answer modes, Fluxo (given/when/then) (+2 more)
+
+### Community 184 - "Feature: Reminders and follow-up"
+Cohesion: 0.18
+Nodes (10): Casos de erro (explícitos, não deixar implícito), Critério de aceite (o que prova que está pronto), Depende de, Descrição, Design Patterns (Gang of Four) Sugerido, Exemplo / contexto, Feature: Reminders and follow-up, Fluxo (given/when/then) (+2 more)
+
+### Community 185 - "Feature: Activity review flow"
+Cohesion: 0.18
+Nodes (10): Casos de erro (explícitos, não deixar implícito), Critério de aceite (o que prova que está pronto), Depende de, Descrição, Design Patterns (Gang of Four) Sugerido, Exemplo / contexto, Feature: Activity review flow, Fluxo (given/when/then) (+2 more)
+
+### Community 186 - "Feature: Surprise mission"
+Cohesion: 0.18
+Nodes (10): Casos de erro (explícitos, não deixar implícito), Critério de aceite (o que prova que está pronto), Depende de, Descrição, Design Patterns (Gang of Four) Sugerido, Exemplo / contexto, Feature: Surprise mission, Fluxo (given/when/then) (+2 more)
+
+### Community 187 - "Feature: Weekly suggestion"
+Cohesion: 0.18
+Nodes (10): Casos de erro (explícitos, não deixar implícito), Critério de aceite (o que prova que está pronto), Depende de, Descrição, Design Patterns (Gang of Four) Sugerido, Exemplo / contexto, Feature: Weekly suggestion, Fluxo (given/when/then) (+2 more)
+
+### Community 188 - "Feature: What we know about you"
+Cohesion: 0.18
+Nodes (10): Casos de erro (explícitos, não deixar implícito), Critério de aceite (o que prova que está pronto), Depende de, Descrição, Design Patterns (Gang of Four) Sugerido, Exemplo / contexto, Feature: What we know about you, Fluxo (given/when/then) (+2 more)
+
+### Community 189 - "forbidden_patterns.md"
+Cohesion: 0.18
+Nodes (9): Forbidden Abstraction Patterns, Forbidden Agent Patterns, Forbidden Architectures By Default, Forbidden Data Flow Patterns, Forbidden Data Patterns, Forbidden Error Patterns, Forbidden MVC Violations, Forbidden TypeScript / Naming Patterns (+1 more)
+
+### Community 190 - "TDD: Activity card"
+Cohesion: 0.18
+Nodes (10): 1. Header & Metadata, 2. Technical Solution, 3. Context Pillars, 4. Context, 5. Problem Statement & Motivation, 6. Scope, 7. Risks, 8. Implementation Plan (+2 more)
+
+### Community 191 - "TDD: Activity library by category"
+Cohesion: 0.18
+Nodes (10): 1. Header & Metadata, 2. Technical Solution, 3. Context Pillars, 4. Context, 5. Problem Statement & Motivation, 6. Scope, 7. Risks, 8. Implementation Plan (+2 more)
+
+### Community 192 - "TDD: Mission pick rules"
+Cohesion: 0.18
+Nodes (10): 1. Header & Metadata, 2. Technical Solution, 3. Context Pillars, 4. Context, 5. Problem Statement & Motivation, 6. Scope, 7. Risks, 8. Implementation Plan (+2 more)
+
+### Community 193 - "TDD: Forecast contexts"
+Cohesion: 0.18
+Nodes (10): 1. Header & Metadata, 2. Technical Solution, 3. Context Pillars, 4. Context, 5. Problem Statement & Motivation, 6. Scope, 7. Risks, 8. Implementation Plan (+2 more)
+
+### Community 194 - "TDD: Question bank"
+Cohesion: 0.18
+Nodes (10): 1. Header & Metadata, 2. Technical Solution, 3. Context Pillars, 4. Context, 5. Problem Statement & Motivation, 6. Scope, 7. Risks, 8. Implementation Plan (+2 more)
+
+### Community 195 - "TDD: Quiz answer modes"
+Cohesion: 0.18
+Nodes (10): 1. Header & Metadata, 2. Technical Solution, 3. Context Pillars, 4. Context, 5. Problem Statement & Motivation, 6. Scope, 7. Risks, 8. Implementation Plan (+2 more)
+
+### Community 196 - "TDD: Activity review flow"
+Cohesion: 0.18
+Nodes (10): 1. Header & Metadata, 2. Technical Solution, 3. Context Pillars, 4. Context, 5. Problem Statement & Motivation, 6. Scope, 7. Risks, 8. Implementation Plan (+2 more)
+
+### Community 197 - "TDD: What we know about you"
+Cohesion: 0.17
+Nodes (11): 10. Testing Strategy, 1. Header & Metadata, 2. Technical Solution, 3. Context Pillars, 4. Context, 5. Problem Statement & Motivation, 6. Scope, 7. Risks (+3 more)
+
+### Community 198 - "Handoff to Scultore — Wave 0"
+Cohesion: 0.18
+Nodes (10): 1 — Next cannot load `next.config.ts` on TypeScript 7, Backend signals, Canva, FE checkboxes, Files written per lane (platform), Graph (scribe), Handoff to Scultore — Wave 0, Not done (+2 more)
+
+### Community 199 - "Handoff to Scultore — Wave 12"
+Cohesion: 0.12
+Nodes (14): Backend signals, Canva, Child cannot add a diary note, Child cannot read completed history, FE checkboxes, Files written per lane, Graph, Handoff to Scultore — Wave 12 (+6 more)
+
+### Community 200 - "Handoff to Scultore — Wave 3"
+Cohesion: 0.18
+Nodes (10): Backend signals, Canva, FE checkboxes, Graph, Handoff to Scultore — Wave 3, No HTTP API to set mock session to Admin/Operator, Not done, Router blocks merged (+2 more)
+
+### Community 201 - "Phase 6 — pick (ai-mission-rules) Green"
+Cohesion: 0.25
+Nodes (7): Brownfield, Context, Frontend, Phase 6 — pick (ai-mission-rules) Green, Red command, Verification, RankerFnProtocol
+
+### Community 204 - ".claude/agents/pittore.md"
+Cohesion: 0.20
+Nodes (9): Audit (structure and finish), Brushes (parallel frontend work), Canva (performance + browser compatibility), Inputs, Modes, Output format, Scribe (graph keeper), Wave handoff loop (+1 more)
+
+### Community 205 - "Tester skill — supplementary examples"
+Cohesion: 0.20
+Nodes (10): AAA boilerplate, Bad example: integration test (order-dependent), Bad example: unit test (never call subject, never assert), Good example: integration tests (TypeORMBookingRepository), Good example: unit tests (Booking Entity), Principle 1: mirror assertion vs hand-derived literal, Principle 2: mock at the right level, Principle 2: real behavior vs mock existence (+2 more)
+
+### Community 206 - ".cursor/agents/pittore.md"
+Cohesion: 0.20
+Nodes (9): Audit (structure and finish), Brushes (parallel frontend work), Canva (performance + browser compatibility), Inputs, Modes, Output format, Scribe (graph keeper), Wave handoff loop (+1 more)
+
+### Community 207 - "Web Styling"
+Cohesion: 0.20
+Nodes (9): BAD / GOOD, Breakpoints, Design brief (orchestrator runs this), Detect, Font self-host, Iron: breakpoints + 1920 container, Tailwind ↔ Bootstrap 5 parity (dense), Token wiring recipes (+1 more)
+
+### Community 208 - "Tester skill — supplementary examples"
+Cohesion: 0.20
+Nodes (10): AAA boilerplate, Bad example: integration test (order-dependent), Bad example: unit test (never call subject, never assert), Good example: integration tests (TypeORMBookingRepository), Good example: unit tests (Booking Entity), Principle 1: mirror assertion vs hand-derived literal, Principle 2: mock at the right level, Principle 2: real behavior vs mock existence (+2 more)
+
+### Community 209 - "operational_constraints.md"
+Cohesion: 0.20
+Nodes (8): Data Constraints, External Service Constraints, Multi-Agent Constraints, MVC Operational Constraints, Observability, Purpose, Runtime Constraints, Security Constraints
+
+### Community 210 - "Green steps"
+Cohesion: 0.13
+Nodes (8): Brownfield only — post-Green playbook, Context, Green steps, Phase 10 — Seeds, object store, catalog and admin APIs Green, Red command, Verification, Phase 10 — Green, ObjectStoreStrategy
+
+### Community 214 - ".claude/agents/ingegnere.md"
+Cohesion: 0.22
+Nodes (8): Dead code and obsolete tests, Fix rules, Inputs, Output format, Skills (load lazily — read each one right before the first step that needs it, never all upfront), Squadre (parallel audits), Toolchain, Quality Run and Lefthook, Workflow (per invocation)
+
+### Community 215 - ".cursor/agents/ingegnere.md"
+Cohesion: 0.22
+Nodes (8): Dead code and obsolete tests, Fix rules, Inputs, Output format, Skills (load lazily — read each one right before the first step that needs it, never all upfront), Squadre (parallel audits), Toolchain, Quality Run and Lefthook, Workflow (per invocation)
+
+### Community 216 - "deployment_rules.md"
+Cohesion: 0.22
+Nodes (7): Agent Rules, Database Rules, MVC Deployment Considerations, Pre-Deployment Checklist, Purpose, Release Principles, Rollback Rules
+
+### Community 217 - "Handoff to Pittore — Wave 3"
+Cohesion: 0.22
+Nodes (8): After paint, DB / Backend status, Handoff to Pittore — Wave 3, Lane: family-shell (parent-shell), Lane: forecast, Lane: panel (admin-panel), Open questions, Rules of execution (Frontend)
+
+### Community 218 - "Handoff to Scultore — Wave 6"
+Cohesion: 0.22
+Nodes (8): Backend signals, Blocked leftovers, FE checkboxes, Files written per lane, Handoff to Scultore — Wave 6, Manual notes per acceptance criterion, pick, Type-check / lint / build
+
+### Community 219 - "Great Kids — Design system"
+Cohesion: 0.22
+Nodes (8): Chrome (iPhone 15 Pro Max), Copy, Do not, Great Kids — Design system, Interaction thesis, Product, Tokens, Visual thesis
+
+### Community 220 - "family-published.test.ts"
+Cohesion: 0.25
+Nodes (5): createPaperBoatsDraft(), FicheEnvelope, MissionCreated, PublishedItem, RouteContext
+
+### Community 222 - "family_profile.ts"
+Cohesion: 0.48
+Nodes (6): FamilyProfileRecord, isRecord(), parseAnswerItem(), parseKeyedEnvelope(), parseQuizAnswerEnvelope(), ProfileRow
+
+### Community 226 - "Phase 2 signal — session brownfield playbook (do not apply)"
+Cohesion: 0.25
+Nodes (7): Do not touch, Legacy inventory, Obsolete tests, Phase 2 signal — session brownfield playbook (do not apply), Removal steps, Replacement map, Verification
+
+### Community 227 - "Phase 3 — panel (admin-panel) Green"
+Cohesion: 0.25
+Nodes (7): Brownfield, Context, Frontend, Increment — mock role switch (Pittore signal), Phase 3 — panel (admin-panel) Green, Red command, Verification
+
+### Community 228 - "Handoff to Pittore — Wave 4"
+Cohesion: 0.25
+Nodes (7): After paint, DB / Backend status, Handoff to Pittore — Wave 4, Lane: mascot (mascot-mission), Lane: questions (question-bank), Open questions, Rules of execution (Frontend)
+
+### Community 229 - "[day]/route.ts"
+Cohesion: 0.18
+Nodes (11): SuggestionItem, SuggestionsEnvelope, badRequest(), CalendarPutBody, CalendarRouteContext, deny(), PUT(), ScheduleOnDay (+3 more)
+
+### Community 230 - "Handoff to Pittore — Wave 5"
+Cohesion: 0.25
+Nodes (7): After paint, DB / Backend status, Handoff to Pittore — Wave 5, Lane: calendar (family-calendar), Lane: gps (family-quiz, quiz-modes, family-profile, what-we-know), Open questions, Rules of execution (Frontend)
+
+### Community 231 - "Handoff to Pittore — Wave 7"
+Cohesion: 0.29
+Nodes (6): After paint, DB / Backend status, Frontend shared touchpoints, Handoff to Pittore — Wave 7, Open questions, Rules of execution (Frontend)
+
+### Community 232 - "Handoff to Pittore — Wave 8"
+Cohesion: 0.10
+Nodes (15): Do not implement, Frontend (Pittore only — do not implement here), Green steps, Phase 0 — Green (platform), Red command, Verification, DB / Backend status, After paint (+7 more)
+
+### Community 233 - "Handoff to Pittore — Wave 9"
+Cohesion: 0.25
+Nodes (7): After paint, DB / Backend status, Frontend shared touchpoints, Handoff to Pittore — Wave 9, Lane: indicators (indicators-panel), Open questions, Rules of execution (Frontend)
+
+### Community 234 - "proposal/route.ts"
+Cohesion: 0.21
+Nodes (11): GpsPolicy, FamilyRouteContext, GET(), deny(), FamilyRouteContext, isRecord(), persistRhythms(), POST() (+3 more)
+
+### Community 235 - "weather-adapter.ts"
+Cohesion: 0.33
+Nodes (4): PreviousWeatherInput, WeatherAdapter, WeatherPathFnProtocol, WeatherPathProtocol
+
+### Community 236 - "fiche-builder.ts"
+Cohesion: 0.29
+Nodes (5): FicheBuildInput, FicheBuilt, FicheValuesEnvelope, FicheBuildInput, FicheBuilt
+
+### Community 238 - "Layout recipes"
+Cohesion: 0.33
+Nodes (6): Architecture (default mirror), Data flow, Layout recipes, Lifecycle, Sequence, Workflow
+
+### Community 239 - "Sistina Arch — SVG shape examples"
+Cohesion: 0.29
+Nodes (4): Architecture fragment, Default map fragment (files + visible complex excerpts), Sequence fragment, Sistina Arch — SVG shape examples
+
+### Community 240 - "testing_expectation.md"
+Cohesion: 0.29
+Nodes (6): Agent Rules, Design Pattern Test Expectations, Minimum Requirements, MVC Test Expectations, Purpose, Testing Philosophy
+
+### Community 241 - "Phase 1 — catalog (activity-library) Green"
+Cohesion: 0.29
+Nodes (6): Context, Frontend, Green steps, Phase 1 — catalog (activity-library) Green, Red command, Verification
+
+### Community 242 - "Phase 1 — identity (adult-holder) Green"
+Cohesion: 0.29
+Nodes (6): Context, Frontend, Green steps, Phase 1 — identity (adult-holder) Green, Red command, Verification
+
+### Community 243 - "Phase 2 — session (context-switch) Green"
+Cohesion: 0.29
+Nodes (6): Brownfield — post-Green playbook, Context, Frontend verification, Phase 2 — session (context-switch) Green, Red command, Verification
+
+### Community 244 - "Phase 2 signal — session Green (Child 403 / mock align)"
+Cohesion: 0.33
+Nodes (5): Brownfield, Context, Phase 2 signal — session Green (Child 403 / mock align), Red command, Verification
+
+### Community 245 - "Phase 7 — surprise (surprise-mission) Green"
+Cohesion: 0.29
+Nodes (6): Brownfield, Context, Frontend, Phase 7 — surprise (surprise-mission) Green, Red command, Verification
+
+### Community 246 - "Phase 8 — mission-play (mission-cycle + completed-missions) Green"
+Cohesion: 0.29
+Nodes (6): Brownfield, Context, Frontend, Phase 8 — mission-play (mission-cycle + completed-missions) Green, Red command, Verification
+
+### Community 247 - "Phase 9 — diary (note-types + family-diary) Green"
+Cohesion: 0.29
+Nodes (6): Brownfield, Context, Frontend, Phase 9 — diary (note-types + family-diary) Green, Red command, Verification
+
+### Community 248 - "review-state.ts"
+Cohesion: 0.20
+Nodes (3): ShoppingOrderState, setReviewStatus(), publishMission()
+
+### Community 250 - "All for Harness"
+Cohesion: 0.33
+Nodes (5): All for Harness, Camadas (docs → especs → código), Enforcement, Plan mode — escrita de features, Workflow (docs → especs → código → graphify)
+
+### Community 251 - "Babylon Gate"
+Cohesion: 0.33
+Nodes (5): Babylon Gate, Counts as bypass or alteration, Do not, Protected, When the user explicitly asks for an override
+
+### Community 252 - "Recipes"
+Cohesion: 0.33
+Nodes (6): AnimatePresence, Gestures, Layout, Motion Values (no re-render), Recipes, Variants
+
+### Community 253 - "UI/UX Pro Max"
+Cohesion: 0.33
+Nodes (5): CLI, Persist, Priority rules (short), UI/UX Pro Max, When
+
+### Community 254 - "Wave 0 — Frontend verification (platform)"
+Cohesion: 0.33
+Nodes (5): Acceptance, Commands, Files written, Manual: empty group layouts, Wave 0 — Frontend verification (platform)
+
+### Community 255 - "Wave 2 — Frontend verification (session)"
+Cohesion: 0.33
+Nodes (5): Acceptance, Commands, Files written, Manual: acceptance, Wave 2 — Frontend verification (session)
+
+### Community 256 - "Phase 3 — family-shell (parent-shell) Green"
+Cohesion: 0.33
+Nodes (5): Context, Green steps, Phase 3 — family-shell (parent-shell) Green, Red command, Verification
+
+### Community 257 - "Wave 4 — Frontend verification (questions)"
+Cohesion: 0.33
+Nodes (5): Acceptance, Commands, Files written, Manual: acceptance, Wave 4 — Frontend verification (questions)
+
+### Community 258 - "Wave 5 — Frontend verification (calendar)"
+Cohesion: 0.33
+Nodes (5): Acceptance, Commands, Files written, Manual: acceptance, Wave 5 — Frontend verification (calendar)
+
+### Community 259 - "Wave 5 — Frontend verification (gps)"
+Cohesion: 0.33
+Nodes (5): Acceptance, Commands, Files written, Manual: acceptance, Wave 5 — Frontend verification (gps)
+
+### Community 260 - "Handoff to Pittore — Wave 6"
+Cohesion: 0.33
+Nodes (5): DB / Backend status, Frontend shared touchpoints, Handoff to Pittore — Wave 6, Open questions, Rules of execution (Frontend)
+
+### Community 261 - "Wave 7 — Frontend verification (calendar-ops)"
+Cohesion: 0.33
+Nodes (5): Acceptance, Commands, Files written, Manual: acceptance, Wave 7 — Frontend verification (calendar-ops)
+
+### Community 262 - "Wave 8 — Frontend verification (mission-play)"
+Cohesion: 0.33
+Nodes (5): Acceptance, Commands, Files written, Manual: acceptance, Wave 8 — Frontend verification (mission-play)
+
+### Community 263 - "Wave 9 — Frontend verification (diary)"
+Cohesion: 0.33
+Nodes (5): Acceptance, Commands, Files written, Manual: acceptance, Wave 9 — Frontend verification (diary)
+
+### Community 264 - "Wave 9 — Frontend verification (indicators)"
+Cohesion: 0.33
+Nodes (5): Acceptance, Commands, Files written, Manual: acceptance, Wave 9 — Frontend verification (indicators)
+
+### Community 265 - "Enforces English"
 Cohesion: 0.40
 Nodes (4): Do not, Enforces English, Examples, Required
 
-### Community 186 - "Graphify First"
+### Community 266 - "Graphify First"
 Cohesion: 0.40
 Nodes (4): Economia de tokens, Graphify First, Graphify indisponível, Quando inferir direto da base (sem grafo)
 
-### Community 187 - ".claude/skills/babylon-gardens/templates/scripts/quality/aggregate.sh"
+### Community 267 - ".claude/skills/babylon-gardens/templates/scripts/quality/aggregate.sh"
 Cohesion: 0.60
 Nodes (3): aggregate.sh script, tool_error(), valid_json()
 
-### Community 188 - "Design Patterns Coder"
+### Community 268 - "Design Patterns Coder"
 Cohesion: 0.40
 Nodes (4): Design Patterns Coder, Fonte da verdade (ordem obrigatória), Regras de implementação, Validação
 
-### Community 189 - ".cursor/skills/babylon-gardens/templates/scripts/quality/aggregate.sh"
+### Community 269 - ".cursor/skills/babylon-gardens/templates/scripts/quality/aggregate.sh"
 Cohesion: 0.60
 Nodes (3): aggregate.sh script, tool_error(), valid_json()
 
-### Community 190 - "Design Patterns Coder"
+### Community 270 - "Design Patterns Coder"
 Cohesion: 0.40
 Nodes (4): Design Patterns Coder, Fonte da verdade (ordem obrigatória), Regras de implementação, Validação
 
-### Community 192 - "Phase 2 — session Green"
+### Community 271 - "Wave 11 — Frontend verification (panel)"
+Cohesion: 0.40
+Nodes (4): Commands, Manual: acceptance, Routes, Wave 11 — Frontend verification (panel)
+
+### Community 272 - "Phase 2 — session Green"
 Cohesion: 0.40
 Nodes (4): Brownfield, DB, Frontend (Pittore verification only), Phase 2 — session Green
 
-### Community 193 - "Phase 3 — family-shell Green"
+### Community 273 - "Phase 3 — family-shell Green"
 Cohesion: 0.40
 Nodes (4): Backend, DB, Frontend (Pittore), Phase 3 — family-shell Green
 
-### Community 194 - "Wave 3 — Frontend verification (family-shell)"
-Cohesion: 0.40
-Nodes (4): Acceptance, Commands, Manual: acceptance, Wave 3 — Frontend verification (family-shell)
+### Community 274 - "Wave 4 — Frontend verification (mascot)"
+Cohesion: 0.33
+Nodes (5): Acceptance, Commands, Files written, Manual: acceptance, Wave 4 — Frontend verification (mascot)
 
-### Community 195 - "Phase 4 — mascot (mascot-mission) Frontend"
+### Community 275 - "Phase 4 — mascot (mascot-mission) Frontend"
 Cohesion: 0.40
 Nodes (4): Context, Green steps (Pittore), Phase 4 — mascot (mascot-mission) Frontend, Verification
 
-### Community 197 - "Interactive Workflow"
-Cohesion: 0.50
-Nodes (4): Critical sections by project type, Interactive Workflow, Multi-feature runs → implementation waves, Sections by project size
+### Community 304 - "Wave 7 — Frontend verification (surprise)"
+Cohesion: 0.33
+Nodes (5): Acceptance, Commands, Files written, Manual: acceptance, Wave 7 — Frontend verification (surprise)
 
 ## Knowledge Gaps
-- **1648 isolated node(s):** `PanelStaffRole`, `QuestionsSessionContextValue`, `QuestionsSessionProviderProps`, `MascotMissionContextValue`, `MascotMissionProviderProps` (+1643 more)
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 1911 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
-- **34 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **2054 isolated node(s):** `check.sh script`, `PATH`, `$schema`, `enabled`, `clientKind` (+2049 more)
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 2636 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+- **41 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `queryRaw()` connect `queryRaw` to `vitest`, `getMockSession`, `Code commenter`, `mission_category.ts`, `husk-service.ts`, `invites/route.ts`, `api/missions/[id]/route.ts`, `fiche-api.test.ts`, `family.ts`, `presentation-writes.test.ts`, `members/route.ts`, `app-users/route.ts`, `getConnection`, `Mission`, `mission_forecast_context.ts`, `panel/families/route.ts`, `Phase 1 — catalog (activity-library) Green`, `Phase 1 — identity (adult-holder) Green`, `Phase 2 signal — session Green (Child 403 / mock align)`, `family_quiz.ts`, `connection.ts`, `mission-categories.test.ts`, `SurfaceFacade`, `Implementation Waves`, `TDD — Adult titular`, `TDD — Family address`, `mission-factory.ts`, `InvitePolicy`, `kind-strategy.test.ts`, `Phase 0 — Green (platform)`, `testing_expectation.md`, `architecture_rules.md`, `forbidden_patterns.md`?**
-  _High betweenness centrality (0.275) - this node is a cross-community bridge._
-- **Why does `Implementation Waves` connect `Implementation Waves` to `implementation.md`?**
-  _High betweenness centrality (0.149) - this node is a cross-community bridge._
-- **Why does `Wave 0 — Platform prerequisites (not a feature)` connect `Implementation Waves` to `queryRaw`?**
-  _High betweenness centrality (0.148) - this node is a cross-community bridge._
-- **Are the 22 inferred relationships involving `queryRaw()` (e.g. with `Data Flow` and `Default Architecture`) actually correct?**
-  _`queryRaw()` has 22 INFERRED edges - model-reasoned connections that need verification._
+- **Why does `queryRaw()` connect `queryRaw` to `getMockSession`, `vitest`, `SurfaceFacade`, `mission.ts`, `Code commenter`, `invites/route.ts`, `architecture_rules.md`, `catalog-pick-strategy.ts`, `ProductComponent`, `questions/route.ts`, `presentation-strategy.ts`, `reminders-patch.test.ts`, `jsonRequest`, `family.ts`, `panel/families/route.ts`, `materials/[id]/route.ts`, `pick/helpers.ts`, `forbidden_patterns.md`, `Implementation Waves`, `[id]/calendar/day-composite.ts`, `FamilyMission`, `family-missions/complete-mission-command.ts`, `FamilyProfile`, `family_profile.ts`, `Green steps`, `proposal/route.ts`, `TDD — Adult titular`, `TDD — Family address`, `testing_expectation.md`, `Phase 1 — catalog (activity-library) Green`, `Phase 1 — identity (adult-holder) Green`, `family_diary.ts`, `[id]/missions/route.ts`, `FamilyCalendar`?**
+  _High betweenness centrality (0.226) - this node is a cross-community bridge._
+- **Why does `react` connect `react` to `mascot-screen.tsx`, `diary-session-context.tsx`, `forecast-session-context.tsx`, `questions-facade.ts`, `SurfaceFacade`, `profile-session-context.tsx`, `families-session-context.tsx`, `calendar-session-context.tsx`, `quiz-session-context.tsx`, `next`, `index.ts`, `useFamilySession`, `surprise-session-context.tsx`, `panel-catalog-facade.ts`, `completed-session-context.tsx`, `panel-staff-facade.ts`, `family-session-context.tsx`, `indicators-session-context.tsx`, `package.json`, `mascot-revealed-copy.tsx`, `diary-screen.tsx`, `forecast-screen.tsx`, `materials-session-context.tsx`, `mascot-mission-context.tsx`, `cycle-session-context.tsx`, `contexts-session-context.tsx`?**
+  _High betweenness centrality (0.188) - this node is a cross-community bridge._
+- **Why does `vitest` connect `vitest` to `getMockSession`, `Refactor phase 10 — brownfield playbook (do not apply in Green)`, `package.json`, `upload/route.ts`, `SurfaceFacade`, `questions/route.ts`, `FamilyMissionCycle`, `weather-adapter.ts`, `fiche-builder.ts`, `reminders-patch.test.ts`, `jsonRequest`, `presentation-strategy.ts`, `mission.ts`, `family.ts`, `panel/families/route.ts`, `review-state.ts`, `pick/helpers.ts`, `family-published.test.ts`?**
+  _High betweenness centrality (0.168) - this node is a cross-community bridge._
+- **Are the 25 inferred relationships involving `queryRaw()` (e.g. with `Data Flow` and `Default Architecture`) actually correct?**
+  _`queryRaw()` has 25 INFERRED edges - model-reasoned connections that need verification._
+- **Are the 14 inferred relationships involving `getMockSession()` (e.g. with `DB / Backend status` and `Green steps`) actually correct?**
+  _`getMockSession()` has 14 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 2 inferred relationships involving `getConnection()` (e.g. with `Context` and `Green steps`) actually correct?**
   _`getConnection()` has 2 INFERRED edges - model-reasoned connections that need verification._
-- **Are the 10 inferred relationships involving `getMockSession()` (e.g. with `Green steps` and `Phase 2 signal — family Green`) actually correct?**
-  _`getMockSession()` has 10 INFERRED edges - model-reasoned connections that need verification._
-- **What connects `PanelStaffRole`, `QuestionsSessionContextValue`, `QuestionsSessionProviderProps` to the rest of the system?**
-  _1648 weakly-connected nodes found - possible documentation gaps or missing edges._
+- **What connects `check.sh script`, `PATH`, `$schema` to the rest of the system?**
+  _2054 weakly-connected nodes found - possible documentation gaps or missing edges._

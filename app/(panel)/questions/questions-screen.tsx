@@ -1,8 +1,13 @@
 "use client";
 
-import type { FormEvent, ReactElement, WheelEvent } from "react";
+import {
+  useState,
+  type ChangeEvent,
+  type FormEvent,
+  type ReactElement,
+  type WheelEvent,
+} from "react";
 import type {
-  PanelMockRole,
   PanelQuestionRow,
   QuestionKind,
   QuestionStatus,
@@ -11,6 +16,11 @@ import {
   useQuestionsSession,
   type SwitchableRole,
 } from "./questions-session-context";
+import { PencilIcon, TrashIcon } from "../shell/panel-icons";
+import {
+  StaffSessionToolbar,
+  staffRoleLabel,
+} from "../shell/staff-session-toolbar";
 
 const SCREEN_STYLES: string = `
 [data-panel-questions] {
@@ -60,6 +70,7 @@ const SCREEN_STYLES: string = `
   animation: panel-enter 200ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 [data-panel-loading-bar] {
+  width: 100%;
   height: 12px;
   border-radius: 999px;
   background: #eae3de;
@@ -102,16 +113,24 @@ const SCREEN_STYLES: string = `
   color: var(--color-ink);
   font-weight: 600;
   cursor: pointer;
+  -moz-appearance: none;
   -webkit-appearance: none;
   appearance: none;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
   transition: transform 120ms ease-out, opacity 120ms ease-out;
 }
+[data-panel-questions] button::-moz-focus-inner {
+  border: 0;
+  padding: 0;
+}
 [data-panel-questions] button[data-pressed="true"] {
-  background: #efdfd8;
-  background: color-mix(in srgb, var(--color-primary) 14%, var(--color-paper));
-  color: var(--color-primary);
+  background: #ededed;
+  color: var(--color-ink);
+}
+[data-panel-filters] button[data-pressed="true"] {
+  background: #ededed;
+  color: var(--color-ink);
 }
 [data-panel-questions] button[data-variant="primary"] {
   background: var(--color-primary);
@@ -139,11 +158,18 @@ const SCREEN_STYLES: string = `
   border-radius: 10px;
   background: var(--color-paper);
   font-size: 16px;
+  -moz-appearance: none;
   -webkit-appearance: none;
   appearance: none;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
   transition: opacity 120ms ease-out;
+}
+[data-panel-questions] input[type="search"]::-webkit-search-decoration,
+[data-panel-questions] input[type="search"]::-webkit-search-cancel-button,
+[data-panel-questions] input[type="search"]::-webkit-search-results-button,
+[data-panel-questions] input[type="search"]::-webkit-search-results-decoration {
+  -webkit-appearance: none;
 }
 [data-panel-questions] select {
   padding-right: 32px;
@@ -215,7 +241,6 @@ const SCREEN_STYLES: string = `
   min-width: 0;
   max-width: 100%;
   overflow-x: auto;
-  overflow-y: hidden;
   overflow-anchor: none;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior-x: contain;
@@ -245,6 +270,8 @@ const SCREEN_STYLES: string = `
   padding: 12px 16px;
   text-align: left;
   vertical-align: middle;
+  overflow-wrap: break-word;
+  overflow-wrap: anywhere;
 }
 [data-panel-table] th {
   color: var(--color-muted);
@@ -261,7 +288,6 @@ const SCREEN_STYLES: string = `
 }
 [data-panel-row] {
   opacity: 1;
-  transform: translate3d(0, 0, 0);
   animation: panel-row-enter 200ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 [data-panel-row][data-deleted="true"] {
@@ -272,10 +298,34 @@ const SCREEN_STYLES: string = `
   flex-wrap: wrap;
   gap: 8px;
 }
-@supports (animation-delay: calc(sibling-index() * 1ms)) {
-  [data-panel-row] {
-    animation-delay: calc(sibling-index() * 40ms);
-  }
+[data-panel-questions] button[data-icon="true"] {
+  padding: 0;
+  width: 36px;
+}
+[data-tooltip] {
+  position: relative;
+}
+[data-tooltip]::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  right: calc(100% + 8px);
+  top: 50%;
+  z-index: 3;
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: var(--color-ink);
+  color: var(--color-paper);
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate3d(4px, -50%, 0);
+  transition: opacity 120ms ease-out, transform 120ms ease-out;
+}
+[data-panel-search] {
+  min-width: 180px;
+  flex: 1 1 220px;
 }
 [data-status-chip] {
   display: inline-flex;
@@ -313,8 +363,8 @@ const SCREEN_STYLES: string = `
   to { opacity: 1; transform: translate3d(0, 0, 0); }
 }
 @keyframes panel-row-enter {
-  from { opacity: 0; transform: translate3d(0, 4px, 0); }
-  to { opacity: 1; transform: translate3d(0, 0, 0); }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 @keyframes panel-load {
   0% { opacity: 0.45; transform: scaleX(0.55); }
@@ -335,10 +385,19 @@ const SCREEN_STYLES: string = `
   }
 }
 @media (hover: hover) and (pointer: fine) {
+  [data-tooltip]:hover::after {
+    opacity: 1;
+    transform: translate3d(0, -50%, 0);
+  }
   [data-panel-questions] button:hover:not(:disabled) {
     background: #efe4d6;
     background: color-mix(in srgb, var(--color-tertiary) 36%, var(--color-paper));
     transform: translateY(-1px);
+  }
+  [data-panel-questions] button[data-pressed="true"]:hover:not(:disabled),
+  [data-panel-filters] button[data-pressed="true"]:hover:not(:disabled) {
+    background: #ededed;
+    color: var(--color-ink);
   }
   [data-panel-questions] button[data-variant="primary"]:hover:not(:disabled) {
     background: var(--color-ink);
@@ -358,7 +417,8 @@ const SCREEN_STYLES: string = `
   [data-panel-loading-bar],
   [data-panel-questions] button,
   [data-panel-questions] input,
-  [data-panel-questions] select {
+  [data-panel-questions] select,
+  [data-tooltip]::after {
     animation: none !important;
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
@@ -369,25 +429,12 @@ const SCREEN_STYLES: string = `
 }
 `;
 
-function roleLabel(p_role: PanelMockRole): string {
-  if (p_role === "Admin") {
-    return "Admin";
-  }
-  if (p_role === "Operator") {
-    return "Operador";
-  }
-  if (p_role === "Child") {
-    return "Criança";
-  }
-  return "Responsável";
-}
-
 function statusLabel(p_status: string): string {
   if (p_status === "active") {
-    return "Ativa";
+    return "Active";
   }
   if (p_status === "inactive") {
-    return "Inativa";
+    return "Inactive";
   }
   return p_status;
 }
@@ -415,11 +462,39 @@ function readWeight(p_value: string): number {
 }
 
 function blurNumberOnWheel(p_event: WheelEvent<HTMLInputElement>): void {
+  if (p_event.currentTarget !== document.activeElement) {
+    return;
+  }
+  p_event.preventDefault();
   p_event.currentTarget.blur();
+}
+
+function submitHtmlForm(p_form: HTMLFormElement | null): void {
+  if (p_form === null) {
+    return;
+  }
+  if (typeof p_form.requestSubmit === "function") {
+    p_form.requestSubmit();
+    return;
+  }
+  p_form.dispatchEvent(
+    new Event("submit", { bubbles: true, cancelable: true }),
+  );
 }
 
 export function QuestionsScreen(): ReactElement {
   const session: ReturnType<typeof useQuestionsSession> = useQuestionsSession();
+  const [searchText, setSearchText] = useState<string>("");
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const visibleQuestions: PanelQuestionRow[] = session.questions.filter(
+    (p_question: PanelQuestionRow): boolean => {
+      const needle: string = searchText.trim().toLowerCase();
+      if (needle.length === 0) {
+        return true;
+      }
+      return p_question.question_text.toLowerCase().includes(needle);
+    },
+  );
 
   const onSwitchRole = (p_role: SwitchableRole): void => {
     void session.switchRole(p_role);
@@ -482,62 +557,31 @@ export function QuestionsScreen(): ReactElement {
       <style href="panel-questions" precedence="medium">
         {SCREEN_STYLES}
       </style>
-      <div data-panel-toolbar>
-        <span data-panel-role data-role={session.activeRole}>
-          {roleLabel(session.activeRole)}
-        </span>
-        <span data-panel-toolbar-label>Sessão</span>
-        <button
-          type="button"
-          data-pressed={session.activeRole === "Admin" ? "true" : "false"}
-          aria-pressed={session.activeRole === "Admin"}
-          onClick={(): void => {
-            onSwitchRole("Admin");
-          }}
-        >
-          Admin
-        </button>
-        <button
-          type="button"
-          data-pressed={session.activeRole === "Operator" ? "true" : "false"}
-          aria-pressed={session.activeRole === "Operator"}
-          onClick={(): void => {
-            onSwitchRole("Operator");
-          }}
-        >
-          Operador
-        </button>
-        <button
-          type="button"
-          data-pressed={session.activeRole === "Parent" ? "true" : "false"}
-          aria-pressed={session.activeRole === "Parent"}
-          onClick={(): void => {
-            onSwitchRole("Parent");
-          }}
-        >
-          Responsável
-        </button>
-      </div>
+      <StaffSessionToolbar
+        activeRole={session.activeRole}
+        onSwitchRole={onSwitchRole}
+        isBusy={session.isLoading}
+      />
       {session.isLoading ? (
         <div data-panel-loading aria-live="polite" aria-busy="true">
-          <span data-panel-role>Perguntas</span>
-          <h1>Carregando as perguntas</h1>
+          <span data-panel-role>Questions</span>
+          <h1>Loading questions</h1>
           <div data-panel-loading-bar />
         </div>
       ) : null}
       {!session.isLoading && session.isForbidden ? (
         <div data-panel-forbidden role="alert">
-          <span data-panel-role>Perguntas</span>
-          <h1>Acesso negado</h1>
-          <p>Este banco é só para a equipe.</p>
+          <span data-panel-role>Questions</span>
+          <h1>Access denied</h1>
+          <p>This bank is staff only.</p>
         </div>
       ) : null}
       {!session.isLoading &&
       !session.isForbidden &&
       session.errorMessage !== null ? (
         <div data-panel-error role="alert">
-          <span data-panel-role>Perguntas</span>
-          <h1>Não foi possível carregar as perguntas</h1>
+          <span data-panel-role>Questions</span>
+          <h1>Could not load questions</h1>
           <p>{session.errorMessage}</p>
         </div>
       ) : null}
@@ -547,12 +591,24 @@ export function QuestionsScreen(): ReactElement {
       session.role !== null ? (
         <div data-panel-success data-questions-id={session.listId ?? ""}>
           <span data-panel-role data-role={session.role}>
-            {roleLabel(session.activeRole)}
+            {staffRoleLabel(session.activeRole ?? session.role)}
           </span>
-          <h1>Perguntas</h1>
-          <p>Banco de perguntas do quiz da família e do Say What?</p>
+          <h1>Questions</h1>
+          <p>Question bank for the family quiz and Say What?</p>
           <div data-panel-filters>
-            <span data-panel-filters-label>Tipo</span>
+            <span data-panel-filters-label>Search</span>
+            <input
+              data-panel-search
+              type="search"
+              value={searchText}
+              autoComplete="off"
+              placeholder="Filter questions"
+              aria-label="Filter questions"
+              onChange={(p_event: ChangeEvent<HTMLInputElement>): void => {
+                setSearchText(p_event.target.value);
+              }}
+            />
+            <span data-panel-filters-label>Type</span>
             <button
               type="button"
               data-question-kind="all"
@@ -562,7 +618,7 @@ export function QuestionsScreen(): ReactElement {
                 session.setKindFilter(null);
               }}
             >
-              Todos
+              All
             </button>
             <button
               type="button"
@@ -593,18 +649,18 @@ export function QuestionsScreen(): ReactElement {
           </div>
           <form data-panel-form onSubmit={onCreateSubmit}>
             <label data-panel-field>
-              <span>Texto</span>
+              <span>Text</span>
               <input name="question_text" type="text" autoComplete="off" />
             </label>
             <label data-panel-field>
-              <span>Tipo</span>
+              <span>Type</span>
               <select name="kind" defaultValue="Family-Quiz">
                 <option value="Family-Quiz">Family-Quiz</option>
                 <option value="Say-What">Say-What</option>
               </select>
             </label>
             <label data-panel-field>
-              <span>Peso</span>
+              <span>Weight</span>
               <input
                 name="weight"
                 type="number"
@@ -616,14 +672,14 @@ export function QuestionsScreen(): ReactElement {
               />
             </label>
             <label data-panel-field>
-              <span>Estado</span>
+              <span>Status</span>
               <select name="status" defaultValue="active">
-                <option value="active">Ativa</option>
-                <option value="inactive">Inativa</option>
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
               </select>
             </label>
             <button type="submit" data-variant="primary">
-              Adicionar
+              Add
             </button>
             {session.formError !== null ? (
               <p data-panel-form-error role="alert">
@@ -632,25 +688,26 @@ export function QuestionsScreen(): ReactElement {
             ) : null}
           </form>
           <div data-panel-table-wrap>
-            {session.questions.length === 0 ? (
-              <p data-panel-empty>Nenhuma pergunta no banco.</p>
+            {visibleQuestions.length === 0 ? (
+              <p data-panel-empty>No questions in the bank.</p>
             ) : (
               <table data-panel-table>
-                <caption>Perguntas do banco</caption>
+                <caption>Bank questions</caption>
                 <thead>
                   <tr>
-                    <th scope="col">Texto</th>
-                    <th scope="col">Tipo</th>
-                    <th scope="col">Estado</th>
-                    <th scope="col">Peso</th>
-                    <th scope="col">Excluída</th>
-                    <th scope="col">Ações</th>
+                    <th scope="col">Text</th>
+                    <th scope="col">Type</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Weight</th>
+                    <th scope="col">Deleted</th>
+                    <th scope="col">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {session.questions.map(
+                  {visibleQuestions.map(
                     (p_question: PanelQuestionRow): ReactElement => {
                       const rowKey: string = `${session.listId ?? ""}-${p_question.id}`;
+                      const isEditing: boolean = editingId === p_question.id;
                       if (p_question.deleted) {
                         return (
                           <tr
@@ -672,7 +729,7 @@ export function QuestionsScreen(): ReactElement {
                             <td>{p_question.weight}</td>
                             <td>
                               <span data-status-chip data-status="deleted">
-                                Excluída
+                                Deleted
                               </span>
                             </td>
                             <td>—</td>
@@ -694,7 +751,8 @@ export function QuestionsScreen(): ReactElement {
                               type="text"
                               autoComplete="off"
                               defaultValue={p_question.question_text}
-                              aria-label="Texto"
+                              aria-label="Text"
+                              disabled={!isEditing}
                             />
                           </td>
                           <td>
@@ -702,7 +760,8 @@ export function QuestionsScreen(): ReactElement {
                               form={formId}
                               name="kind"
                               defaultValue={p_question.kind}
-                              aria-label="Tipo"
+                              aria-label="Type"
+                              disabled={!isEditing}
                             >
                               <option value="Family-Quiz">Family-Quiz</option>
                               <option value="Say-What">Say-What</option>
@@ -713,10 +772,11 @@ export function QuestionsScreen(): ReactElement {
                               form={formId}
                               name="status"
                               defaultValue={p_question.status}
-                              aria-label="Estado"
+                              aria-label="Status"
+                              disabled={!isEditing}
                             >
-                              <option value="active">Ativa</option>
-                              <option value="inactive">Inativa</option>
+                              <option value="active">Active</option>
+                              <option value="inactive">Inactive</option>
                             </select>
                           </td>
                           <td>
@@ -728,11 +788,12 @@ export function QuestionsScreen(): ReactElement {
                               step={1}
                               defaultValue={p_question.weight}
                               inputMode="numeric"
-                              aria-label="Peso"
+                              aria-label="Weight"
+                              disabled={!isEditing}
                               onWheel={blurNumberOnWheel}
                             />
                           </td>
-                          <td>Não</td>
+                          <td>No</td>
                           <td>
                             <form id={formId} onSubmit={onPatchSubmit}>
                               <input
@@ -741,15 +802,43 @@ export function QuestionsScreen(): ReactElement {
                                 value={p_question.id}
                               />
                               <div data-panel-row-actions>
-                                <button type="submit">Guardar</button>
+                                <button
+                                  type="button"
+                                  data-icon="true"
+                                  data-pressed={isEditing ? "true" : "false"}
+                                  aria-pressed={isEditing}
+                                  aria-label={
+                                    isEditing
+                                      ? "Done editing"
+                                      : "Edit question"
+                                  }
+                                  onClick={(): void => {
+                                    if (isEditing) {
+                                      const form: HTMLFormElement | null =
+                                        document.getElementById(
+                                          formId,
+                                        ) as HTMLFormElement | null;
+                                      submitHtmlForm(form);
+                                      setEditingId(null);
+                                      return;
+                                    }
+                                    setEditingId(p_question.id);
+                                  }}
+                                >
+                                  <PencilIcon label="Edit question" />
+                                </button>
                                 <button
                                   type="button"
                                   data-variant="danger"
+                                  data-icon="true"
+                                  data-tooltip="Delete question"
+                                  title="Delete question"
+                                  aria-label="Delete question"
                                   onClick={(): void => {
                                     onDelete(p_question.id);
                                   }}
                                 >
-                                  Excluir
+                                  <TrashIcon label="Delete question" />
                                 </button>
                               </div>
                             </form>
