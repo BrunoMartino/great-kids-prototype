@@ -2,6 +2,30 @@
 
 Source: `docs/harness/features/*` and `especs/design-docs/tdd-feature-*.md`. Do not invent features. GoF patterns: implement **all** patterns listed in each feature harness / TDD Technical Solution.
 
+## Status (2026-10-20)
+
+Waves **0–9** are implemented (Red/Green Vitest + Pittore FE where the wave has FE). Handoffs live under `especs/tdd/wave{N}/`. `npx tsc --noEmit` and `npm run build` pass. Full Vitest last recorded: **327 passed**.
+
+| Wave | Backend | Frontend | Notes |
+|------|---------|----------|-------|
+| 0 | done | done | Platform shell, SQLite, health |
+| 1–4 | done | done | Before this resume |
+| 5 | done | done | Quiz, GPS, what-we-know, calendar |
+| 6 | done | n/a (`FE: —`) | `POST /api/families/{id}/missions/pick` published ids only |
+| 7 | done | done | Forecast week, calendar PATCH, surprise |
+| 8 | done | done | Cycle + completed history; migration `080100_family_mission_title.sql` (model also `ADD COLUMN` if Wave 0 runner skipped it) |
+| 9 | done | done | Diary five kinds, no photos; panel indicators zeros-on-empty |
+
+Still open (not blockers for the wave exit criteria unless noted):
+
+- Babylon Gate was **not** run (explicit user override this conversation).
+- Mock session is process-wide via `globalThis` **outside Vitest**; Vitest keeps a module store so `resetModules` isolation still works. Switching panel Admin then opening a family screen can still 403 until the mock role is Parent again.
+- No `GET /api/family-missions/{id}` — a refresh mid-Doing re-offers Start and the PATCH can 422.
+- Canva: Safari / Firefox / iOS device passes remain manual.
+- Blocked table below is unchanged (auth, MinIO keys, payments, native, live weather, quiz mode column).
+
+Ops: `nixpacks.toml` pins Node 22 + native build deps for `better-sqlite3`. `.dockerignore` excludes `graphify-out`, `node_modules`, `.next`, `.env`. Local compose `Dockerfile` still starts `npm run dev`.
+
 ## Rules of execution
 
 - **Lane** = code feature folder, not an F-ID. One lane may carry several F-IDs. The same folder may reappear in a later wave.

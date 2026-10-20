@@ -150,6 +150,7 @@ export default function PanelLayout(p_props: PanelLayoutProps): ReactElement {
           <nav data-panel-nav aria-label="Painel">
             <a href="/catalog">Catálogo</a>
             <a href="/questions">Perguntas</a>
+            <a href="/indicators">Indicadores</a>
           </nav>
         </header>
         <main data-panel-main>{p_props.children}</main>

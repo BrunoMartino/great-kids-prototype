@@ -1,0 +1,15 @@
+.git
+.gitignore
+.env
+.env.*
+!.env.example
+node_modules
+.next
+graphify-out
+data
+*.sqlite
+.quality
+my_docs
+agent-transcripts
+.cursor
+.claude

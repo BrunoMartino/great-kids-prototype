@@ -100,3 +100,31 @@
 | FamilyQuiz AR / kind+text | Create Family-Quiz; weight 0; empty/invalid kind throw; injection as data | `tests/questions/family-quiz.test.ts` | `npx vitest run tests/questions/family-quiz.test.ts` |
 | panel questions CRUD | Admin 201+list; kind filter/PATCH/soft delete; 400; Parent 403 | `tests/questions/questions-api.test.ts` | `npx vitest run tests/questions/questions-api.test.ts` |
 | KindStrategy / live offer | Family-Quiz vs Say-What; deleted excluded; injection kind as data | `tests/questions/kind-strategy.test.ts` | `npx vitest run tests/questions/kind-strategy.test.ts` |
+| GET family quiz offer | Live Family-Quiz envelope; deleted omitted; injection id as data | `tests/gps/quiz-offer.test.ts` | `npx vitest run tests/gps/quiz-offer.test.ts` |
+| POST family quiz answer | Envelope with bank id; empty/unknown 400; no bare array | `tests/gps/quiz-answer.test.ts` | `npx vitest run tests/gps/quiz-answer.test.ts` |
+| quiz ModeStrategy | solo+table persist; default solo; invalid 400; no second table | `tests/gps/quiz-modes.test.ts` | `npx vitest run tests/gps/quiz-modes.test.ts` |
+| Child vs question bank | Child PATCH panel question 403 | `tests/gps/quiz-child-bank.test.ts` | `npx vitest run tests/gps/quiz-child-bank.test.ts` |
+| GET family GPS | Three envelopes; Composite rejects []; no photo; 404; quiz→profile | `tests/gps/profile-gps.test.ts` | `npx vitest run tests/gps/profile-gps.test.ts` |
+| what-we-know answers | GET source id; hide deleted; empty PATCH 400; DELETE flag; Child 403; liveAnswers skip | `tests/gps/profile-answers.test.ts` | `npx vitest run tests/gps/profile-answers.test.ts` |
+| GpsPolicy | Parent edit; Parent\|Child answer; Admin denied | `tests/gps/gps-policy.test.ts` | `npx vitest run tests/gps/gps-policy.test.ts` |
+| calendar GET/PUT day | Envelope; unique 409; bare array 400; injection day as data | `tests/calendar/calendar-day.test.ts` | `npx vitest run tests/calendar/calendar-day.test.ts` |
+| calendar published-only | Draft 422; published 200; moved+draft 422 | `tests/calendar/calendar-published.test.ts` | `npx vitest run tests/calendar/calendar-published.test.ts` |
+| DayComposite | Empty envelope; reject []; scheduled/done/moved | `tests/calendar/day-composite.test.ts` | `npx vitest run tests/calendar/day-composite.test.ts` |
+| CatalogPickStrategy / published | Published id; draft omitted; empty; rain context; ages; liveAnswers skip deleted | `tests/pick/pick-strategy.test.ts` | `npx vitest run tests/pick/pick-strategy.test.ts` |
+| CatalogPickStrategy / history | Skip recent non-repeatable Completed; repeatable eligible; empty; injection fam_id | `tests/pick/pick-history.test.ts` | `npx vitest run tests/pick/pick-history.test.ts` |
+| RankerAdapter | Published id; free-text discard; unknown id discard; leaky draft rejected | `tests/pick/pick-ranker-adapter.test.ts` | `npx vitest run tests/pick/pick-ranker-adapter.test.ts` |
+| POST family missions pick | Parent catalog `{ id, mission_id }`; no candidate no title/body; Child 403; injection id | `tests/pick/pick-api.test.ts` | `npx vitest run tests/pick/pick-api.test.ts` |
+| WeekListStrategy / finite published | Catalog title; cap 5; draft omitted; injection family id | `tests/calendar-ops/week-strategy.test.ts` | `npx vitest run tests/calendar-ops/week-strategy.test.ts` |
+| GET forecast week | Envelope published; empty no invention; 404; Child 403 | `tests/calendar-ops/week-api.test.ts` | `npx vitest run tests/calendar-ops/week-api.test.ts` |
+| POST DropOnDay | Scheduled write; merge existing day; missing day 422; unpublished 422 | `tests/calendar-ops/drop-on-day.test.ts` | `npx vitest run tests/calendar-ops/drop-on-day.test.ts` |
+| PATCH calendar suggestion | done persists; move merge unique; moved without target 422; Child 403 | `tests/calendar-ops/reminders-patch.test.ts` | `npx vitest run tests/calendar-ops/reminders-patch.test.ts` |
+| rhythm Observer + POST | Four repeats propose; three none; dismiss no-write; accept envelope; Child 403 | `tests/calendar-ops/rhythm-proposal.test.ts` | `npx vitest run tests/calendar-ops/rhythm-proposal.test.ts` |
+| SurpriseSelectionStrategy | Published id; drafts null; non-repeatable skip; injection family id | `tests/surprise/selection-strategy.test.ts` | `npx vitest run tests/surprise/selection-strategy.test.ts` |
+| AcceptedFamilyMissionFactory | Accepted insert; unpublished/missing/injection no row | `tests/surprise/accepted-factory.test.ts` | `npx vitest run tests/surprise/accepted-factory.test.ts` |
+| POST surprise | Accepted catalog payload; empty `{ id, mission_id: null }`; Child 403; injection id | `tests/surprise/surprise-api.test.ts` | `npx vitest run tests/surprise/surprise-api.test.ts` |
+| FamilyMissionCycle State | Accepted→Doing; Doing→Completed; skip Doing throw; Completed→Accepted throw | `tests/mission-play/cycle-state.test.ts` | `npx vitest run tests/mission-play/cycle-state.test.ts` |
+| PATCH family-missions cycle | Doing; closing txn; missing closing 422; skip/reverse 422; envelope 422; counter; repeatable; Child 403; injection | `tests/mission-play/cycle-api.test.ts` | `npx vitest run tests/mission-play/cycle-api.test.ts` |
+| GET completed missions | Completed only envelope; empty; unpublished keeps title; injection fam_id | `tests/mission-play/history-api.test.ts` | `npx vitest run tests/mission-play/history-api.test.ts` |
+| NoteKindStrategy whitelist | Five kinds; unknown/empty/injection kind rejected | `tests/diary/kind-strategy.test.ts` | `npx vitest run tests/diary/kind-strategy.test.ts` |
+| GET/POST family diary | Envelope `{ id, notes }`; five kinds; empty/photo 422; deleted hide; mission_note; foreign 422; Child 403; injection id | `tests/diary/diary-api.test.ts` | `npx vitest run tests/diary/diary-api.test.ts` |
+| GET panel indicators | Zeros empty; completed SQL match; scheduled items; repeated ≥2; no table; Parent/Child 403 | `tests/indicators/indicators-api.test.ts` | `npx vitest run tests/indicators/indicators-api.test.ts` |
