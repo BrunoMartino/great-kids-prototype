@@ -1,5 +1,5 @@
 import { AddressPolicy } from "@/app/api/families/[id]/address/address-policy";
-import { getMockSession } from "@/internal/db/mock-session";
+import { getFamilyRole } from "@/internal/db/mock-session";
 import { Family, type FamilyAddress } from "@/models/family";
 
 type FamilyRouteContext = {
@@ -15,7 +15,7 @@ export async function PUT(
   const actorUserId: string = p_request.headers.get("x-actor-user-id") ?? "";
   const holderUserId: string = Family.instance.findHolderUserId(familyId) ?? "";
   try {
-    AddressPolicy.assertCanWrite(actorUserId, getMockSession().role, holderUserId);
+    AddressPolicy.assertCanWrite(actorUserId, getFamilyRole(), holderUserId);
   } catch {
     return Response.json({ error: "forbidden" }, { status: 403 });
   }

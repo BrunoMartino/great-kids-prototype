@@ -34,8 +34,20 @@ export type CalendarPresentation =
   | { kind: "error"; message: string }
   | { kind: "ready"; day: DayComposite };
 
+export type AgendaDayItem = {
+  day: string;
+  suggestions: Array<{ id: string; mission_id: string; status: string }>;
+};
+
 export type CalendarSessionContextValue = {
   presentation: CalendarPresentation;
+  agendaDays: AgendaDayItem[];
+  isComposerOpen: boolean;
+  setComposerOpen: (p_open: boolean) => void;
+  isToolsOpen: boolean;
+  setToolsOpen: (p_open: boolean) => void;
+  noteDraft: string;
+  setNoteDraft: (p_text: string) => void;
   familyId: string;
   idDraft: string;
   setIdDraft: (p_id: string) => void;
@@ -53,6 +65,8 @@ export type CalendarSessionContextValue = {
   previewMission: () => Promise<void>;
   schedule: () => Promise<void>;
   move: () => Promise<void>;
+  saveComposer: () => Promise<void>;
+  refreshAgenda: () => Promise<void>;
 };
 
 type CalendarSessionProviderProps = {
@@ -91,6 +105,87 @@ export function CalendarSessionProvider(
   const [targetDay, setTargetDay] = useState<string>("");
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const [formError, setFormError] = useState<string | null>(null);
+  const [agendaDays, setAgendaDays] = useState<AgendaDayItem[]>([]);
+  const [isComposerOpen, setComposerOpen] = useState<boolean>(false);
+  const [isToolsOpen, setToolsOpen] = useState<boolean>(false);
+  const [noteDraft, setNoteDraft] = useState<string>("");
+
+  const loadAgenda = async (
+    p_familyId: string,
+    p_signal?: AbortSignal,
+  ): Promise<void> => {
+    const trimmed: string = p_familyId.trim();
+    if (trimmed.length === 0) {
+      setAgendaDays([]);
+      return;
+    }
+    try {
+      const response: Response = await fetch(
+        `/api/families/${encodeURIComponent(trimmed)}/calendar`,
+        { cache: "no-store", signal: p_signal },
+      );
+      if (p_signal?.aborted) {
+        return;
+      }
+      if (!response.ok) {
+        return;
+      }
+      const body: unknown = await response.json();
+      if (
+        body === null ||
+        typeof body !== "object" ||
+        !Array.isArray(Reflect.get(body, "days"))
+      ) {
+        return;
+      }
+      const daysRaw: unknown[] = Reflect.get(body, "days") as unknown[];
+      const next: AgendaDayItem[] = [];
+      for (const p_item of daysRaw) {
+        if (p_item === null || typeof p_item !== "object") {
+          continue;
+        }
+        const dayValue: unknown = Reflect.get(p_item, "day");
+        const suggestionsEnvelope: unknown = Reflect.get(p_item, "suggestions");
+        if (typeof dayValue !== "string") {
+          continue;
+        }
+        const suggestionsRaw: unknown =
+          suggestionsEnvelope !== null &&
+          typeof suggestionsEnvelope === "object"
+            ? Reflect.get(suggestionsEnvelope, "suggestions")
+            : [];
+        const suggestions: AgendaDayItem["suggestions"] = [];
+        if (Array.isArray(suggestionsRaw)) {
+          for (const p_sugg of suggestionsRaw) {
+            if (p_sugg === null || typeof p_sugg !== "object") {
+              continue;
+            }
+            const id: unknown = Reflect.get(p_sugg, "id");
+            const missionId: unknown = Reflect.get(p_sugg, "mission_id");
+            const status: unknown = Reflect.get(p_sugg, "status");
+            if (
+              typeof id === "string" &&
+              typeof missionId === "string" &&
+              typeof status === "string"
+            ) {
+              suggestions.push({
+                id,
+                mission_id: missionId,
+                status,
+              });
+            }
+          }
+        }
+        next.push({ day: dayValue, suggestions });
+      }
+      setAgendaDays(next);
+    } catch (p_error: unknown) {
+      if (p_signal?.aborted) {
+        return;
+      }
+      void p_error;
+    }
+  };
 
   const loadDay = async (
     p_familyId: string,
@@ -173,6 +268,7 @@ export function CalendarSessionProvider(
     }
     const controller: AbortController = new AbortController();
     void loadDay(queryId, day, controller.signal);
+    void loadAgenda(queryId, controller.signal);
     return (): void => {
       controller.abort();
     };
@@ -180,6 +276,23 @@ export function CalendarSessionProvider(
 
   const value: CalendarSessionContextValue = {
     presentation,
+    agendaDays,
+    isComposerOpen,
+    setComposerOpen: (p_open: boolean): void => {
+      setComposerOpen(p_open);
+      if (p_open) {
+        setToolsOpen(false);
+      }
+    },
+    isToolsOpen,
+    setToolsOpen: (p_open: boolean): void => {
+      setToolsOpen(p_open);
+      if (p_open) {
+        setComposerOpen(false);
+      }
+    },
+    noteDraft,
+    setNoteDraft,
     familyId: queryId.trim(),
     idDraft,
     setIdDraft,
@@ -259,6 +372,7 @@ export function CalendarSessionProvider(
         );
         await command.execute();
         await loadDay(familyId, day);
+        await loadAgenda(familyId);
       } catch (p_error: unknown) {
         if (p_error instanceof DayConflictError) {
           setFormError("This day is already taken.");
@@ -268,6 +382,79 @@ export function CalendarSessionProvider(
           setFormError("Mission is not published.");
         } else {
           setFormError("Could not schedule.");
+        }
+      } finally {
+        setIsSaving(false);
+      }
+    },
+    refreshAgenda: async (): Promise<void> => {
+      await loadAgenda(queryId.trim());
+    },
+    saveComposer: async (): Promise<void> => {
+      const familyId: string = queryId.trim();
+      if (familyId.length === 0) {
+        setFormError("Family missing.");
+        return;
+      }
+      const hasMission: boolean = missionDraft.trim().length > 0;
+      const hasNote: boolean = noteDraft.trim().length > 0;
+      if (!hasMission && !hasNote) {
+        setFormError("Add a mission, a note, or both.");
+        return;
+      }
+      setIsSaving(true);
+      setFormError(null);
+      try {
+        if (hasMission) {
+          const response: Response = await fetch(
+            `/api/missions/${encodeURIComponent(missionDraft.trim())}`,
+            { cache: "no-store" },
+          );
+          if (!response.ok) {
+            setUnpublishedTried(true);
+            setFormError("Mission is not published.");
+            return;
+          }
+          const body: unknown = await response.json();
+          const mission: PublishedMission = readPublishedMission(body);
+          setPublished(mission);
+          const command: ScheduleOnDayCommand = new ScheduleOnDayCommand(
+            familyId,
+            day,
+            mission.getId(),
+            "scheduled",
+          );
+          await command.execute();
+        }
+        if (hasNote) {
+          const noteResponse: Response = await fetch(
+            `/api/families/${encodeURIComponent(familyId)}/diary`,
+            {
+              method: "POST",
+              headers: { "content-type": "application/json" },
+              body: JSON.stringify({
+                kind: "phrase",
+                text: `${day}: ${noteDraft.trim()}`,
+              }),
+            },
+          );
+          if (!noteResponse.ok) {
+            setFormError("Could not save the day note.");
+            return;
+          }
+        }
+        await loadDay(familyId, day);
+        await loadAgenda(familyId);
+        setNoteDraft("");
+        setComposerOpen(false);
+      } catch (p_error: unknown) {
+        if (p_error instanceof DayConflictError) {
+          setFormError("This day is already taken.");
+        } else if (p_error instanceof UnpublishedMissionError) {
+          setUnpublishedTried(true);
+          setFormError("Mission is not published.");
+        } else {
+          setFormError("Could not save the day.");
         }
       } finally {
         setIsSaving(false);

@@ -184,8 +184,8 @@ function ChildScreenBody(): ReactElement {
           actions={
             child.presentation.kind === "ready" ? (
             <form data-child-card onSubmit={onSubmit}>
-              <h2>Add note</h2>
-              <p>Text only. No child photo.</p>
+              <h2>Mission note</h2>
+              <p>About a finished mission. Text only. No photo.</p>
               <div data-child-kinds>
                 {noteKindStrategies().map((p_kind) => (
                   <button

@@ -90,19 +90,23 @@ const SCREEN_STYLES: string = `
   50% { opacity: 1; transform: scaleX(1); }
   100% { opacity: 0.45; transform: scaleX(0.55); }
 }
+[data-calendar-screen] [data-family-thumb-actions] {
+  gap: 12px;
+  padding-top: 12px;
+}
 [data-calendar-card],
 [data-calendar-tools] {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  padding: 16px;
+  padding: 12px;
   border-radius: 20px;
   background: color-mix(in srgb, var(--color-tertiary) 22%, var(--color-paper));
 }
 [data-calendar-screen] label {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 12px;
   color: var(--color-muted);
   font-size: 0.85rem;
 }
@@ -151,6 +155,87 @@ const SCREEN_STYLES: string = `
 [data-calendar-screen] button:disabled { opacity: 0.55; cursor: not-allowed; }
 [data-calendar-error] { color: var(--color-danger); font-weight: 600; }
 [data-calendar-success] { color: var(--color-success); font-weight: 600; }
+[data-calendar-agenda] {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+[data-calendar-agenda-item] {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--color-secondary) 12%, var(--color-paper));
+  text-align: left;
+  cursor: pointer;
+  border: 0;
+  font: inherit;
+  color: inherit;
+}
+[data-calendar-agenda-item] strong {
+  font-size: 0.95rem;
+}
+[data-calendar-add] {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+}
+[data-calendar-add] > button,
+[data-calendar-fab] {
+  position: relative;
+  width: 48px;
+  min-width: 48px;
+  min-height: 48px;
+  padding: 0;
+  border-radius: 999px;
+  font-size: 1.5rem;
+  line-height: 1;
+}
+[data-calendar-fab][data-kind="tools"] {
+  background: color-mix(in srgb, var(--color-ink) 12%, var(--color-paper));
+  color: var(--color-ink);
+}
+[data-calendar-fab][data-open="true"] {
+  background: var(--color-primary);
+  color: var(--color-paper);
+}
+[data-calendar-fab-badge] {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  min-height: 20px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: var(--color-danger, #c62828);
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  line-height: 1;
+  pointer-events: none;
+  animation: calendar-fab-pulse 1.4s ease-in-out infinite;
+}
+@keyframes calendar-fab-pulse {
+  0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-danger, #c62828) 45%, transparent); }
+  50% { transform: scale(1.08); box-shadow: 0 0 0 8px transparent; }
+}
+[data-calendar-composer],
+[data-calendar-tools-sheet] {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 20px;
+  background: color-mix(in srgb, var(--color-tertiary) 22%, var(--color-paper));
+  margin: 0;
+}
 @media (hover: hover) and (pointer: fine) {
   [data-calendar-screen] button:hover:not(:disabled) { opacity: 0.92; }
 }
@@ -179,6 +264,16 @@ function CalendarScreenBody(): ReactElement {
     p_event.preventDefault();
     void calendar.previewMission();
   };
+
+  const scheduledCount: number =
+    presentation.kind === "ready"
+      ? presentation.day.getChildren().filter((p_child): boolean => {
+          return (
+            p_child instanceof SuggestionLeaf &&
+            p_child.p_item.status === "scheduled"
+          );
+        }).length
+      : 0;
 
   return (
     <div data-calendar-screen>
@@ -226,28 +321,220 @@ function CalendarScreenBody(): ReactElement {
         {presentation.kind === "ready" ? (
           <div data-calendar-enter>
             <h1>Family calendar</h1>
-            <p>
-              {presentation.day.p_day} · {presentation.day.statusLabel()}
-            </p>
-            {presentation.day.getChildren().length === 0 ? (
+            <p>Scheduled days and missions for this family.</p>
+            {calendar.agendaDays.length === 0 ? (
               <div data-calendar-card>
+                <p>No days on the agenda yet. Tap + to add one.</p>
+              </div>
+            ) : (
+              <div data-calendar-agenda>
+                {calendar.agendaDays.map((p_item) => (
+                  <button
+                    type="button"
+                    data-calendar-agenda-item
+                    key={p_item.day}
+                    onClick={(): void => {
+                      calendar.setDay(p_item.day);
+                    }}
+                  >
+                    <strong>{p_item.day}</strong>
+                    {p_item.suggestions.length === 0 ? (
+                      <span>No missions</span>
+                    ) : (
+                      p_item.suggestions.map((p_sugg) => (
+                        <span key={p_sugg.id}>
+                          {p_sugg.status}: {p_sugg.mission_id.slice(0, 8)}…
+                        </span>
+                      ))
+                    )}
+                  </button>
+                ))}
+              </div>
+            )}
+            <div data-calendar-card>
+              <h2>
+                {presentation.day.p_day} · {presentation.day.statusLabel()}
+              </h2>
+              {presentation.day.getChildren().length === 0 ? (
                 <p>No suggestions on this day.</p>
-              </div>
-            ) : null}
-            {presentation.day.getChildren().map((p_child, p_index) => (
-              <div data-calendar-card key={`${p_child.statusLabel()}-${String(p_index)}`}>
-                <h2>{p_child.statusLabel()}</h2>
-                {p_child instanceof SuggestionLeaf ? (
-                  <p>{p_child.p_item.mission_id}</p>
-                ) : null}
-              </div>
-            ))}
+              ) : null}
+              {presentation.day.getChildren().map((p_child, p_index) => (
+                <div key={`${p_child.statusLabel()}-${String(p_index)}`}>
+                  <p>{p_child.statusLabel()}</p>
+                  {p_child instanceof SuggestionLeaf ? (
+                    <p>{p_child.p_item.mission_id}</p>
+                  ) : null}
+                </div>
+              ))}
+            </div>
           </div>
         ) : null}
             </>
           }
           actions={
             <>
+        {presentation.kind === "ready" || presentation.kind === "loading" ? (
+          <div data-calendar-add>
+            <button
+              type="button"
+              data-calendar-fab
+              data-kind="tools"
+              data-open={calendar.isToolsOpen ? "true" : "false"}
+              aria-label="Schedule or move a published mission"
+              aria-expanded={calendar.isToolsOpen}
+              disabled={calendar.isSaving}
+              onClick={(): void => {
+                calendar.setToolsOpen(!calendar.isToolsOpen);
+              }}
+            >
+              !
+              {scheduledCount > 0 ? (
+                <span data-calendar-fab-badge aria-label={`${String(scheduledCount)} scheduled`}>
+                  {String(scheduledCount)}
+                </span>
+              ) : null}
+            </button>
+            <button
+              type="button"
+              data-calendar-fab
+              data-open={calendar.isComposerOpen ? "true" : "false"}
+              aria-label="Add day with mission or note"
+              aria-expanded={calendar.isComposerOpen}
+              disabled={calendar.isSaving}
+              onClick={(): void => {
+                calendar.setComposerOpen(!calendar.isComposerOpen);
+              }}
+            >
+              +
+            </button>
+          </div>
+        ) : null}
+        {calendar.isComposerOpen ? (
+          <form
+            data-calendar-composer
+            onSubmit={(p_event: FormEvent<HTMLFormElement>): void => {
+              p_event.preventDefault();
+              void calendar.saveComposer();
+            }}
+          >
+            <h2>Add to the calendar</h2>
+            <label>
+              Day
+              <input
+                type="date"
+                name="composer-day"
+                value={calendar.day}
+                onChange={(p_event: ChangeEvent<HTMLInputElement>): void => {
+                  calendar.setDay(p_event.currentTarget.value);
+                }}
+              />
+            </label>
+            <label>
+              Published mission
+              <select
+                name="composer-mission"
+                value={calendar.missionDraft}
+                onChange={(p_event: ChangeEvent<HTMLSelectElement>): void => {
+                  calendar.setMissionDraft(p_event.currentTarget.value);
+                }}
+              >
+                <option value="">None</option>
+                {SEEDED_PUBLISHED_MISSIONS.map((p_mission) => (
+                  <option key={p_mission.id} value={p_mission.id}>
+                    {p_mission.title}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label>
+              Note about this day
+              <input
+                type="text"
+                name="composer-note"
+                value={calendar.noteDraft}
+                onChange={(p_event: ChangeEvent<HTMLInputElement>): void => {
+                  calendar.setNoteDraft(p_event.currentTarget.value);
+                }}
+                placeholder="Optional note"
+              />
+            </label>
+            <button type="submit" disabled={calendar.isSaving}>
+              Save
+            </button>
+            {calendar.formError !== null ? (
+              <p data-calendar-error role="alert">
+                {calendar.formError}
+              </p>
+            ) : null}
+          </form>
+        ) : null}
+        {calendar.isToolsOpen ? (
+          <form data-calendar-tools-sheet onSubmit={onPreview}>
+            <h2>Schedule a published mission</h2>
+            <label>
+              Published mission
+              <select
+                name="mission-id"
+                value={calendar.missionDraft}
+                onChange={(p_event: ChangeEvent<HTMLSelectElement>): void => {
+                  calendar.setMissionDraft(p_event.currentTarget.value);
+                }}
+              >
+                {SEEDED_PUBLISHED_MISSIONS.map((p_mission) => (
+                  <option key={p_mission.id} value={p_mission.id}>
+                    {p_mission.title}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <button type="submit" data-kind="ghost">
+              Check publication
+            </button>
+            {calendar.unpublishedTried ? (
+              <p data-calendar-error>
+                Unpublished mission. It does not appear and cannot be scheduled.
+              </p>
+            ) : null}
+            {calendar.published !== null ? (
+              <p data-calendar-success>{calendar.published.getTitle()}</p>
+            ) : null}
+            <button
+              type="button"
+              disabled={calendar.isSaving || calendar.published === null}
+              onClick={(): void => {
+                void calendar.schedule();
+              }}
+            >
+              Schedule on this day
+            </button>
+            <label>
+              Move to day
+              <input
+                type="date"
+                name="target-day"
+                value={calendar.targetDay}
+                onChange={(p_event: ChangeEvent<HTMLInputElement>): void => {
+                  calendar.setTargetDay(p_event.currentTarget.value);
+                }}
+              />
+            </label>
+            <button
+              type="button"
+              data-kind="ghost"
+              disabled={calendar.isSaving || calendar.published === null}
+              onClick={(): void => {
+                void calendar.move();
+              }}
+            >
+              Move
+            </button>
+            {calendar.formError !== null ? (
+              <p data-calendar-error role="alert">
+                {calendar.formError}
+              </p>
+            ) : null}
+          </form>
+        ) : null}
         <form data-calendar-tools onSubmit={onApply}>
           <label>
             Day
@@ -262,73 +549,6 @@ function CalendarScreenBody(): ReactElement {
           </label>
           <button type="submit">Open day</button>
         </form>
-        {presentation.kind === "ready" ? (
-            <form data-calendar-card onSubmit={onPreview}>
-              <h2>Schedule a published mission</h2>
-              <label>
-                Published mission
-                <select
-                  name="mission-id"
-                  value={calendar.missionDraft}
-                  onChange={(p_event: ChangeEvent<HTMLSelectElement>): void => {
-                    calendar.setMissionDraft(p_event.currentTarget.value);
-                  }}
-                >
-                  {SEEDED_PUBLISHED_MISSIONS.map((p_mission) => (
-                    <option key={p_mission.id} value={p_mission.id}>
-                      {p_mission.title}
-                    </option>
-                  ))}
-                </select>
-              </label>
-              <button type="submit" data-kind="ghost">
-                Check publication
-              </button>
-              {calendar.unpublishedTried ? (
-                <p data-calendar-error>
-                  Unpublished mission. It does not appear and cannot be scheduled.
-                </p>
-              ) : null}
-              {calendar.published !== null ? (
-                <p data-calendar-success>{calendar.published.getTitle()}</p>
-              ) : null}
-              <button
-                type="button"
-                disabled={calendar.isSaving || calendar.published === null}
-                onClick={(): void => {
-                  void calendar.schedule();
-                }}
-              >
-                Schedule on this day
-              </button>
-              <label>
-                Move to day
-                <input
-                  type="date"
-                  name="target-day"
-                  value={calendar.targetDay}
-                  onChange={(p_event: ChangeEvent<HTMLInputElement>): void => {
-                    calendar.setTargetDay(p_event.currentTarget.value);
-                  }}
-                />
-              </label>
-              <button
-                type="button"
-                data-kind="ghost"
-                disabled={calendar.isSaving || calendar.published === null}
-                onClick={(): void => {
-                  void calendar.move();
-                }}
-              >
-                Move
-              </button>
-              {calendar.formError !== null ? (
-                <p data-calendar-error role="alert">
-                  {calendar.formError}
-                </p>
-              ) : null}
-            </form>
-        ) : null}
             </>
           }
         />

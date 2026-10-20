@@ -1,6 +1,7 @@
 "use client";
 
-import type { ReactElement, ReactNode } from "react";
+import { useRef, type ReactElement, type ReactNode, type RefObject } from "react";
+import { useDragScroll } from "./use-drag-scroll";
 
 type FamilyThumbShellProps = {
   content: ReactNode;
@@ -25,6 +26,21 @@ const THUMB_STYLES: string = `
   overscroll-behavior: contain;
   scrollbar-width: thin;
   scrollbar-color: color-mix(in srgb, var(--color-ink) 22%, transparent) transparent;
+  cursor: grab;
+  touch-action: pan-y;
+  user-select: none;
+}
+[data-family-thumb-content][data-drag-scroll="true"] {
+  cursor: grabbing;
+}
+[data-family-thumb-content] input,
+[data-family-thumb-content] textarea,
+[data-family-thumb-content] select,
+[data-family-thumb-content] button,
+[data-family-thumb-content] a,
+[data-family-thumb-content] [contenteditable="true"] {
+  user-select: text;
+  cursor: auto;
 }
 [data-family-thumb-content]::-webkit-scrollbar {
   width: 4px;
@@ -57,12 +73,17 @@ const THUMB_STYLES: string = `
 `;
 
 export function FamilyThumbShell(p_props: FamilyThumbShellProps): ReactElement {
+  const contentRef: RefObject<HTMLDivElement | null> = useRef<HTMLDivElement>(null);
+  useDragScroll(contentRef);
+
   return (
     <>
       <style href="family-thumb-shell" precedence="medium">
         {THUMB_STYLES}
       </style>
-      <div data-family-thumb-content>{p_props.content}</div>
+      <div data-family-thumb-content ref={contentRef}>
+        {p_props.content}
+      </div>
       {p_props.actions !== undefined ? (
         <div data-family-thumb-actions>{p_props.actions}</div>
       ) : null}

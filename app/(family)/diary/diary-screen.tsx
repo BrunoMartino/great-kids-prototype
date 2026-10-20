@@ -273,10 +273,26 @@ function DiaryScreenBody(): ReactElement {
     presentation.kind === "ready" ? presentation.payload.family_notes.notes : [];
   const missionNotes: DiaryMissionNoteItem[] =
     presentation.kind === "ready" ? presentation.payload.mission_note.notes : [];
+  const parentPersonalNotes: DiaryNoteItem[] = familyNotes.filter(
+    (p_note: DiaryNoteItem): boolean => {
+      return p_note.author !== "Child";
+    },
+  );
+  const parentMissionNotes: DiaryMissionNoteItem[] = missionNotes.filter(
+    (p_item: DiaryMissionNoteItem): boolean => {
+      return p_item.note.author !== "Child";
+    },
+  );
+  const childMissionNotes: DiaryMissionNoteItem[] = missionNotes.filter(
+    (p_item: DiaryMissionNoteItem): boolean => {
+      return p_item.note.author === "Child";
+    },
+  );
   const isEmpty: boolean =
     presentation.kind === "ready" &&
-    familyNotes.length === 0 &&
-    missionNotes.length === 0;
+    parentPersonalNotes.length === 0 &&
+    parentMissionNotes.length === 0 &&
+    childMissionNotes.length === 0;
 
   const onSubmitNote = (p_event: FormEvent<HTMLFormElement>): void => {
     p_event.preventDefault();
@@ -331,7 +347,7 @@ function DiaryScreenBody(): ReactElement {
             <h1>Family diary</h1>
             <p>No photo. Story only.</p>
             {presentation.canAuthor ? null : (
-              <p>Child view reads the stories. It does not write.</p>
+              <p>Child can add notes on chosen missions from Child home.</p>
             )}
             {isEmpty ? (
               <div data-diary-card data-diary-empty-state="true">
@@ -339,34 +355,74 @@ function DiaryScreenBody(): ReactElement {
                 <p>The envelope arrives empty. No photo. Text only.</p>
               </div>
             ) : null}
-            {familyNotes.map((p_note: DiaryNoteItem): ReactElement => {
-              return (
-                <article
-                  key={p_note.id}
-                  data-diary-item
-                  data-diary-kind={p_note.kind}
-                >
-                  <span data-diary-kind-chip>{labelForKind(p_note.kind)}</span>
-                  <p>{p_note.text}</p>
-                </article>
-              );
-            })}
-            {missionNotes.map((p_item: DiaryMissionNoteItem): ReactElement => {
-              return (
-                <article
-                  key={p_item.note.id}
-                  data-diary-item
-                  data-diary-kind={p_item.note.kind}
-                  data-mission-id={p_item.mission_id}
-                >
-                  <span data-diary-kind-chip>
-                    {labelForKind(p_item.note.kind)}
-                  </span>
-                  <p>{p_item.note.text}</p>
-                  <p>Linked to a completed mission.</p>
-                </article>
-              );
-            })}
+            {parentPersonalNotes.length > 0 ? (
+              <div data-diary-card>
+                <h2>Parent notes</h2>
+                {parentPersonalNotes.map((p_note: DiaryNoteItem): ReactElement => {
+                  return (
+                    <article
+                      key={p_note.id}
+                      data-diary-item
+                      data-diary-kind={p_note.kind}
+                      data-diary-author="Parent"
+                    >
+                      <span data-diary-kind-chip>
+                        {labelForKind(p_note.kind)}
+                      </span>
+                      <p>{p_note.text}</p>
+                    </article>
+                  );
+                })}
+              </div>
+            ) : null}
+            {parentMissionNotes.length > 0 ? (
+              <div data-diary-card>
+                <h2>Parent mission notes</h2>
+                {parentMissionNotes.map(
+                  (p_item: DiaryMissionNoteItem): ReactElement => {
+                    return (
+                      <article
+                        key={p_item.note.id}
+                        data-diary-item
+                        data-diary-kind={p_item.note.kind}
+                        data-diary-author="Parent"
+                        data-mission-id={p_item.mission_id}
+                      >
+                        <span data-diary-kind-chip>
+                          {labelForKind(p_item.note.kind)}
+                        </span>
+                        <p>{p_item.note.text}</p>
+                        <p>Linked to a completed mission.</p>
+                      </article>
+                    );
+                  },
+                )}
+              </div>
+            ) : null}
+            {childMissionNotes.length > 0 ? (
+              <div data-diary-card>
+                <h2>Child mission notes</h2>
+                {childMissionNotes.map(
+                  (p_item: DiaryMissionNoteItem): ReactElement => {
+                    return (
+                      <article
+                        key={p_item.note.id}
+                        data-diary-item
+                        data-diary-kind={p_item.note.kind}
+                        data-diary-author="Child"
+                        data-mission-id={p_item.mission_id}
+                      >
+                        <span data-diary-kind-chip>
+                          {labelForKind(p_item.note.kind)}
+                        </span>
+                        <p>{p_item.note.text}</p>
+                        <p>From the child about a mission.</p>
+                      </article>
+                    );
+                  },
+                )}
+              </div>
+            ) : null}
           </div>
         ) : null}
             </>

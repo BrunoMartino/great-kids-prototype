@@ -1,6 +1,8 @@
 "use client";
 
 import {
+  useEffect,
+  useState,
   type ChangeEvent,
   type FormEvent,
   type ReactElement,
@@ -9,7 +11,11 @@ import { FamilyNav } from "../chrome/family-nav";
 import { FamilyThumbShell } from "../chrome/family-thumb-shell";
 import { useFamilySession } from "../context-switch/family-session-context";
 import type { QuizMode } from "./mode-strategy";
-import { QuizSessionProvider, useQuizSession } from "./quiz-session-context";
+import {
+  QuizSessionProvider,
+  useQuizSession,
+  type QuizQuestion,
+} from "./quiz-session-context";
 
 const SCREEN_STYLES: string = `
 [data-quiz-screen] {
@@ -274,6 +280,24 @@ function QuizScreenBody(): ReactElement {
   const session: ReturnType<typeof useFamilySession> = useFamilySession();
   const role: string = session.snapshot?.role ?? "none";
   const presentation = quiz.presentation;
+  const [questionIndex, setQuestionIndex] = useState<number>(0);
+
+  useEffect(() => {
+    setQuestionIndex(0);
+  }, [presentation.kind === "ready" ? presentation.questions.length : 0, quiz.familyId]);
+
+  const questions: QuizQuestion[] =
+    presentation.kind === "ready" ? presentation.questions : [];
+  const safeIndex: number =
+    questions.length === 0
+      ? 0
+      : Math.min(questionIndex, questions.length - 1);
+  const current: QuizQuestion | null =
+    questions.length > 0 ? questions[safeIndex] ?? null : null;
+  const isDone: boolean =
+    presentation.kind === "ready" &&
+    questions.length > 0 &&
+    questionIndex >= questions.length;
 
   return (
     <div data-quiz-screen data-mode={quiz.mode}>
@@ -322,27 +346,37 @@ function QuizScreenBody(): ReactElement {
                 <div data-quiz-enter>
                   <h1>Family quiz</h1>
                   <p>{quiz.modePrompt}</p>
-                  {presentation.questions.length === 0 ? (
+                  {questions.length === 0 ? (
                     <div data-quiz-card>
                       <p>No family questions right now.</p>
                     </div>
                   ) : null}
-                  {presentation.questions.map((p_question) => (
-                    <div data-quiz-card key={p_question.id}>
-                      <p>{p_question.question_text}</p>
+                  {isDone ? (
+                    <div data-quiz-card>
+                      <p>All questions answered for now.</p>
+                      {quiz.lastEnvelope !== null ? (
+                        <p data-quiz-success>
+                          {String(quiz.lastEnvelope.answers.length)} answers in
+                          GPS.
+                        </p>
+                      ) : null}
                     </div>
-                  ))}
-                  {quiz.lastEnvelope !== null ? (
-                    <p data-quiz-success>
-                      {String(quiz.lastEnvelope.answers.length)} answers in GPS.
-                    </p>
+                  ) : null}
+                  {current !== null && !isDone ? (
+                    <div data-quiz-card data-quiz-prompt="true">
+                      <p>
+                        Question {String(safeIndex + 1)} of{" "}
+                        {String(questions.length)}
+                      </p>
+                      <p>{current.question_text}</p>
+                    </div>
                   ) : null}
                 </div>
               ) : null}
             </>
           }
           actions={
-            presentation.kind === "ready" ? (
+            presentation.kind === "ready" && current !== null && !isDone ? (
               <>
                 <div data-quiz-modes>
                   <span data-quiz-mode-thumb data-mode={quiz.mode} aria-hidden="true" />
@@ -365,34 +399,43 @@ function QuizScreenBody(): ReactElement {
                     At the table
                   </button>
                 </div>
-                {presentation.questions.map((p_question) => (
-                  <form
-                    key={p_question.id}
-                    data-quiz-card
-                    onSubmit={(p_event: FormEvent<HTMLFormElement>): void => {
-                      p_event.preventDefault();
-                      void quiz.submitAnswer(p_question.id);
-                    }}
+                <form
+                  data-quiz-card
+                  onSubmit={(p_event: FormEvent<HTMLFormElement>): void => {
+                    p_event.preventDefault();
+                    const questionId: string = current.id;
+                    void quiz
+                      .submitAnswer(questionId)
+                      .then((p_ok: boolean): void => {
+                        if (!p_ok) {
+                          return;
+                        }
+                        setQuestionIndex((p_prev: number): number => {
+                          return p_prev + 1;
+                        });
+                      });
+                  }}
+                >
+                  <label>
+                    Answer
+                    <textarea
+                      name={`answer-${current.id}`}
+                      value={quiz.drafts[current.id] ?? ""}
+                      onChange={(
+                        p_event: ChangeEvent<HTMLTextAreaElement>,
+                      ): void => {
+                        quiz.setDraft(current.id, p_event.currentTarget.value);
+                      }}
+                    />
+                  </label>
+                  <button
+                    type="submit"
+                    data-kind="submit"
+                    disabled={quiz.isSubmitting}
                   >
-                    <label>
-                      Answer
-                      <textarea
-                        name={`answer-${p_question.id}`}
-                        value={quiz.drafts[p_question.id] ?? ""}
-                        onChange={(p_event: ChangeEvent<HTMLTextAreaElement>): void => {
-                          quiz.setDraft(p_question.id, p_event.currentTarget.value);
-                        }}
-                      />
-                    </label>
-                    <button
-                      type="submit"
-                      data-kind="submit"
-                      disabled={quiz.isSubmitting}
-                    >
-                      Save answer
-                    </button>
-                  </form>
-                ))}
+                    Save answer
+                  </button>
+                </form>
                 {quiz.formError !== null ? (
                   <p data-quiz-error role="alert">
                     {quiz.formError}

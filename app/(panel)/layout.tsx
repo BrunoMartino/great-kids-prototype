@@ -47,6 +47,7 @@ const PANEL_SHELL_STYLES: string = `
   flex: 0 0 auto;
   flex-wrap: wrap;
   align-items: center;
+  justify-content: center;
   gap: 16px 24px;
   min-height: 64px;
   padding: 12px 24px;
@@ -115,7 +116,10 @@ const PANEL_SHELL_STYLES: string = `
   }
 }
 [data-panel-main] {
+  display: flex;
   flex: 1 1 auto;
+  flex-direction: column;
+  align-items: center;
   min-width: 0;
   padding: 24px;
   padding-right: max(24px, env(safe-area-inset-right, 0px));

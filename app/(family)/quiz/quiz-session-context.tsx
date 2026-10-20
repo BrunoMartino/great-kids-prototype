@@ -47,7 +47,7 @@ export type QuizSessionContextValue = {
   isSubmitting: boolean;
   lastEnvelope: QuizAnswerEnvelope | null;
   formError: string | null;
-  submitAnswer: (p_questionId: string) => Promise<void>;
+  submitAnswer: (p_questionId: string) => Promise<boolean>;
 };
 
 type QuizSessionProviderProps = {
@@ -212,20 +212,20 @@ export function QuizSessionProvider(
     isSubmitting,
     lastEnvelope,
     formError,
-    submitAnswer: async (p_questionId: string): Promise<void> => {
+    submitAnswer: async (p_questionId: string): Promise<boolean> => {
       const familyId: string = queryId.trim();
       const role: string | undefined = session.snapshot?.role;
       if (familyId.length === 0 || role === undefined) {
-        return;
+        return false;
       }
       if (!GpsViewPolicy.canAnswer(role)) {
         setPresentation({ kind: "denied" });
-        return;
+        return false;
       }
       const text: string = (drafts[p_questionId] ?? "").trim();
       if (text.length === 0) {
         setFormError("Write an answer.");
-        return;
+        return false;
       }
       let resolved: QuizMode;
       try {
@@ -233,7 +233,7 @@ export function QuizSessionProvider(
       } catch (p_error: unknown) {
         void p_error;
         setFormError("Invalid mode.");
-        return;
+        return false;
       }
       setIsSubmitting(true);
       setFormError(null);
@@ -250,9 +250,11 @@ export function QuizSessionProvider(
           ...p_prev,
           [p_questionId]: "",
         }));
+        return true;
       } catch (p_error: unknown) {
         void p_error;
         setFormError("Could not save the answer.");
+        return false;
       } finally {
         setIsSubmitting(false);
       }

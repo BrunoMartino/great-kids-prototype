@@ -1,5 +1,5 @@
 import { GpsPolicy } from "@/app/api/families/[id]/profile/gps-policy";
-import { getMockSession } from "@/internal/db/mock-session";
+import { getFamilyRole } from "@/internal/db/mock-session";
 import { Family } from "@/models/family";
 import { Mission, type MissionFiche } from "@/models/mission";
 import { MissionPick, NoCandidateError, type PickResult } from "@/services/mission_pick/mission-pick";
@@ -36,7 +36,7 @@ export async function POST(
   const params: { id: string } = await p_context.params;
   const familyId: string = params.id;
   try {
-    GpsPolicy.assertCanEdit(getMockSession().role);
+    GpsPolicy.assertCanEdit(getFamilyRole());
   } catch {
     return deny();
   }

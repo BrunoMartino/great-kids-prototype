@@ -7,7 +7,7 @@ import {
 } from "@/app/api/families/[id]/diary/add-note-command";
 import { UnknownNoteKindError } from "@/app/api/families/[id]/diary/kind-strategy";
 import { GpsPolicy } from "@/app/api/families/[id]/profile/gps-policy";
-import { getMockSession } from "@/internal/db/mock-session";
+import { getFamilyRole, type FamilyRole } from "@/internal/db/mock-session";
 import { FamilyDiary, type DiaryDocument } from "@/models/family_diary";
 
 type DiaryRouteContext = {
@@ -53,7 +53,7 @@ export async function GET(
   const params: { id: string } = await p_context.params;
   const familyId: string = params.id;
   try {
-    GpsPolicy.assertCanAnswer(getMockSession().role);
+    GpsPolicy.assertCanAnswer(getFamilyRole());
   } catch {
     return deny();
   }
@@ -64,22 +64,45 @@ export async function GET(
   return Response.json(toPayload(stored), { status: 200 });
 }
 
+function isRecord(p_value: unknown): p_value is Record<string, unknown> {
+  return p_value !== null && typeof p_value === "object" && !Array.isArray(p_value);
+}
+
+function assertCanAuthorNote(p_role: FamilyRole, p_body: unknown): void {
+  if (p_role === "Parent") {
+    GpsPolicy.assertCanEdit(p_role);
+    return;
+  }
+  if (p_role !== "Child") {
+    throw new Error("family diary author forbidden");
+  }
+  if (!isRecord(p_body)) {
+    throw new Error("family diary author forbidden");
+  }
+  if (
+    typeof p_body.mission_id !== "string" ||
+    typeof p_body.family_mission_id !== "string"
+  ) {
+    throw new Error("family diary author forbidden");
+  }
+}
+
 export async function POST(
   p_request: Request,
   p_context: DiaryRouteContext,
 ): Promise<Response> {
   const params: { id: string } = await p_context.params;
   const familyId: string = params.id;
-  try {
-    GpsPolicy.assertCanEdit(getMockSession().role);
-  } catch {
-    return deny();
-  }
   let body: unknown;
   try {
     body = await p_request.json();
   } catch {
     return Response.json({ error: "bad request" }, { status: 400 });
+  }
+  try {
+    assertCanAuthorNote(getFamilyRole(), body);
+  } catch {
+    return deny();
   }
   try {
     const stored: DiaryDocument = new AddNoteCommand(familyId, body).execute();

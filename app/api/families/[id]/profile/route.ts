@@ -1,5 +1,5 @@
 import { GpsPolicy } from "@/app/api/families/[id]/profile/gps-policy";
-import { getMockSession } from "@/internal/db/mock-session";
+import { getFamilyRole } from "@/internal/db/mock-session";
 import { FamilyProfile, type GpsDocument } from "@/models/family_profile";
 
 type FamilyRouteContext = {
@@ -14,7 +14,7 @@ export async function GET(
   const params: { id: string } = await p_context.params;
   const familyId: string = params.id;
   try {
-    GpsPolicy.assertCanEdit(getMockSession().role);
+    GpsPolicy.assertCanEdit(getFamilyRole());
   } catch {
     return Response.json({ error: "forbidden" }, { status: 403 });
   }

@@ -170,9 +170,12 @@ export function CatalogScreen(): ReactElement {
               <span>Image</span>
               <input name="file" type="file" accept="image/*" />
             </label>
-            <button type="submit" data-variant="primary">
-              Create
-            </button>
+            <div data-panel-field data-panel-submit>
+              <span>Create</span>
+              <button type="submit" data-variant="primary">
+                Create
+              </button>
+            </div>
             {session.formError !== null ? (
               <p data-panel-form-error role="alert">
                 {session.formError}

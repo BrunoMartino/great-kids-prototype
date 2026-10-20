@@ -10,7 +10,7 @@ import {
   UnpublishedMissionError,
 } from "@/app/api/families/[id]/calendar/schedule-on-day";
 import { GpsPolicy } from "@/app/api/families/[id]/profile/gps-policy";
-import { getMockSession } from "@/internal/db/mock-session";
+import { getFamilyRole } from "@/internal/db/mock-session";
 import { Family } from "@/models/family";
 import { FamilyCalendar } from "@/models/family_calendar";
 
@@ -41,7 +41,7 @@ export async function GET(
   const familyId: string = params.id;
   const day: string = params.day;
   try {
-    GpsPolicy.assertCanEdit(getMockSession().role);
+    GpsPolicy.assertCanEdit(getFamilyRole());
   } catch {
     return deny();
   }
@@ -64,7 +64,7 @@ export async function PUT(
   const familyId: string = params.id;
   const day: string = params.day;
   try {
-    GpsPolicy.assertCanEdit(getMockSession().role);
+    GpsPolicy.assertCanEdit(getFamilyRole());
   } catch {
     return deny();
   }

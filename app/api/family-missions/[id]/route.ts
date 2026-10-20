@@ -9,7 +9,7 @@ import {
   StartDoingCommand,
 } from "@/app/api/family-missions/start-doing-command";
 import { GpsPolicy } from "@/app/api/families/[id]/profile/gps-policy";
-import { getMockSession } from "@/internal/db/mock-session";
+import { getFamilyRole } from "@/internal/db/mock-session";
 import { FamilyMission, type FamilyMissionClosing, type FamilyMissionRow } from "@/models/family_mission";
 
 type CycleRouteContext = {
@@ -66,7 +66,7 @@ export async function PATCH(
   const params: { id: string } = await p_context.params;
   const cycleId: string = params.id;
   try {
-    GpsPolicy.assertCanEdit(getMockSession().role);
+    GpsPolicy.assertCanEdit(getFamilyRole());
   } catch {
     return deny();
   }

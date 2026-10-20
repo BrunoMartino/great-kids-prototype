@@ -1,7 +1,8 @@
 "use client";
 
-import type { ReactElement } from "react";
-import { usePathname } from "next/navigation";
+import type { MouseEvent, ReactElement } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { useState } from "react";
 
 const USER_HOME: string = "/quiz";
 const ADMIN_HOME: string = "/catalog";
@@ -47,20 +48,28 @@ const SWITCH_STYLES: string = `
   min-width: 72px;
   min-height: 40px;
   padding: 0 14px;
+  border: 0;
   border-radius: 999px;
+  background: transparent;
   color: var(--color-muted, #5a6674);
+  font: inherit;
   font-size: 0.875rem;
   font-weight: 700;
   letter-spacing: 0.01em;
   line-height: 1;
   white-space: nowrap;
   text-decoration: none;
+  cursor: pointer;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
 }
 [data-surface-mode-option="on"] {
   background: var(--color-primary, #ff5a36);
   color: #fff;
+}
+[data-surface-mode-option]:disabled {
+  opacity: 0.6;
+  cursor: wait;
 }
 [data-surface-mode-option]:focus {
   outline: 2px solid var(--color-ink, #1f2a37);
@@ -78,7 +87,7 @@ const SWITCH_STYLES: string = `
     transition: none !important;
   }
 }
-`
+`;
 
 function isAdminPath(p_path: string): boolean {
   if (p_path === "/") {
@@ -91,7 +100,45 @@ function isAdminPath(p_path: string): boolean {
 
 export function SurfaceModeSwitch(): ReactElement {
   const path: string = usePathname();
+  const router: ReturnType<typeof useRouter> = useRouter();
   const admin: boolean = isAdminPath(path);
+  const [isBusy, setIsBusy] = useState<boolean>(false);
+
+  const goUser = async (p_event: MouseEvent<HTMLAnchorElement>): Promise<void> => {
+    p_event.preventDefault();
+    if (isBusy) {
+      return;
+    }
+    setIsBusy(true);
+    try {
+      await fetch("/api/session/context", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ role: "Parent" }),
+      });
+      router.push(USER_HOME);
+    } finally {
+      setIsBusy(false);
+    }
+  };
+
+  const goAdmin = async (p_event: MouseEvent<HTMLAnchorElement>): Promise<void> => {
+    p_event.preventDefault();
+    if (isBusy) {
+      return;
+    }
+    setIsBusy(true);
+    try {
+      await fetch("/api/panel/session", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ role: "Admin" }),
+      });
+      router.push(ADMIN_HOME);
+    } finally {
+      setIsBusy(false);
+    }
+  };
 
   return (
     <nav data-surface-mode-switch aria-label="Screen mode">
@@ -102,6 +149,10 @@ export function SurfaceModeSwitch(): ReactElement {
         href={USER_HOME}
         data-surface-mode-option={admin ? "off" : "on"}
         aria-current={admin ? undefined : "page"}
+        aria-disabled={isBusy}
+        onClick={(p_event: MouseEvent<HTMLAnchorElement>): void => {
+          void goUser(p_event);
+        }}
       >
         User
       </a>
@@ -109,6 +160,10 @@ export function SurfaceModeSwitch(): ReactElement {
         href={ADMIN_HOME}
         data-surface-mode-option={admin ? "on" : "off"}
         aria-current={admin ? "page" : undefined}
+        aria-disabled={isBusy}
+        onClick={(p_event: MouseEvent<HTMLAnchorElement>): void => {
+          void goAdmin(p_event);
+        }}
       >
         Admin
       </a>

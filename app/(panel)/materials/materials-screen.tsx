@@ -1,8 +1,14 @@
 "use client";
 
-import type { ChangeEvent, FormEvent, ReactElement } from "react";
+import type { ChangeEvent, DragEvent, FormEvent, ReactElement, RefObject } from "react";
+import { useRef, useState } from "react";
 import { PANEL_SCREEN_STYLES } from "../shell/panel-screen-styles";
-import { TrashIcon, UploadIcon } from "../shell/panel-icons";
+import {
+  ImageFileIcon,
+  PdfFileIcon,
+  TrashIcon,
+  UploadIcon,
+} from "../shell/panel-icons";
 import {
   StaffSessionToolbar,
   staffRoleLabel,
@@ -10,6 +16,94 @@ import {
 } from "../shell/staff-session-toolbar";
 import { MATERIAL_TYPES, type PanelMaterialRow } from "./materials-facade";
 import { useMaterialsSession } from "./materials-session-context";
+
+const FILE_ACCEPT: string = "image/*,application/pdf";
+
+const MATERIALS_DROP_STYLES: string = `
+[data-file-drop-field] {
+  grid-column: 1 / -1;
+}
+[data-file-drop] {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-height: 148px;
+  padding: 20px 16px;
+  border: 1.5px dashed color-mix(in srgb, var(--color-ink) 22%, transparent);
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--color-desk) 28%, var(--color-paper));
+  cursor: pointer;
+  transition: border-color 120ms ease-out, background 120ms ease-out;
+}
+[data-file-drop][data-active="true"] {
+  border-color: var(--color-primary);
+  background: color-mix(in srgb, var(--color-primary) 10%, var(--color-paper));
+}
+[data-file-drop] input[type="file"] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  clip-path: inset(50%);
+  border: 0;
+  opacity: 0;
+}
+[data-file-drop-icons] {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  color: var(--color-ink);
+}
+[data-file-kind] {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  color: var(--color-muted);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+[data-file-kind] svg {
+  color: var(--color-ink);
+}
+[data-file-drop-copy] {
+  color: var(--color-muted);
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-align: center;
+}
+[data-file-drop][data-chosen="true"] [data-file-drop-copy] {
+  color: var(--color-ink);
+}
+@media (hover: hover) and (pointer: fine) {
+  [data-file-drop]:hover {
+    border-color: var(--color-secondary);
+  }
+}
+`;
+
+function isAllowedMaterialFile(p_file: File): boolean {
+  if (p_file.type.startsWith("image/")) {
+    return true;
+  }
+  return p_file.type === "application/pdf";
+}
+
+function assignInputFile(p_input: HTMLInputElement, p_file: File): void {
+  const transfer: DataTransfer = new DataTransfer();
+  transfer.items.add(p_file);
+  p_input.files = transfer.files;
+}
 
 function fileLabel(p_row: PanelMaterialRow): string {
   if (p_row.feat_img_path !== null) {
@@ -23,6 +117,9 @@ function fileLabel(p_row: PanelMaterialRow): string {
 
 export function MaterialsScreen(): ReactElement {
   const session: ReturnType<typeof useMaterialsSession> = useMaterialsSession();
+  const fileInputRef: RefObject<HTMLInputElement | null> = useRef<HTMLInputElement>(null);
+  const [fileName, setFileName] = useState<string | null>(null);
+  const [dragDepth, setDragDepth] = useState<number>(0);
 
   const onSwitchRole = (p_role: StaffRole): void => {
     void session.switchRole(p_role);
@@ -45,8 +142,53 @@ export function MaterialsScreen(): ReactElement {
       .then((p_ok: boolean): void => {
         if (p_ok) {
           form.reset();
+          setFileName(null);
+          setDragDepth(0);
         }
       });
+  };
+
+  const onFileChange = (p_event: ChangeEvent<HTMLInputElement>): void => {
+    const file: File | undefined = p_event.target.files?.[0];
+    if (file === undefined) {
+      setFileName(null);
+      return;
+    }
+    setFileName(file.name);
+  };
+
+  const onDragEnter = (p_event: DragEvent<HTMLLabelElement>): void => {
+    p_event.preventDefault();
+    p_event.stopPropagation();
+    setDragDepth((p_prev: number): number => {
+      return p_prev + 1;
+    });
+  };
+
+  const onDragOver = (p_event: DragEvent<HTMLLabelElement>): void => {
+    p_event.preventDefault();
+    p_event.stopPropagation();
+  };
+
+  const onDragLeave = (p_event: DragEvent<HTMLLabelElement>): void => {
+    p_event.preventDefault();
+    p_event.stopPropagation();
+    setDragDepth((p_prev: number): number => {
+      return Math.max(0, p_prev - 1);
+    });
+  };
+
+  const onDrop = (p_event: DragEvent<HTMLLabelElement>): void => {
+    p_event.preventDefault();
+    p_event.stopPropagation();
+    setDragDepth(0);
+    const input: HTMLInputElement | null = fileInputRef.current;
+    const dropped: File | undefined = p_event.dataTransfer.files[0];
+    if (input === null || dropped === undefined || !isAllowedMaterialFile(dropped)) {
+      return;
+    }
+    assignInputFile(input, dropped);
+    setFileName(dropped.name);
   };
 
   const onRowFile = (
@@ -65,6 +207,9 @@ export function MaterialsScreen(): ReactElement {
     <div data-panel-page data-panel-materials>
       <style href="panel-page" precedence="medium">
         {PANEL_SCREEN_STYLES}
+      </style>
+      <style href="materials-drop" precedence="medium">
+        {MATERIALS_DROP_STYLES}
       </style>
       <StaffSessionToolbar
         activeRole={session.activeRole}
@@ -123,12 +268,42 @@ export function MaterialsScreen(): ReactElement {
             </label>
             <label data-panel-field>
               <span>Description</span>
-              <input name="description" type="text" autoComplete="off" />
+              <textarea name="description" rows={8} autoComplete="off" />
             </label>
-            <label data-panel-field>
+            <div data-panel-field data-file-drop-field>
               <span>File</span>
-              <input name="file" type="file" accept="image/*,application/pdf" />
-            </label>
+              <label
+                data-file-drop
+                data-active={dragDepth > 0 ? "true" : "false"}
+                data-chosen={fileName !== null ? "true" : "false"}
+                onDragEnter={onDragEnter}
+                onDragOver={onDragOver}
+                onDragLeave={onDragLeave}
+                onDrop={onDrop}
+              >
+                <input
+                  ref={fileInputRef}
+                  name="file"
+                  type="file"
+                  accept={FILE_ACCEPT}
+                  aria-label="Drop an image or PDF, or click to browse"
+                  onChange={onFileChange}
+                />
+                <span data-file-drop-icons>
+                  <span data-file-kind>
+                    <ImageFileIcon label="Image" />
+                    Image
+                  </span>
+                  <span data-file-kind>
+                    <PdfFileIcon label="PDF" />
+                    PDF
+                  </span>
+                </span>
+                <span data-file-drop-copy>
+                  {fileName ?? "Drop an image or PDF here, or click to browse"}
+                </span>
+              </label>
+            </div>
             <button type="submit" data-variant="primary">
               Create
             </button>
