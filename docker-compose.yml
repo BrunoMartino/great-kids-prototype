@@ -1,0 +1,15 @@
+services:
+  web:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      SQLITE_PATH: /app/data/great-kids.sqlite
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - great-kids-data:/app/data
+    command: npm run dev
+
+volumes:
+  great-kids-data:

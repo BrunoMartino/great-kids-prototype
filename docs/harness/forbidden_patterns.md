@@ -1,0 +1,90 @@
+# forbidden_patterns.md
+
+## Purpose
+
+List patterns, architectures, and implementation habits that are forbidden by default.
+
+## Forbidden Architectures By Default
+
+The following are forbidden unless explicitly requested by the user or enabled in `architecture_rules.md`:
+
+- Domain-Driven Design / DDD
+- Clean Architecture
+- Hexagonal Architecture
+- Onion Architecture
+- Ports and Adapters as a global architecture
+- CQRS as a global architecture
+- Event Sourcing as a global architecture
+- Repository / DAO layer (this project: Active Record + `queryRaw` only)
+- ORM (Prisma, Drizzle, TypeORM, or similar)
+- Native mobile stacks (React Native, Expo, Flutter, Capacitor). Family UI is an HTML iPhone 15 Pro Max chrome.
+
+These patterns may be valid in other contexts, but they are not default choices for this project.
+
+## Forbidden MVC Violations
+
+- Large controllers containing complex business workflows.
+- Views that query databases directly.
+- Models that call external APIs directly.
+- Jobs that duplicate business logic instead of calling services.
+- Services that depend directly on HTTP request/response objects.
+- Controllers that contain authorization rules inline instead of using policies/guards.
+
+## Forbidden Abstraction Patterns
+
+- Creating interfaces for every class by default.
+- Creating repositories for every model by default.
+- Creating factories for simple constructors.
+- Creating service layers that only pass through to one method.
+- Using “Manager”, “Helper”, or “Util” as vague dumping grounds.
+- Adding patterns because they are fashionable rather than needed.
+- Importing Flowbite (or Flowbite React). Reference only.
+- Redux, Zustand, or extra global stores. Client state is `useContext` + `useEffect`.
+
+## Forbidden Data Patterns
+
+- Updating critical state without transactions when consistency is required.
+- Using nullable fields to encode many unrelated states.
+- Persisting derived values without invalidation rules.
+- Relying on timestamps alone for critical ordering.
+- Mixing tenant/customer data without explicit scoping.
+- Bare JSON arrays in hub columns (must be `{ id, <key>: [] }`).
+- Storing child photos. Memories are text only.
+- Inventing missions in the API or UI. Pick only `review_status = published` catalog rows.
+- Auth tables, passwords, or `REFERENCES auth.users` in this prototype.
+
+## Forbidden Data Flow Patterns
+
+- Non-unidirectional data flow: data must always flow in one direction through the application.
+- Data cycles and loops between modules, layers, or services.
+
+Exceptions — cycles/loops are only allowed when:
+
+1. The alternatives to avoid them are more complex, more abstract, or require significantly more code.
+2. The user explicitly requests the loop.
+
+## Forbidden Error Patterns
+
+- Catching errors and returning success.
+- Swallowing exceptions without logs or recovery.
+- Retrying non-idempotent operations blindly.
+- Logging secrets, tokens, passwords, or sensitive PII.
+- Throwing generic errors for known business failures.
+
+## Forbidden TypeScript / Naming Patterns
+
+- Untyped variables or parameters.
+- Agent-authored `any` / `as any`. Only the user may write `any`.
+- Parameters without the `p_` prefix.
+- Environment variables not in SCREAMING_SNAKE_CASE.
+- Agents creating or editing `.env`.
+
+## Forbidden Agent Patterns
+
+- Introducing DDD/Clean Architecture without permission.
+- Expanding task scope beyond the user request.
+- Performing broad refactors for small changes.
+- Adding dependencies without justification.
+- Changing architecture because a generic best practice suggests it.
+- Editing or removing existing tests (`persisted-tester`).
+- Bypassing Babylon Gate / Lefthook.
