@@ -1,10 +1,6 @@
 "use client";
 
 import type { ReactNode } from "react";
-import {
-  SurfaceFacade,
-  type SurfaceChrome,
-} from "@/app/api/panel/surface-facade";
 import { FamilySurfaceDecorator } from "./family-surface-decorator";
 import { FamilyDrawer } from "./family-drawer";
 import type { IFamilySurface } from "./family-surface-protocol";
@@ -159,9 +155,7 @@ export class PhoneChromeDecorator extends FamilySurfaceDecorator {
   }
 
   public render(): ReactNode {
-    const facade: SurfaceFacade = new SurfaceFacade();
-    const surfaceChrome: SurfaceChrome = facade.familySurface();
-    const chrome: SurfaceChrome["chrome"] = surfaceChrome.chrome;
+    const chrome: "iphone-15-pro-max" = "iphone-15-pro-max";
     const inner: ReactNode = this.surface.render();
 
     return (

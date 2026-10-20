@@ -141,10 +141,16 @@ export class MinioAdapter implements ObjectStoreProtocol {
         requestHeaders[p_header[0]] = p_header[1];
       }
     }
+    let putBody: ArrayBuffer | undefined;
+    if (p_method === "PUT") {
+      const copy: ArrayBuffer = new ArrayBuffer(p_body.byteLength);
+      new Uint8Array(copy).set(p_body);
+      putBody = copy;
+    }
     const response: Response = await fetch(target, {
       method: p_method,
       headers: requestHeaders,
-      body: p_method === "PUT" ? p_body : undefined,
+      body: putBody,
     });
     if (!response.ok) {
       throw new Error("object store request failed");

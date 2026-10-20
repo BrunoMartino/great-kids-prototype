@@ -1,5 +1,5 @@
-import { Suspense, type ReactElement } from "react";
-import { CycleScreen } from "./cycle-screen";
+import dynamic from "next/dynamic";
+import type { ComponentType, ReactElement } from "react";
 
 function CycleFallback(): ReactElement {
   return (
@@ -13,10 +13,14 @@ function CycleFallback(): ReactElement {
   );
 }
 
+const CycleScreen: ComponentType = dynamic(
+  async (): Promise<{ default: ComponentType }> => {
+    const loaded: { CycleScreen: ComponentType } = await import("./cycle-screen");
+    return { default: loaded.CycleScreen };
+  },
+  { loading: CycleFallback },
+);
+
 export default function CyclePage(): ReactElement {
-  return (
-    <Suspense fallback={<CycleFallback />}>
-      <CycleScreen />
-    </Suspense>
-  );
+  return <CycleScreen />;
 }

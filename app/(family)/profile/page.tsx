@@ -1,5 +1,5 @@
-import { Suspense, type ReactElement } from "react";
-import { ProfileScreen } from "./profile-screen";
+import dynamic from "next/dynamic";
+import type { ComponentType, ReactElement } from "react";
 
 function ProfileFallback(): ReactElement {
   return (
@@ -13,10 +13,14 @@ function ProfileFallback(): ReactElement {
   );
 }
 
+const ProfileScreen: ComponentType = dynamic(
+  async (): Promise<{ default: ComponentType }> => {
+    const loaded: { ProfileScreen: ComponentType } = await import("./profile-screen");
+    return { default: loaded.ProfileScreen };
+  },
+  { loading: ProfileFallback },
+);
+
 export default function ProfilePage(): ReactElement {
-  return (
-    <Suspense fallback={<ProfileFallback />}>
-      <ProfileScreen />
-    </Suspense>
-  );
+  return <ProfileScreen />;
 }

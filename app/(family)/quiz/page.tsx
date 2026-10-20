@@ -1,5 +1,5 @@
-import { Suspense, type ReactElement } from "react";
-import { QuizScreen } from "./quiz-screen";
+import dynamic from "next/dynamic";
+import type { ComponentType, ReactElement } from "react";
 
 function QuizFallback(): ReactElement {
   return (
@@ -13,10 +13,14 @@ function QuizFallback(): ReactElement {
   );
 }
 
+const QuizScreen: ComponentType = dynamic(
+  async (): Promise<{ default: ComponentType }> => {
+    const loaded: { QuizScreen: ComponentType } = await import("./quiz-screen");
+    return { default: loaded.QuizScreen };
+  },
+  { loading: QuizFallback },
+);
+
 export default function QuizPage(): ReactElement {
-  return (
-    <Suspense fallback={<QuizFallback />}>
-      <QuizScreen />
-    </Suspense>
-  );
+  return <QuizScreen />;
 }

@@ -1,5 +1,5 @@
-import { Suspense, type ReactElement } from "react";
-import { CalendarScreen } from "./calendar-screen";
+import dynamic from "next/dynamic";
+import type { ComponentType, ReactElement } from "react";
 
 function CalendarFallback(): ReactElement {
   return (
@@ -13,10 +13,14 @@ function CalendarFallback(): ReactElement {
   );
 }
 
+const CalendarScreen: ComponentType = dynamic(
+  async (): Promise<{ default: ComponentType }> => {
+    const loaded: { CalendarScreen: ComponentType } = await import("./calendar-screen");
+    return { default: loaded.CalendarScreen };
+  },
+  { loading: CalendarFallback },
+);
+
 export default function CalendarPage(): ReactElement {
-  return (
-    <Suspense fallback={<CalendarFallback />}>
-      <CalendarScreen />
-    </Suspense>
-  );
+  return <CalendarScreen />;
 }

@@ -1,5 +1,5 @@
-import { Suspense, type ReactElement } from "react";
-import { ForecastScreen } from "./forecast-screen";
+import dynamic from "next/dynamic";
+import type { ComponentType, ReactElement } from "react";
 
 function ForecastFallback(): ReactElement {
   return (
@@ -13,10 +13,14 @@ function ForecastFallback(): ReactElement {
   );
 }
 
+const ForecastScreen: ComponentType = dynamic(
+  async (): Promise<{ default: ComponentType }> => {
+    const loaded: { ForecastScreen: ComponentType } = await import("./forecast-screen");
+    return { default: loaded.ForecastScreen };
+  },
+  { loading: ForecastFallback },
+);
+
 export default function ForecastPage(): ReactElement {
-  return (
-    <Suspense fallback={<ForecastFallback />}>
-      <ForecastScreen />
-    </Suspense>
-  );
+  return <ForecastScreen />;
 }

@@ -1,5 +1,5 @@
-import { Suspense, type ReactElement } from "react";
-import { MascotScreen } from "./mascot-screen";
+import dynamic from "next/dynamic";
+import type { ComponentType, ReactElement } from "react";
 
 function MascotFallback(): ReactElement {
   return (
@@ -13,10 +13,14 @@ function MascotFallback(): ReactElement {
   );
 }
 
+const MascotScreen: ComponentType = dynamic(
+  async (): Promise<{ default: ComponentType }> => {
+    const loaded: { MascotScreen: ComponentType } = await import("./mascot-screen");
+    return { default: loaded.MascotScreen };
+  },
+  { loading: MascotFallback },
+);
+
 export default function MascotPage(): ReactElement {
-  return (
-    <Suspense fallback={<MascotFallback />}>
-      <MascotScreen />
-    </Suspense>
-  );
+  return <MascotScreen />;
 }

@@ -1,5 +1,5 @@
-import { Suspense, type ReactElement } from "react";
-import { DiaryScreen } from "./diary-screen";
+import dynamic from "next/dynamic";
+import type { ComponentType, ReactElement } from "react";
 
 function DiaryFallback(): ReactElement {
   return (
@@ -13,10 +13,14 @@ function DiaryFallback(): ReactElement {
   );
 }
 
+const DiaryScreen: ComponentType = dynamic(
+  async (): Promise<{ default: ComponentType }> => {
+    const loaded: { DiaryScreen: ComponentType } = await import("./diary-screen");
+    return { default: loaded.DiaryScreen };
+  },
+  { loading: DiaryFallback },
+);
+
 export default function DiaryPage(): ReactElement {
-  return (
-    <Suspense fallback={<DiaryFallback />}>
-      <DiaryScreen />
-    </Suspense>
-  );
+  return <DiaryScreen />;
 }

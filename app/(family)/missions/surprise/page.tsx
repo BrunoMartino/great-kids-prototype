@@ -1,5 +1,5 @@
-import { Suspense, type ReactElement } from "react";
-import { SurpriseScreen } from "./surprise-screen";
+import dynamic from "next/dynamic";
+import type { ComponentType, ReactElement } from "react";
 
 function SurpriseFallback(): ReactElement {
   return (
@@ -13,10 +13,14 @@ function SurpriseFallback(): ReactElement {
   );
 }
 
+const SurpriseScreen: ComponentType = dynamic(
+  async (): Promise<{ default: ComponentType }> => {
+    const loaded: { SurpriseScreen: ComponentType } = await import("./surprise-screen");
+    return { default: loaded.SurpriseScreen };
+  },
+  { loading: SurpriseFallback },
+);
+
 export default function SurprisePage(): ReactElement {
-  return (
-    <Suspense fallback={<SurpriseFallback />}>
-      <SurpriseScreen />
-    </Suspense>
-  );
+  return <SurpriseScreen />;
 }

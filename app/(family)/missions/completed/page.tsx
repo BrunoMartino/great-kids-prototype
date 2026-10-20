@@ -1,5 +1,5 @@
-import { Suspense, type ReactElement } from "react";
-import { CompletedScreen } from "./completed-screen";
+import dynamic from "next/dynamic";
+import type { ComponentType, ReactElement } from "react";
 
 function CompletedFallback(): ReactElement {
   return (
@@ -13,10 +13,14 @@ function CompletedFallback(): ReactElement {
   );
 }
 
+const CompletedScreen: ComponentType = dynamic(
+  async (): Promise<{ default: ComponentType }> => {
+    const loaded: { CompletedScreen: ComponentType } = await import("./completed-screen");
+    return { default: loaded.CompletedScreen };
+  },
+  { loading: CompletedFallback },
+);
+
 export default function CompletedPage(): ReactElement {
-  return (
-    <Suspense fallback={<CompletedFallback />}>
-      <CompletedScreen />
-    </Suspense>
-  );
+  return <CompletedScreen />;
 }
