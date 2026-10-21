@@ -1,14 +1,12 @@
 import dynamic from "next/dynamic";
 import type { ComponentType, ReactElement } from "react";
+import { FamilyThumbShell } from "../chrome/family-thumb-shell";
+import { LoadingCard } from "../chrome/family-ui";
 
 function ForecastFallback(): ReactElement {
   return (
     <div data-forecast-screen>
-      <div data-forecast-scroll>
-        <div aria-live="polite" aria-busy="true">
-          <h1>Loading the forecast</h1>
-        </div>
-      </div>
+      <FamilyThumbShell content={<LoadingCard label="Loading the forecast" />} />
     </div>
   );
 }

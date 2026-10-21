@@ -16,27 +16,26 @@ const CATALOG_EXTRAS: string = `
   align-items: center;
   min-height: 28px;
   padding: 0 10px;
-  border-radius: 999px;
-  background: #ece6df;
-  background: color-mix(in srgb, var(--color-muted) 16%, var(--color-paper));
-  color: var(--color-muted);
-  font-size: 0.75rem;
+  border-radius: var(--r-pill);
+  background: var(--gk-surface-2);
+  background: color-mix(in srgb, var(--gk-ink-muted) 16%, var(--gk-surface));
+  color: var(--gk-ink-muted);
+  font-size: var(--fs-caption);
   font-weight: 700;
 }
 [data-review-chip][data-review-status="published"] {
-  background: #e4ecdf;
-  background: color-mix(in srgb, var(--color-success) 16%, var(--color-paper));
-  color: var(--color-success);
+  background: var(--gk-success-soft);
+  background: color-mix(in srgb, var(--gk-success) 16%, var(--gk-surface));
+  color: var(--gk-success-ink);
 }
 [data-review-chip][data-review-status="in_review"] {
-  background: #f3ead4;
-  background: color-mix(in srgb, var(--color-warning) 18%, var(--color-paper));
-  color: var(--color-warning);
+  background: var(--gk-warning-soft);
+  background: color-mix(in srgb, var(--gk-warning) 18%, var(--gk-surface));
+  color: var(--gk-warning-ink);
 }
 @media (min-width: 768px) {
-  [data-panel-catalog] [data-panel-form] {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr) minmax(0, 1fr) auto;
-    align-items: end;
+  [data-panel-catalog] [data-panel-form] > [data-panel-field]:nth-of-type(2) {
+    flex-grow: 1.4;
   }
 }
 `;

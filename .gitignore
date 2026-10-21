@@ -8,3 +8,5 @@ node_modules
 data/
 *.sqlite
 graphify-out/
+test-results/
+playwright-report/

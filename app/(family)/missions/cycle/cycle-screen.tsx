@@ -7,233 +7,62 @@ import {
   type ReactElement,
 } from "react";
 import Link from "next/link";
-import { FamilyNav } from "../../chrome/family-nav";
+import {
+  ArrowsClockwiseIcon,
+  CheckIcon,
+  GiftIcon,
+  LockIcon,
+  StarIcon,
+  WarningIcon,
+} from "@/app/design-system/icons";
 import { FamilyThumbShell } from "../../chrome/family-thumb-shell";
+import {
+  LoadingCard,
+  MascotGlyph,
+  StateCard,
+  TypewriterCopy,
+  Well,
+} from "../../chrome/family-ui";
 import { useFamilySession } from "../../context-switch/family-session-context";
 import { CycleSessionProvider, useCycleSession } from "./cycle-session-context";
 import type { CycleOfferedCommand } from "./cycle-ui-state";
 
-const SCREEN_STYLES: string = `
-[data-cycle-screen] {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  flex: 1 1 auto;
-  min-width: 0;
-  min-height: 0;
-  height: 100%;
-  overflow: hidden;
+const CYCLE_STEPS: readonly string[] = ["Accepted", "Doing", "Completed"];
+
+type YesNoProps = {
+  label: string;
+  value: boolean | null;
+  onChange: (p_value: boolean) => void;
+};
+
+function YesNo(p_props: YesNoProps): ReactElement {
+  return (
+    <div data-gk-stack>
+      <p>{p_props.label}</p>
+      <fieldset data-gk-chips aria-label={p_props.label}>
+        {([true, false] as const).map((p_option: boolean) => (
+          <button
+            key={String(p_option)}
+            type="button"
+            data-gk-chip
+            data-kind="choice"
+            aria-pressed={p_props.value === p_option}
+            onClick={(): void => {
+              p_props.onChange(p_option);
+            }}
+          >
+            <CheckIcon data-gk-check size={16} weight="bold" aria-hidden="true" />
+            {p_option ? "Yes" : "No"}
+          </button>
+        ))}
+      </fieldset>
+    </div>
+  );
 }
-[data-cycle-scroll] {
-  display: flex;
-  flex-direction: column;
-  flex: 1 1 auto;
-  gap: 16px;
-  min-width: 0;
-  min-height: 0;
-  overflow-x: hidden;
-  overflow-y: auto;
-  overflow-anchor: none;
-  padding: 8px 4px 16px;
-  -webkit-overflow-scrolling: touch;
-  overscroll-behavior: contain;
-  scrollbar-width: thin;
-  scrollbar-color: color-mix(in srgb, var(--color-ink) 22%, transparent) transparent;
-}
-[data-cycle-scroll]::-webkit-scrollbar { width: 4px; }
-[data-cycle-scroll]::-webkit-scrollbar-thumb {
-  background: color-mix(in srgb, var(--color-ink) 22%, transparent);
-  border-radius: 999px;
-}
-[data-cycle-screen] h1 { margin: 0; font-size: 1.35rem; line-height: 1.25; }
-[data-cycle-screen] h2 { margin: 0; font-size: 1.05rem; }
-[data-cycle-screen] p { margin: 0; color: var(--color-muted); line-height: 1.45; }
-[data-cycle-badge] {
-  display: inline-flex;
-  align-items: center;
-  align-self: flex-start;
-  min-height: 28px;
-  padding: 0 10px;
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--color-primary) 14%, var(--color-paper));
-  color: var(--color-primary);
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-}
-[data-cycle-badge][data-role="Child"] {
-  background: color-mix(in srgb, var(--color-child) 14%, var(--color-paper));
-  color: var(--color-child);
-}
-[data-cycle-status] {
-  display: inline-flex;
-  align-items: center;
-  align-self: flex-start;
-  min-height: 28px;
-  padding: 0 10px;
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--color-secondary) 16%, var(--color-paper));
-  color: var(--color-secondary);
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-}
-[data-cycle-enter] {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  animation: cycle-enter 280ms cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-@keyframes cycle-enter {
-  from { opacity: 0; transform: translate3d(0, 8px, 0); }
-  to { opacity: 1; transform: translate3d(0, 0, 0); }
-}
-[data-cycle-loading-bar] {
-  height: 12px;
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--color-ink) 10%, var(--color-paper));
-  transform-origin: left center;
-  animation: cycle-load 900ms ease-in-out infinite;
-}
-@keyframes cycle-load {
-  0% { opacity: 0.45; transform: scaleX(0.55); }
-  50% { opacity: 1; transform: scaleX(1); }
-  100% { opacity: 0.45; transform: scaleX(0.55); }
-}
-[data-cycle-card],
-[data-cycle-tools] {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding: 16px;
-  border-radius: 20px;
-  background: color-mix(in srgb, var(--color-tertiary) 22%, var(--color-paper));
-}
-[data-cycle-screen] label {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  color: var(--color-muted);
-  font-size: 0.85rem;
-}
-[data-cycle-screen] input {
-  width: 100%;
-  min-height: 44px;
-  box-sizing: border-box;
-  padding: 0 14px;
-  border: 1px solid color-mix(in srgb, var(--color-ink) 14%, var(--color-tertiary));
-  border-radius: 14px;
-  background: var(--color-paper);
-  color: var(--color-ink);
-  font: inherit;
-  font-size: 16px;
-  -webkit-appearance: none;
-  appearance: none;
-}
-[data-cycle-screen] input:focus,
-[data-cycle-screen] button:focus,
-[data-cycle-screen] a:focus { outline: 2px solid var(--color-ink); outline-offset: 2px; }
-[data-cycle-screen] input:focus:not(:focus-visible),
-[data-cycle-screen] button:focus:not(:focus-visible),
-[data-cycle-screen] a:focus:not(:focus-visible) { outline: none; }
-[data-cycle-screen] input:focus-visible,
-[data-cycle-screen] button:focus-visible,
-[data-cycle-screen] a:focus-visible { outline: 2px solid var(--color-ink); outline-offset: 2px; }
-[data-cycle-actions] { display: flex; flex-direction: column; gap: 8px; }
-[data-cycle-screen] button,
-[data-cycle-screen] a[data-cycle-link] {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 44px;
-  margin: 0;
-  padding: 0 16px;
-  border: 0;
-  border-radius: 14px;
-  background: var(--color-primary);
-  color: var(--color-paper);
-  font: inherit;
-  font-weight: 600;
-  text-decoration: none;
-  cursor: pointer;
-  -webkit-appearance: none;
-  appearance: none;
-  -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation;
-}
-[data-cycle-screen] button[data-kind="ghost"],
-[data-cycle-screen] a[data-kind="ghost"] {
-  background: color-mix(in srgb, var(--color-ink) 10%, var(--color-paper));
-  color: var(--color-ink);
-}
-[data-cycle-screen] button[data-kind="choice"] {
-  background: color-mix(in srgb, var(--color-ink) 10%, var(--color-paper));
-  color: var(--color-ink);
-}
-[data-cycle-screen] button[data-kind="choice"][data-on="true"] {
-  background: var(--color-secondary);
-  color: var(--color-paper);
-}
-[data-cycle-screen] button:active,
-[data-cycle-screen] a[data-cycle-link]:active { opacity: 0.88; }
-[data-cycle-screen] button:disabled { opacity: 0.55; cursor: not-allowed; }
-[data-cycle-error] { color: var(--color-danger); font-weight: 600; }
-[data-cycle-pair] { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-[data-cycle-backdrop] {
-  position: absolute;
-  inset: 0;
-  z-index: 4;
-  display: flex;
-  align-items: flex-end;
-  padding: 12px;
-  background: color-mix(in srgb, var(--color-ink) 38%, transparent);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 160ms ease-in;
-}
-[data-cycle-backdrop][data-open="true"] {
-  opacity: 1;
-  pointer-events: auto;
-  transition: opacity 240ms cubic-bezier(0.16, 1, 0.3, 1);
-}
-[data-cycle-sheet] {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  width: 100%;
-  padding: 20px 16px 16px;
-  border-radius: 20px 20px 16px 16px;
-  background: var(--color-paper);
-  opacity: 0;
-  transform: translate3d(0, 8px, 0);
-  transition: transform 160ms ease-in, opacity 160ms ease-in;
-}
-[data-cycle-backdrop][data-open="true"] [data-cycle-sheet] {
-  opacity: 1;
-  transform: translate3d(0, 0, 0);
-  transition: transform 240ms cubic-bezier(0.16, 1, 0.3, 1), opacity 240ms cubic-bezier(0.16, 1, 0.3, 1);
-}
-[data-cycle-sheet] button { width: 100%; }
-[data-cycle-pair] button { width: auto; }
-@media (hover: hover) and (pointer: fine) {
-  [data-cycle-screen] button:hover:not(:disabled),
-  [data-cycle-screen] a[data-cycle-link]:hover { opacity: 0.92; }
-}
-@media (prefers-reduced-motion: reduce) {
-  [data-cycle-screen] *,
-  [data-cycle-screen] *::before,
-  [data-cycle-screen] *::after {
-    animation: none !important;
-    transition: none !important;
-  }
-}
-`;
 
 function commandLabel(p_command: CycleOfferedCommand): string {
   if (p_command === "start") {
-    return "Start";
+    return "Start mission";
   }
   return "Complete";
 }
@@ -241,7 +70,6 @@ function commandLabel(p_command: CycleOfferedCommand): string {
 function CycleScreenBody(): ReactElement {
   const cycle: ReturnType<typeof useCycleSession> = useCycleSession();
   const session: ReturnType<typeof useFamilySession> = useFamilySession();
-  const role: string = session.snapshot?.role ?? "none";
   const presentation = cycle.presentation;
   const [isReady, setIsReady] = useState<boolean>(false);
 
@@ -254,122 +82,153 @@ function CycleScreenBody(): ReactElement {
       ? "/missions/completed"
       : `/missions/completed?id=${encodeURIComponent(cycle.familyId)}`;
 
+  const stepIndex: number =
+    presentation.kind === "ready" ? Math.max(0, CYCLE_STEPS.indexOf(presentation.status)) : 0;
+  const isShown: boolean = isReady && presentation.kind === "ready" && !session.isLoading;
+
   return (
     <div data-cycle-screen>
-      <style href="cycle-screen" precedence="medium">
-        {SCREEN_STYLES}
-      </style>
-      <div data-cycle-scroll inert={cycle.isClosingOpen}>
+      <div data-gk-screen-frame inert={cycle.isClosingOpen}>
         <FamilyThumbShell
+          sub="Accepted together"
+          title="Mission cycle"
           content={
             <>
-        <FamilyNav familyId={cycle.familyId} active="cycle" />
-        <span data-cycle-badge data-role={role}>
-          View {role === "none" ? "session" : role}
-        </span>
-        {presentation.kind === "loading" || session.isLoading ? (
-          <div data-cycle-enter aria-live="polite" aria-busy="true">
-            <h1>Loading the cycle</h1>
-            <div data-cycle-loading-bar />
-          </div>
-        ) : null}
-        {presentation.kind === "need-family" && !session.isLoading ? (
-          <div data-cycle-enter>
-            <h1>Mission cycle</h1>
-            <p>Opening the accepted mission cycle.</p>
-          </div>
-        ) : null}
-        {presentation.kind === "need-cycle" && !session.isLoading ? (
-          <div data-cycle-enter>
-            <h1>Mission cycle</h1>
-            <p>Accept a surprise to start. Illegal transitions are hidden.</p>
-          </div>
-        ) : null}
-        {presentation.kind === "denied" ? (
-          <div data-cycle-enter role="alert">
-            <h1>Cycle is Parent only</h1>
-            <p>Child view cannot advance or complete the mission.</p>
-          </div>
-        ) : null}
-        {presentation.kind === "missing" ? (
-          <div data-cycle-enter>
-            <h1>Mission not found</h1>
-            <p>That id does not open the cycle.</p>
-          </div>
-        ) : null}
-        {presentation.kind === "error" ? (
-          <div data-cycle-enter role="alert">
-            <h1>Mission cycle</h1>
-            <p>{presentation.message}</p>
-          </div>
-        ) : null}
-        {isReady && presentation.kind === "ready" && !session.isLoading ? (
-          <div data-cycle-enter data-cycle-card data-status={presentation.status}>
-            <span data-cycle-status>{presentation.status}</span>
-            <h1>
-              {presentation.title.length > 0 ? presentation.title : "Family mission"}
-            </h1>
-            {presentation.status === "Accepted" ? (
-              <p>The family accepted. You can only start — complete is not offered yet.</p>
-            ) : null}
-            {presentation.status === "Doing" ? (
-              <p>They are doing it. The closing question opens only when completing.</p>
-            ) : null}
-            {presentation.status === "Completed" && presentation.closing !== null ? (
-              <p>
-                Closing: {presentation.closing.do_again ? "would do again" : "do not repeat"}
-                {"; "}
-                {presentation.closing.save_memory ? "save in memory" : "do not save"}.
-              </p>
-            ) : null}
-            {cycle.formError !== null ? (
-              <p data-cycle-error role="alert">
-                {cycle.formError}
-              </p>
-            ) : null}
-          </div>
-        ) : null}
+              {presentation.kind === "loading" || session.isLoading ? (
+                <LoadingCard label="Loading the cycle" />
+              ) : null}
+              {presentation.kind === "need-family" && !session.isLoading ? (
+                <StateCard icon={ArrowsClockwiseIcon} title="Mission cycle">
+                  <p>Opening the accepted mission cycle.</p>
+                </StateCard>
+              ) : null}
+              {presentation.kind === "need-cycle" && !session.isLoading ? (
+                <StateCard icon={GiftIcon} tone="warm" title="No mission yet">
+                  <p>Accept a surprise to start. Illegal transitions are hidden.</p>
+                </StateCard>
+              ) : null}
+              {presentation.kind === "denied" ? (
+                <StateCard icon={LockIcon} title="Cycle is Parent only" role="alert">
+                  <p>Child view cannot advance or complete the mission.</p>
+                </StateCard>
+              ) : null}
+              {presentation.kind === "missing" ? (
+                <StateCard icon={WarningIcon} title="Mission not found">
+                  <p>That id does not open the cycle.</p>
+                </StateCard>
+              ) : null}
+              {presentation.kind === "error" ? (
+                <StateCard icon={WarningIcon} title="Mission cycle" role="alert">
+                  <p>{presentation.message}</p>
+                </StateCard>
+              ) : null}
+              {isShown && presentation.kind === "ready" ? (
+                <>
+                  <div data-gk-mission data-gk-enter data-cycle-card data-status={presentation.status}>
+                    <div data-gk-mission-top>
+                      <p data-gk-eyebrow data-cycle-status>
+                        {presentation.status}
+                      </p>
+                      <MascotGlyph />
+                    </div>
+                    <TypewriterCopy
+                      text={presentation.title.length > 0 ? presentation.title : "Family mission"}
+                    />
+                  </div>
+                  <div data-gk-stack>
+                    <div data-gk-progress-meta>
+                      <span>
+                        Step {String(stepIndex + 1)} of {String(CYCLE_STEPS.length)}
+                      </span>
+                      <span>{presentation.status}</span>
+                    </div>
+                    <div
+                      data-gk-progress
+                      role="progressbar"
+                      aria-label="Mission progress"
+                      aria-valuemin={1}
+                      aria-valuemax={CYCLE_STEPS.length}
+                      aria-valuenow={stepIndex + 1}
+                    >
+                      <i style={{ transform: `scaleX(${String((stepIndex + 1) / CYCLE_STEPS.length)})` }} />
+                    </div>
+                  </div>
+                  {presentation.status === "Accepted" ? (
+                    <p data-gk-alert="info">
+                      <ArrowsClockwiseIcon size={20} aria-hidden="true" />
+                      The family accepted. You can only start — complete is not offered yet.
+                    </p>
+                  ) : null}
+                  {presentation.status === "Doing" ? (
+                    <p data-gk-alert="info">
+                      <ArrowsClockwiseIcon size={20} aria-hidden="true" />
+                      They are doing it. The closing question opens only when completing.
+                    </p>
+                  ) : null}
+                  {presentation.status === "Completed" && presentation.closing !== null ? (
+                    <div data-gk-reward>
+                      <Well icon={StarIcon} tone="warm" />
+                      <div>
+                        <h2>Mission complete</h2>
+                        <p>
+                          {presentation.closing.do_again ? "Would do again" : "Do not repeat"}
+                          {"; "}
+                          {presentation.closing.save_memory ? "saved in memory" : "not saved"}.
+                        </p>
+                      </div>
+                    </div>
+                  ) : null}
+                  {cycle.formError !== null && !cycle.isClosingOpen ? (
+                    <p data-gk-alert="danger" role="alert">
+                      <WarningIcon size={20} aria-hidden="true" />
+                      {cycle.formError}
+                    </p>
+                  ) : null}
+                </>
+              ) : null}
             </>
           }
           actions={
-            isReady && presentation.kind === "ready" && !session.isLoading ? (
-            <div data-cycle-actions>
-              {presentation.offered.map((p_command: CycleOfferedCommand) => (
-                <button
-                  key={p_command}
-                  type="button"
-                  data-cycle-command={p_command}
-                  disabled={cycle.isSaving}
-                  onClick={(): void => {
-                    if (p_command === "start") {
-                      void cycle.startDoing();
-                      return;
-                    }
-                    cycle.openClosing();
-                  }}
-                >
-                  {commandLabel(p_command)}
-                </button>
-              ))}
-              {presentation.status === "Completed" ? (
-                <Link href={historyHref} data-cycle-link data-kind="ghost">
-                  View completed
-                </Link>
-              ) : null}
-            </div>
+            isShown && presentation.kind === "ready" &&
+            (presentation.offered.length > 0 || presentation.status === "Completed") ? (
+              <div data-gk-action-row data-cycle-actions>
+                {presentation.status === "Completed" ? (
+                  <Link href={historyHref} data-cycle-link data-gk-btn="secondary">
+                    View completed
+                  </Link>
+                ) : null}
+                {presentation.offered.map((p_command: CycleOfferedCommand) => (
+                  <button
+                    key={p_command}
+                    type="button"
+                    data-cycle-command={p_command}
+                    data-gk-btn={p_command === "start" ? "warm" : "primary"}
+                    disabled={cycle.isSaving}
+                    onClick={(): void => {
+                      if (p_command === "start") {
+                        void cycle.startDoing();
+                        return;
+                      }
+                      cycle.openClosing();
+                    }}
+                  >
+                    {commandLabel(p_command)}
+                  </button>
+                ))}
+              </div>
             ) : undefined
           }
         />
       </div>
       <div
-        data-cycle-backdrop
+        data-gk-sheet-backdrop
         data-open={cycle.isClosingOpen ? "true" : "false"}
         role="presentation"
         aria-hidden={!cycle.isClosingOpen}
         inert={!cycle.isClosingOpen}
       >
         <form
-          data-cycle-sheet
+          data-gk-sheet
           role="dialog"
           aria-modal="true"
           aria-labelledby="closing-title"
@@ -378,73 +237,32 @@ function CycleScreenBody(): ReactElement {
             void cycle.completeMission();
           }}
         >
+          <span data-gk-grab aria-hidden="true" />
           <h2 id="closing-title">Close the mission</h2>
           <p>Both answers go with Completed, in the same transaction.</p>
-          <p>Would you do it again?</p>
-          <div data-cycle-pair>
-            <button
-              type="button"
-              data-kind="choice"
-              data-on={cycle.doAgain === true ? "true" : "false"}
-              onClick={(): void => {
-                cycle.setDoAgain(true);
-              }}
-            >
-              Yes
-            </button>
-            <button
-              type="button"
-              data-kind="choice"
-              data-on={cycle.doAgain === false ? "true" : "false"}
-              onClick={(): void => {
-                cycle.setDoAgain(false);
-              }}
-            >
-              No
-            </button>
-          </div>
-          <p>Save this in memory?</p>
-          <div data-cycle-pair>
-            <button
-              type="button"
-              data-kind="choice"
-              data-on={cycle.saveMemory === true ? "true" : "false"}
-              onClick={(): void => {
-                cycle.setSaveMemory(true);
-              }}
-            >
-              Yes
-            </button>
-            <button
-              type="button"
-              data-kind="choice"
-              data-on={cycle.saveMemory === false ? "true" : "false"}
-              onClick={(): void => {
-                cycle.setSaveMemory(false);
-              }}
-            >
-              No
-            </button>
-          </div>
+          <YesNo label="Would you do it again?" value={cycle.doAgain} onChange={cycle.setDoAgain} />
+          <YesNo label="Save this in memory?" value={cycle.saveMemory} onChange={cycle.setSaveMemory} />
           {cycle.formError !== null && cycle.isClosingOpen ? (
-            <p data-cycle-error role="alert">
+            <p data-gk-alert="danger" role="alert">
+              <WarningIcon size={20} aria-hidden="true" />
               {cycle.formError}
             </p>
           ) : null}
           <button
-            type="submit"
-            disabled={cycle.isSaving || cycle.doAgain === null || cycle.saveMemory === null}
-          >
-            Complete
-          </button>
-          <button
             type="button"
-            data-kind="ghost"
+            data-gk-btn="secondary"
             onClick={(): void => {
               cycle.closeClosing();
             }}
           >
             Cancel
+          </button>
+          <button
+            type="submit"
+            data-gk-btn="primary"
+            disabled={cycle.isSaving || cycle.doAgain === null || cycle.saveMemory === null}
+          >
+            Complete
           </button>
         </form>
       </div>

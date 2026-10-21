@@ -1,0 +1,247 @@
+/**
+ * Tidal design system — the single token source of the app.
+ * Spec: `Design-System/MASTER.md`. Every color, radius, elevation, motion and
+ * type value used by `app/(family)/**` and `app/(panel)/**` comes from here.
+ * Components consume `var(--gk-*)`, `var(--app-*)`, `var(--adm-*)`, never hex.
+ */
+
+type TokenMap = Readonly<Record<string, string>>;
+
+/** Theme-dependent tokens, light mode. */
+const LIGHT_TOKENS: TokenMap = {
+  "--gk-bg": "#F5FAFA",
+  "--gk-surface": "#FFFFFF",
+  "--gk-surface-2": "#E0F2F3",
+  "--gk-surface-warm": "#F3ECE1",
+  "--gk-ink": "#0B2E33",
+  "--gk-ink-muted": "#4A6670",
+  "--gk-ink-subtle": "#5E7A84",
+  "--gk-border": "#D3E3E5",
+  "--gk-border-strong": "#7D949C",
+  "--gk-primary": "#0D5C63",
+  "--gk-on-primary": "#FFFFFF",
+  "--gk-primary-hover": "#0A4A50",
+  "--gk-link": "#127D86",
+  "--gk-focus": "#127D86",
+  "--gk-accent": "#7FC9CC",
+  "--gk-warm": "#DCCBB4",
+  "--gk-on-warm": "#0B2E33",
+  "--gk-success": "#2E7D5B",
+  "--gk-success-soft": "#E3F3EA",
+  "--gk-success-ink": "#24664A",
+  "--gk-warning": "#9A6212",
+  "--gk-warning-soft": "#F8EEDC",
+  "--gk-warning-ink": "#7F500E",
+  "--gk-danger": "#B4413C",
+  "--gk-danger-soft": "#F8E5E3",
+  "--gk-danger-ink": "#963530",
+  "--gk-info": "#127D86",
+  "--gk-scrim": "rgba(7, 28, 31, 0.48)",
+  "--el-1": "0 1px 2px rgba(11, 46, 51, 0.06), 0 2px 6px rgba(11, 46, 51, 0.06)",
+  "--el-2": "0 2px 4px rgba(11, 46, 51, 0.06), 0 8px 20px rgba(11, 46, 51, 0.10)",
+  "--el-3": "0 6px 12px rgba(11, 46, 51, 0.08), 0 18px 40px rgba(11, 46, 51, 0.16)",
+  "--el-inset": "inset 0 1px 0 rgba(255, 255, 255, 0.6)",
+  "--app-desk-from": "#F5FAFA",
+  "--app-desk-to": "#E0F2F3",
+  "--app-hero-from": "#0D5C63",
+  "--app-hero-to": "#127D86",
+  "--app-on-hero": "#FFFFFF",
+  "--app-on-hero-muted": "#E0F2F3",
+  "--app-hero-glass": "rgba(7, 28, 31, 0.22)",
+  "--app-hero-glass-hi": "rgba(255, 255, 255, 0.12)",
+  "--app-hero-control": "rgba(224, 242, 243, 0.16)",
+  "--app-foam-wave": "rgba(224, 242, 243, 0.18)",
+  "--app-tide-1": "rgba(127, 201, 204, 0.35)",
+  "--app-tide-2": "rgba(127, 201, 204, 0.22)",
+  "--app-tide-3": "rgba(127, 201, 204, 0.14)",
+  "--app-tide-pool": "rgba(127, 201, 204, 0.30)",
+  "--app-tide-pool-warm": "rgba(220, 203, 180, 0.40)",
+  "--app-child": "#5F4A34",
+  "--app-mission-well": "#E0F2F3",
+  "--app-mascot": "#3FA3A9",
+  "--app-mascot-shade": "#0D5C63",
+  "--app-bezel": "#0E1A1C",
+  "--app-bezel-edge": "#33494F",
+  "--app-bezel-highlight": "#1E3236",
+  "--app-island": "#050A0B",
+  "--adm-sidebar": "#0B2E33",
+  "--adm-sidebar-ink": "#E0F2F3",
+  "--adm-sidebar-muted": "#93A7B0",
+  "--adm-sidebar-active": "#0D5C63",
+  "--adm-sidebar-bar": "#7FC9CC",
+  "--adm-row-hover": "#F5FAFA",
+  "--adm-row-selected": "#E0F2F3",
+  "--viz-1": "#00909B",
+  "--viz-2": "#C27C2C",
+  "--viz-3": "#5266B8",
+  "--viz-4": "#B24F82",
+  "--viz-5": "#2E9E5E",
+};
+
+/** Theme-dependent tokens, dark mode (selected, not inverted). */
+const DARK_TOKENS: TokenMap = {
+  "--gk-bg": "#071C1F",
+  "--gk-surface": "#0E2A2E",
+  "--gk-surface-2": "#133539",
+  "--gk-surface-warm": "#2A2A22",
+  "--gk-ink": "#E0F2F3",
+  "--gk-ink-muted": "#9FB4BC",
+  "--gk-ink-subtle": "#8AA1AA",
+  "--gk-border": "#24474C",
+  "--gk-border-strong": "#5E7F87",
+  "--gk-primary": "#7FC9CC",
+  "--gk-on-primary": "#071C1F",
+  "--gk-primary-hover": "#9AD6D8",
+  "--gk-link": "#7FC9CC",
+  "--gk-focus": "#7FC9CC",
+  "--gk-accent": "#3FA3A9",
+  "--gk-success": "#6FCF9F",
+  "--gk-success-soft": "#133539",
+  "--gk-success-ink": "#6FCF9F",
+  "--gk-warning": "#E8B866",
+  "--gk-warning-soft": "#133539",
+  "--gk-warning-ink": "#E8B866",
+  "--gk-danger": "#F2A39E",
+  "--gk-danger-soft": "#133539",
+  "--gk-danger-ink": "#F2A39E",
+  "--gk-info": "#7FC9CC",
+  "--el-1": "0 1px 2px rgba(0, 0, 0, 0.45), 0 2px 6px rgba(0, 0, 0, 0.45)",
+  "--el-2": "0 2px 4px rgba(0, 0, 0, 0.45), 0 8px 20px rgba(0, 0, 0, 0.45)",
+  "--el-3": "0 6px 12px rgba(0, 0, 0, 0.45), 0 18px 40px rgba(0, 0, 0, 0.45)",
+  "--el-inset": "inset 0 1px 0 rgba(224, 242, 243, 0.06)",
+  "--app-desk-from": "#071C1F",
+  "--app-desk-to": "#0B2E33",
+  "--app-hero-from": "#0A4A50",
+  "--app-hero-to": "#0D5C63",
+  "--app-tide-1": "rgba(63, 163, 169, 0.28)",
+  "--app-tide-2": "rgba(63, 163, 169, 0.18)",
+  "--app-tide-3": "rgba(63, 163, 169, 0.10)",
+  "--app-foam-wave": "rgba(224, 242, 243, 0.10)",
+  "--app-tide-pool": "rgba(63, 163, 169, 0.22)",
+  "--app-tide-pool-warm": "rgba(220, 203, 180, 0.10)",
+  "--app-child": "#DCCBB4",
+  "--app-mission-well": "#133539",
+  "--app-mascot": "#3FA3A9",
+  "--app-mascot-shade": "#0A4A50",
+  "--adm-sidebar": "#05171A",
+  "--adm-sidebar-active": "#133539",
+  "--adm-row-hover": "#133539",
+  "--adm-row-selected": "#18403F",
+  "--viz-1": "#13A3AD",
+  "--viz-2": "#BB7F33",
+  "--viz-3": "#6A7ED4",
+  "--viz-4": "#C4609A",
+  "--viz-5": "#2FA562",
+};
+
+/** Theme-independent tokens: type, spacing, radius, motion, z-scale, gradients. */
+const STATIC_TOKENS: TokenMap = {
+  "--font-sans":
+    'var(--font-sans-face), system-ui, -apple-system, "Segoe UI", Roboto, sans-serif',
+  "--font-display": 'var(--font-display-face), Georgia, "Times New Roman", serif',
+  "--fs-display": "2.25rem",
+  "--fs-h1": "1.75rem",
+  "--fs-h2": "1.375rem",
+  "--fs-h3": "1.125rem",
+  "--fs-body": "1rem",
+  "--fs-body-sm": "0.875rem",
+  "--fs-caption": "0.75rem",
+  "--fs-adm-h1": "1.5rem",
+  "--fs-adm-h2": "1.25rem",
+  "--fs-adm-body": "0.9375rem",
+  "--fs-kpi": "2rem",
+  "--sp-1": "4px",
+  "--sp-2": "8px",
+  "--sp-3": "12px",
+  "--sp-4": "16px",
+  "--sp-5": "20px",
+  "--sp-6": "24px",
+  "--sp-8": "32px",
+  "--sp-10": "40px",
+  "--sp-12": "48px",
+  "--sp-16": "64px",
+  "--r-xs": "6px",
+  "--r-sm": "10px",
+  "--r-md": "14px",
+  "--r-lg": "20px",
+  "--r-xl": "28px",
+  "--r-pill": "999px",
+  "--dur-micro": "120ms",
+  "--dur-ui": "240ms",
+  "--dur-enter": "300ms",
+  "--dur-exit": "180ms",
+  "--dur-drawer": "280ms",
+  "--dur-celebrate": "480ms",
+  "--ease-enter": "cubic-bezier(0.16, 1, 0.3, 1)",
+  "--ease-exit": "cubic-bezier(0.4, 0, 1, 1)",
+  "--ease-state": "cubic-bezier(0.42, 0, 0.58, 1)",
+  "--ease-playful": "cubic-bezier(0.34, 1.56, 0.64, 1)",
+  "--stagger": "50ms",
+  "--z-sticky": "10",
+  "--z-drawer": "20",
+  "--z-sheet": "30",
+  "--z-toast": "40",
+  "--z-tooltip": "50",
+  "--grad-tide": "linear-gradient(160deg, var(--app-hero-from) 0%, var(--app-hero-to) 100%)",
+  "--grad-foam": "linear-gradient(180deg, var(--gk-bg) 0%, var(--gk-surface-2) 100%)",
+  "--grad-shore": "linear-gradient(135deg, var(--gk-surface-warm) 0%, var(--gk-surface-2) 100%)",
+  "--grad-desk": "linear-gradient(180deg, var(--app-desk-from) 0%, var(--app-desk-to) 100%)",
+  "--app-card": "var(--gk-surface)",
+  "--app-card-shadow": "var(--el-2), var(--el-inset)",
+};
+
+function declarations(p_tokens: TokenMap): string {
+  return Object.entries(p_tokens)
+    .map(([p_name, p_value]: [string, string]): string => `  ${p_name}: ${p_value};`)
+    .join("\n");
+}
+
+/** Static tokens that reference theme tokens must be re-declared wherever the theme changes, so they resolve against that theme. */
+const THEMED_STATIC_TOKENS: TokenMap = Object.fromEntries(
+  Object.entries(STATIC_TOKENS).filter(([p_name, p_value]: [string, string]): boolean => {
+    return p_value.includes("var(--") && !p_name.startsWith("--font-");
+  }),
+);
+
+const DARK_DECLARATIONS: string = declarations({ ...DARK_TOKENS, ...THEMED_STATIC_TOKENS });
+
+/**
+ * Injected once by `app/layout.tsx`. Light is the default and only automatic mode (decision D5):
+ * nothing follows `prefers-color-scheme`. Dark applies only inside `[data-theme="dark"]`
+ * (the admin panel theme toggle); the family app is always light.
+ */
+export const TOKENS_STYLES: string = `
+:root {
+  color-scheme: light;
+${declarations(STATIC_TOKENS)}
+${declarations(LIGHT_TOKENS)}
+}
+[data-theme="dark"] {
+  color-scheme: dark;
+${DARK_DECLARATIONS}
+}
+`;
+
+/** Global guard: every surface drops motion when the user asks for it. */
+export const REDUCED_MOTION_STYLES: string = `
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+`;
+
+/** Framework-agnostic export used to regenerate `Design-System/tokens.css`. */
+export const TOKEN_SOURCE: Readonly<{ light: TokenMap; dark: TokenMap; static: TokenMap }> = {
+  light: LIGHT_TOKENS,
+  dark: DARK_TOKENS,
+  static: STATIC_TOKENS,
+};
+
+/** Browser UI color (`<meta name="theme-color">`), read from the light canvas token (light is the default mode). */
+export const THEME_COLOR_LIGHT: string = LIGHT_TOKENS["--gk-bg"] ?? "";

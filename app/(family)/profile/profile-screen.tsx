@@ -1,15 +1,24 @@
 "use client";
 
+import type { ChangeEvent, FormEvent, ReactElement } from "react";
 import {
-  type ChangeEvent,
-  type FormEvent,
-  type ReactElement,
-} from "react";
-import { FamilyNav } from "../chrome/family-nav";
+  ArrowsClockwiseIcon,
+  CompassIcon,
+  type Icon,
+  LockIcon,
+  NotePencilIcon,
+  PencilSimpleIcon,
+  QuestionIcon,
+  TrashIcon,
+  TrophyIcon,
+  WarningIcon,
+} from "@/app/design-system/icons";
 import { FamilyThumbShell } from "../chrome/family-thumb-shell";
+import { LoadingCard, StateCard, Well } from "../chrome/family-ui";
 import { useFamilySession } from "../context-switch/family-session-context";
 import {
   AchievementsLeaf,
+  type GpsComponent,
   QuizAnswerLeaf,
   RhythmsLeaf,
 } from "./gps-composite";
@@ -19,202 +28,46 @@ import {
 } from "./profile-session-context";
 
 const SCREEN_STYLES: string = `
-[data-profile-screen] {
-  position: relative;
+[data-profile-fact-actions] {
   display: flex;
-  flex-direction: column;
-  flex: 1 1 auto;
-  min-width: 0;
-  min-height: 0;
-  height: 100%;
-  overflow: hidden;
-}
-[data-profile-scroll] {
-  display: flex;
-  flex-direction: column;
-  flex: 1 1 auto;
-  gap: 16px;
-  min-width: 0;
-  min-height: 0;
-  overflow-x: hidden;
-  overflow-y: auto;
-  overflow-anchor: none;
-  padding: 8px 4px 16px;
-  -webkit-overflow-scrolling: touch;
-  overscroll-behavior: contain;
-  scrollbar-width: thin;
-  scrollbar-color: #c4b8ac transparent;
-  scrollbar-color: color-mix(in srgb, var(--color-ink) 22%, transparent) transparent;
-}
-[data-profile-scroll]::-webkit-scrollbar { width: 4px; }
-[data-profile-scroll]::-webkit-scrollbar-thumb {
-  background: color-mix(in srgb, var(--color-ink) 22%, transparent);
-  border-radius: 999px;
-}
-[data-profile-screen] h1 { margin: 0; font-size: 1.35rem; line-height: 1.25; }
-[data-profile-screen] h2 { margin: 0; font-size: 1.05rem; }
-[data-profile-screen] p { margin: 0; color: var(--color-muted); line-height: 1.45; }
-[data-profile-badge] {
-  display: inline-flex;
-  align-items: center;
-  align-self: flex-start;
-  min-height: 28px;
-  padding: 0 10px;
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--color-primary) 14%, var(--color-paper));
-  color: var(--color-primary);
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-}
-[data-profile-badge][data-role="Child"] {
-  background: color-mix(in srgb, var(--color-child) 14%, var(--color-paper));
-  color: var(--color-child);
-}
-[data-profile-enter] {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  animation: profile-enter 280ms cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-@keyframes profile-enter {
-  from { opacity: 0; transform: translate3d(0, 8px, 0); }
-  to { opacity: 1; transform: translate3d(0, 0, 0); }
-}
-[data-profile-loading-bar] {
-  height: 12px;
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--color-ink) 10%, var(--color-paper));
-  transform-origin: left center;
-  animation: profile-load 900ms ease-in-out infinite;
-}
-@keyframes profile-load {
-  0% { opacity: 0.45; transform: scaleX(0.55); }
-  50% { opacity: 1; transform: scaleX(1); }
-  100% { opacity: 0.45; transform: scaleX(0.55); }
-}
-[data-profile-card],
-[data-profile-tools] {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding: 16px;
-  border-radius: 20px;
-  background: color-mix(in srgb, var(--color-tertiary) 22%, var(--color-paper));
-}
-[data-profile-screen] label {
-  display: flex;
-  flex-direction: column;
   gap: 8px;
-  color: var(--color-muted);
-  font-size: 0.85rem;
 }
-[data-profile-screen] input,
-[data-profile-screen] textarea {
-  width: 100%;
-  min-height: 44px;
-  box-sizing: border-box;
-  padding: 10px 14px;
-  border: 1px solid color-mix(in srgb, var(--color-ink) 14%, var(--color-tertiary));
-  border-radius: 14px;
-  background: var(--color-paper);
-  color: var(--color-ink);
-  font: inherit;
+[data-profile-fact] [data-profile-answer] {
+  color: var(--gk-ink);
   font-size: 16px;
-  -webkit-appearance: none;
-  appearance: none;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
 }
-[data-profile-screen] textarea { min-height: 88px; resize: none; }
-[data-profile-screen] input:focus,
-[data-profile-screen] textarea:focus,
-[data-profile-screen] button:focus { outline: 2px solid var(--color-ink); outline-offset: 2px; }
-[data-profile-screen] input:focus:not(:focus-visible),
-[data-profile-screen] textarea:focus:not(:focus-visible),
-[data-profile-screen] button:focus:not(:focus-visible) { outline: none; }
-[data-profile-screen] input:focus-visible,
-[data-profile-screen] textarea:focus-visible,
-[data-profile-screen] button:focus-visible { outline: 2px solid var(--color-ink); outline-offset: 2px; }
-[data-profile-actions] { display: flex; gap: 8px; }
-[data-profile-screen] button {
-  min-height: 44px;
-  margin: 0;
-  padding: 0 16px;
-  border: 0;
-  border-radius: 14px;
-  background: var(--color-primary);
-  color: var(--color-paper);
-  font: inherit;
-  font-weight: 600;
-  cursor: pointer;
-  -webkit-appearance: none;
-  appearance: none;
-  -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation;
-}
-[data-profile-screen] button[data-kind="ghost"] {
-  background: color-mix(in srgb, var(--color-ink) 10%, var(--color-paper));
-  color: var(--color-ink);
-}
-[data-profile-screen] button[data-kind="danger"] { background: var(--color-danger); }
-[data-profile-screen] button:active { opacity: 0.88; }
-[data-profile-screen] button:disabled { opacity: 0.55; cursor: not-allowed; }
-[data-profile-error] { color: var(--color-danger); font-weight: 600; }
-[data-profile-source] {
-  font-size: 0.75rem;
-  letter-spacing: 0.02em;
-  word-break: break-all;
-}
-[data-profile-backdrop] {
-  position: absolute;
-  inset: 0;
-  z-index: 4;
-  display: flex;
-  align-items: flex-end;
-  padding: 12px;
-  background: color-mix(in srgb, var(--color-ink) 38%, transparent);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 160ms ease-in;
-}
-[data-profile-backdrop][data-open="true"] {
-  opacity: 1;
-  pointer-events: auto;
-  transition: opacity 240ms cubic-bezier(0.16, 1, 0.3, 1);
-}
-[data-profile-sheet] {
-  width: 100%;
-  padding: 20px 16px 16px;
-  border-radius: 20px 20px 16px 16px;
-  background: var(--color-paper);
-  opacity: 0;
-  transform: translate3d(0, 8px, 0);
-  transition: transform 160ms ease-in, opacity 160ms ease-in;
-}
-[data-profile-backdrop][data-open="true"] [data-profile-sheet] {
-  opacity: 1;
-  transform: translate3d(0, 0, 0);
-  transition: transform 240ms cubic-bezier(0.16, 1, 0.3, 1), opacity 240ms cubic-bezier(0.16, 1, 0.3, 1);
-}
-[data-profile-sheet] h2 { margin-bottom: 8px; }
-[data-profile-sheet] button { width: 100%; margin-top: 12px; }
-@media (hover: hover) and (pointer: fine) {
-  [data-profile-screen] button:hover:not(:disabled) { opacity: 0.92; }
-}
-@media (prefers-reduced-motion: reduce) {
-  [data-profile-screen] *,
-  [data-profile-screen] *::before,
-  [data-profile-screen] *::after {
-    animation: none !important;
-    transition: none !important;
-  }
+[data-profile-tiles] [data-gk-card] {
+  gap: 8px;
+  padding: 16px;
 }
 `;
+
+type GpsTile = {
+  count: string;
+  title: string;
+  icon: Icon;
+  tone: "sea" | "warm";
+};
+
+function tileFor(p_child: GpsComponent): GpsTile {
+  const count: string = p_child.label().split(" ")[0] ?? "0";
+  if (p_child instanceof QuizAnswerLeaf) {
+    return { count, title: "Answers", icon: QuestionIcon, tone: "sea" };
+  }
+  if (p_child instanceof RhythmsLeaf) {
+    return { count, title: "Rhythms", icon: ArrowsClockwiseIcon, tone: "sea" };
+  }
+  if (p_child instanceof AchievementsLeaf) {
+    return { count, title: "Achievements", icon: TrophyIcon, tone: "warm" };
+  }
+  return { count, title: "GPS", icon: CompassIcon, tone: "sea" };
+}
 
 function ProfileScreenBody(): ReactElement {
   const profile: ReturnType<typeof useProfileSession> = useProfileSession();
   const session: ReturnType<typeof useFamilySession> = useFamilySession();
-  const role: string = session.snapshot?.role ?? "none";
   const presentation = profile.presentation;
   const isModalOpen: boolean =
     profile.editingQuestionId !== null || profile.deletingQuestionId !== null;
@@ -224,115 +77,113 @@ function ProfileScreenBody(): ReactElement {
       <style href="profile-screen" precedence="medium">
         {SCREEN_STYLES}
       </style>
-      <div data-profile-scroll inert={isModalOpen}>
+      <div data-gk-screen-frame inert={isModalOpen}>
         <FamilyThumbShell
+          sub="What we know about you"
+          title="Family GPS"
           content={
             <>
-        <FamilyNav familyId={profile.familyId} active="profile" />
-        <span data-profile-badge data-role={role}>
-          View {role === "none" ? "session" : role}
-        </span>
-        {presentation.kind === "loading" || session.isLoading ? (
-          <div data-profile-enter aria-live="polite" aria-busy="true">
-            <h1>Loading GPS</h1>
-            <div data-profile-loading-bar />
-          </div>
-        ) : null}
-        {presentation.kind === "need-family" && !session.isLoading ? (
-          <div data-profile-enter>
-            <h1>Family GPS</h1>
-            <p>Opening family GPS.</p>
-          </div>
-        ) : null}
-        {presentation.kind === "denied" ? (
-          <div data-profile-enter role="alert">
-            <h1>GPS is Parent only</h1>
-            <p>Child view cannot edit or delete what we know about you.</p>
-          </div>
-        ) : null}
-        {presentation.kind === "missing" ? (
-          <div data-profile-enter>
-            <h1>Family not found</h1>
-            <p>That id does not open GPS.</p>
-          </div>
-        ) : null}
-        {presentation.kind === "error" ? (
-          <div data-profile-enter role="alert">
-            <h1>Family GPS</h1>
-            <p>{presentation.message}</p>
-          </div>
-        ) : null}
-        {presentation.kind === "ready" ? (
-          <div data-profile-enter>
-            <h1>Family GPS</h1>
-            <p>{presentation.composite.label()}</p>
-            {presentation.composite.getChildren().map((p_child, p_index) => (
-              <div data-profile-card key={`${p_child.label()}-${String(p_index)}`}>
-                <h2>
-                  {p_child instanceof QuizAnswerLeaf
-                    ? "Answers"
-                    : p_child instanceof RhythmsLeaf
-                      ? "Rhythms"
-                      : p_child instanceof AchievementsLeaf
-                        ? "Achievements"
-                        : "GPS"}
-                </h2>
-                <p>{p_child.label()}</p>
-              </div>
-            ))}
-            {presentation.composite.p_profileNotes !== null &&
-            presentation.composite.p_profileNotes.length > 0 ? (
-              <div data-profile-card>
-                <h2>Notes</h2>
-                <p>{presentation.composite.p_profileNotes}</p>
-              </div>
-            ) : null}
-            <h2>What we know about you</h2>
-            {presentation.answers.length === 0 ? (
-              <div data-profile-card>
-                <p>No facts stored yet.</p>
-              </div>
-            ) : null}
-            {presentation.answers.map((p_item) => (
-              <div data-profile-card key={p_item.question_id}>
-                <p data-profile-source>Question {p_item.question_id}</p>
-                <p>{p_item.answer_text}</p>
-                <div data-profile-actions>
-                  <button
-                    type="button"
-                    onClick={(): void => {
-                      profile.openEdit(p_item);
-                    }}
-                  >
-                    Edit
-                  </button>
-                  <button
-                    type="button"
-                    data-kind="danger"
-                    onClick={(): void => {
-                      profile.openDelete(p_item);
-                    }}
-                  >
-                    Delete
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        ) : null}
+              {presentation.kind === "loading" || session.isLoading ? (
+                <LoadingCard label="Loading GPS" />
+              ) : null}
+              {presentation.kind === "need-family" && !session.isLoading ? (
+                <StateCard icon={CompassIcon} title="Family GPS">
+                  <p>Opening family GPS.</p>
+                </StateCard>
+              ) : null}
+              {presentation.kind === "denied" ? (
+                <StateCard icon={LockIcon} title="GPS is Parent only" role="alert">
+                  <p>Child view cannot edit or delete what we know about you.</p>
+                </StateCard>
+              ) : null}
+              {presentation.kind === "missing" ? (
+                <StateCard icon={WarningIcon} title="Family not found">
+                  <p>That id does not open GPS.</p>
+                </StateCard>
+              ) : null}
+              {presentation.kind === "error" ? (
+                <StateCard icon={WarningIcon} title="Family GPS" role="alert">
+                  <p>{presentation.message}</p>
+                </StateCard>
+              ) : null}
+              {presentation.kind === "ready" ? (
+                <>
+                  <div data-gk-tiles data-profile-tiles data-gk-enter>
+                    {presentation.composite.getChildren().map((p_child: GpsComponent, p_index: number) => {
+                      const tile: GpsTile = tileFor(p_child);
+                      return (
+                        <div data-gk-card key={`${tile.title}-${String(p_index)}`}>
+                          <Well icon={tile.icon} tone={tile.tone} />
+                          <span data-gk-num>{tile.count}</span>
+                          <h2>{tile.title}</h2>
+                        </div>
+                      );
+                    })}
+                  </div>
+                  {presentation.composite.p_profileNotes !== null &&
+                  presentation.composite.p_profileNotes.length > 0 ? (
+                    <div data-gk-reward>
+                      <Well icon={NotePencilIcon} tone="warm" />
+                      <div>
+                        <h2>Notes</h2>
+                        <p>{presentation.composite.p_profileNotes}</p>
+                      </div>
+                    </div>
+                  ) : null}
+                  <section data-gk-stack aria-labelledby="profile-facts">
+                    <h2 data-gk-sec id="profile-facts">Your answers</h2>
+                    {presentation.answers.length === 0 ? (
+                      <StateCard icon={QuestionIcon} title="Nothing stored yet">
+                        <p>No facts stored yet. Answer the family quiz to start.</p>
+                      </StateCard>
+                    ) : null}
+                    {presentation.answers.map((p_item) => (
+                      <div data-gk-card data-profile-fact key={p_item.question_id}>
+                        <p data-profile-answer>{p_item.answer_text}</p>
+                        <p>From the family quiz</p>
+                        <div data-profile-fact-actions>
+                          <button
+                            type="button"
+                            data-gk-btn="secondary"
+                            data-size="sm"
+                            onClick={(): void => {
+                              profile.openEdit(p_item);
+                            }}
+                          >
+                            <PencilSimpleIcon size={16} weight="bold" aria-hidden="true" />
+                            Edit
+                          </button>
+                          <button
+                            type="button"
+                            data-gk-btn="ghost"
+                            data-size="sm"
+                            data-kind="danger"
+                            onClick={(): void => {
+                              profile.openDelete(p_item);
+                            }}
+                          >
+                            <TrashIcon size={16} weight="bold" aria-hidden="true" />
+                            Delete
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </section>
+                </>
+              ) : null}
             </>
           }
         />
       </div>
       <div
-        data-profile-backdrop
+        data-gk-sheet-backdrop
         data-open={profile.editingQuestionId !== null ? "true" : "false"}
         role="presentation"
         aria-hidden={profile.editingQuestionId === null}
         inert={profile.editingQuestionId === null}
       >
         <form
-          data-profile-sheet
+          data-gk-sheet
           role="dialog"
           aria-modal="true"
           aria-labelledby="edit-answer-title"
@@ -341,10 +192,12 @@ function ProfileScreenBody(): ReactElement {
             void profile.saveEdit();
           }}
         >
+          <span data-gk-grab aria-hidden="true" />
           <h2 id="edit-answer-title">Edit answer</h2>
-          <label>
+          <label data-gk-field>
             Answer
             <textarea
+              data-gk-input
               value={profile.editDraft}
               onChange={(p_event: ChangeEvent<HTMLTextAreaElement>): void => {
                 profile.setEditDraft(p_event.currentTarget.value);
@@ -352,62 +205,60 @@ function ProfileScreenBody(): ReactElement {
             />
           </label>
           {profile.formError !== null && profile.editingQuestionId !== null ? (
-            <p data-profile-error role="alert">
+            <p data-gk-alert="danger" role="alert">
+              <WarningIcon size={20} aria-hidden="true" />
               {profile.formError}
             </p>
           ) : null}
-          <button type="submit" disabled={profile.isSaving}>
-            Save
-          </button>
           <button
             type="button"
-            data-kind="ghost"
+            data-gk-btn="secondary"
             onClick={(): void => {
               profile.closeModal();
             }}
           >
             Cancel
           </button>
+          <button type="submit" data-gk-btn="primary" disabled={profile.isSaving}>
+            Save
+          </button>
         </form>
       </div>
       <div
-        data-profile-backdrop
+        data-gk-sheet-backdrop
         data-open={profile.deletingQuestionId !== null ? "true" : "false"}
         role="presentation"
         aria-hidden={profile.deletingQuestionId === null}
         inert={profile.deletingQuestionId === null}
       >
-        <div
-          data-profile-sheet
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="delete-answer-title"
-        >
+        <div data-gk-sheet role="dialog" aria-modal="true" aria-labelledby="delete-answer-title">
+          <span data-gk-grab aria-hidden="true" />
           <h2 id="delete-answer-title">Delete this fact?</h2>
           <p>The bank question stays. Only the family answer leaves GPS.</p>
           {profile.formError !== null && profile.deletingQuestionId !== null ? (
-            <p data-profile-error role="alert">
+            <p data-gk-alert="danger" role="alert">
+              <WarningIcon size={20} aria-hidden="true" />
               {profile.formError}
             </p>
           ) : null}
           <button
             type="button"
-            data-kind="danger"
+            data-gk-btn="secondary"
+            onClick={(): void => {
+              profile.closeModal();
+            }}
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            data-gk-btn="danger"
             disabled={profile.isSaving}
             onClick={(): void => {
               void profile.confirmDelete();
             }}
           >
             Delete
-          </button>
-          <button
-            type="button"
-            data-kind="ghost"
-            onClick={(): void => {
-              profile.closeModal();
-            }}
-          >
-            Cancel
           </button>
         </div>
       </div>

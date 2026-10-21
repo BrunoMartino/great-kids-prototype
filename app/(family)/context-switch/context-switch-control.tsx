@@ -18,9 +18,8 @@ const CONTROL_STYLES: string = `
   min-height: 44px;
   padding: 4px;
   border: 0;
-  border-radius: 999px;
-  background: #eee8e2;
-  background: color-mix(in srgb, var(--color-ink) 8%, var(--color-paper));
+  border-radius: var(--r-pill);
+  background: var(--gk-surface-2);
 }
 [data-context-switch-thumb] {
   position: absolute;
@@ -28,10 +27,10 @@ const CONTROL_STYLES: string = `
   bottom: 4px;
   left: 4px;
   width: calc(50% - 4px);
-  border-radius: 999px;
-  background: var(--color-paper);
-  box-shadow: 0 1px 4px rgba(44, 42, 40, 0.16);
-  box-shadow: 0 1px 4px color-mix(in srgb, var(--color-ink) 16%, transparent);
+  border-radius: var(--r-pill);
+  background: var(--gk-surface);
+  box-shadow: 0 1px 4px var(--gk-border);
+  box-shadow: 0 1px 4px color-mix(in srgb, var(--gk-ink) 16%, transparent);
   transform: translate3d(0, 0, 0);
   transition: transform 240ms ease-in-out;
   will-change: transform;
@@ -47,9 +46,9 @@ const CONTROL_STYLES: string = `
   margin: 0;
   padding: 0;
   border: 0;
-  border-radius: 999px;
+  border-radius: var(--r-pill);
   background: transparent;
-  color: var(--color-muted);
+  color: var(--gk-ink-muted);
   font: inherit;
   font-weight: 600;
   cursor: pointer;
@@ -59,17 +58,17 @@ const CONTROL_STYLES: string = `
   touch-action: manipulation;
 }
 [data-context-switch-option][aria-pressed="true"] {
-  color: var(--color-ink);
+  color: var(--gk-ink);
 }
 [data-context-switch-option]:focus {
-  outline: 2px solid var(--color-primary);
+  outline: 2px solid var(--gk-focus);
   outline-offset: 2px;
 }
 [data-context-switch-option]:focus:not(:focus-visible) {
   outline: none;
 }
 [data-context-switch-option]:focus-visible {
-  outline: 2px solid var(--color-primary);
+  outline: 2px solid var(--gk-focus);
   outline-offset: 2px;
 }
 [data-context-switch-option]:disabled {

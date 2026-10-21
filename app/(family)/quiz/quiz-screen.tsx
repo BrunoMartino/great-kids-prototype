@@ -1,14 +1,19 @@
 "use client";
 
 import {
-  useEffect,
   useState,
   type ChangeEvent,
   type FormEvent,
   type ReactElement,
 } from "react";
-import { FamilyNav } from "../chrome/family-nav";
+import {
+  CheckIcon,
+  LockIcon,
+  QuestionIcon,
+  WarningIcon,
+} from "@/app/design-system/icons";
 import { FamilyThumbShell } from "../chrome/family-thumb-shell";
+import { LoadingCard, StateCard, Well } from "../chrome/family-ui";
 import { useFamilySession } from "../context-switch/family-session-context";
 import type { QuizMode } from "./mode-strategy";
 import {
@@ -17,435 +22,180 @@ import {
   type QuizQuestion,
 } from "./quiz-session-context";
 
-const SCREEN_STYLES: string = `
-[data-quiz-screen] {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  flex: 1 1 auto;
-  min-width: 0;
-  min-height: 0;
-  height: 100%;
-  overflow: hidden;
-}
-[data-quiz-scroll] {
-  display: flex;
-  flex-direction: column;
-  flex: 1 1 auto;
-  gap: 16px;
-  min-width: 0;
-  min-height: 0;
-  overflow-x: hidden;
-  overflow-y: auto;
-  overflow-anchor: none;
-  padding: 8px 4px 16px;
-  -webkit-overflow-scrolling: touch;
-  overscroll-behavior: contain;
-  scrollbar-width: thin;
-  scrollbar-color: #c4b8ac transparent;
-  scrollbar-color: color-mix(in srgb, var(--color-ink) 22%, transparent) transparent;
-}
-[data-quiz-scroll]::-webkit-scrollbar {
-  width: 4px;
-}
-[data-quiz-scroll]::-webkit-scrollbar-thumb {
-  background: #c4b8ac;
-  background: color-mix(in srgb, var(--color-ink) 22%, transparent);
-  border-radius: 999px;
-}
-[data-quiz-screen] h1 {
-  margin: 0;
-  font-size: 1.35rem;
-  line-height: 1.25;
-}
-[data-quiz-screen] p {
-  margin: 0;
-  color: var(--color-muted);
-  line-height: 1.45;
-}
-[data-quiz-badge] {
-  display: inline-flex;
-  align-items: center;
-  align-self: flex-start;
-  width: fit-content;
-  min-height: 28px;
-  padding: 0 10px;
-  border-radius: 999px;
-  background: #efdfd8;
-  background: color-mix(in srgb, var(--color-primary) 14%, var(--color-paper));
-  color: var(--color-primary);
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-}
-[data-quiz-badge][data-role="Child"] {
-  background: #e8e1e2;
-  background: color-mix(in srgb, var(--color-child) 14%, var(--color-paper));
-  color: var(--color-child);
-}
-[data-quiz-enter] {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  opacity: 1;
-  transform: translate3d(0, 0, 0);
-  animation: quiz-enter 280ms cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-@keyframes quiz-enter {
-  from {
-    opacity: 0;
-    transform: translate3d(0, 8px, 0);
-  }
-  to {
-    opacity: 1;
-    transform: translate3d(0, 0, 0);
-  }
-}
-[data-quiz-loading-bar] {
-  height: 12px;
-  border-radius: 999px;
-  background: #eae3de;
-  background: color-mix(in srgb, var(--color-ink) 10%, var(--color-paper));
-  transform-origin: left center;
-  transform: translateZ(0);
-  animation: quiz-load 900ms ease-in-out infinite;
-}
-@keyframes quiz-load {
-  0% { opacity: 0.45; transform: scaleX(0.55); }
-  50% { opacity: 1; transform: scaleX(1); }
-  100% { opacity: 0.45; transform: scaleX(0.55); }
-}
-[data-quiz-card],
-[data-quiz-tools] {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding: 16px;
-  border-radius: 20px;
-  background: #f3e6d8;
-  background: color-mix(in srgb, var(--color-tertiary) 22%, var(--color-paper));
-}
-[data-quiz-tools] label,
-[data-quiz-card] label {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  color: var(--color-muted);
-  font-size: 0.85rem;
-}
-[data-quiz-screen] input,
-[data-quiz-screen] textarea {
-  width: 100%;
-  min-height: 44px;
-  box-sizing: border-box;
-  padding: 10px 14px;
-  border: 1px solid #ddd2c6;
-  border: 1px solid color-mix(in srgb, var(--color-ink) 14%, var(--color-tertiary));
-  border-radius: 14px;
-  background: var(--color-paper);
-  color: var(--color-ink);
-  font: inherit;
-  font-size: 16px;
-  -webkit-appearance: none;
-  appearance: none;
-}
-[data-quiz-screen] textarea {
-  min-height: 88px;
-  resize: none;
-}
-[data-quiz-screen] input:focus,
-[data-quiz-screen] textarea:focus,
-[data-quiz-screen] button:focus {
-  outline: 2px solid var(--color-ink);
-  outline-offset: 2px;
-}
-[data-quiz-screen] input:focus:not(:focus-visible),
-[data-quiz-screen] textarea:focus:not(:focus-visible),
-[data-quiz-screen] button:focus:not(:focus-visible) {
-  outline: none;
-}
-[data-quiz-screen] input:focus-visible,
-[data-quiz-screen] textarea:focus-visible,
-[data-quiz-screen] button:focus-visible {
-  outline: 2px solid var(--color-ink);
-  outline-offset: 2px;
-}
-[data-quiz-modes] {
-  position: relative;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  min-height: 44px;
-  padding: 4px;
-  border-radius: 999px;
-  background: #eee8e2;
-  background: color-mix(in srgb, var(--color-ink) 8%, var(--color-paper));
-}
-[data-quiz-mode-thumb] {
-  position: absolute;
-  top: 4px;
-  bottom: 4px;
-  left: 4px;
-  width: calc(50% - 4px);
-  border-radius: 999px;
-  background: var(--color-paper);
-  box-shadow: 0 1px 4px color-mix(in srgb, var(--color-ink) 16%, transparent);
-  transform: translate3d(0, 0, 0);
-  transition: transform 240ms ease-in-out;
-  pointer-events: none;
-}
-[data-quiz-mode-thumb][data-mode="table"] {
-  transform: translate3d(100%, 0, 0);
-}
-[data-quiz-modes] button {
-  position: relative;
-  z-index: 1;
-  min-height: 44px;
-  margin: 0;
-  padding: 0;
-  border: 0;
-  border-radius: 999px;
-  background: transparent;
-  color: var(--color-muted);
-  font: inherit;
-  font-weight: 600;
-  cursor: pointer;
-  -webkit-appearance: none;
-  appearance: none;
-  -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation;
-}
-[data-quiz-modes] button[aria-pressed="true"] {
-  color: var(--color-ink);
-}
-[data-quiz-screen] button[data-kind="submit"],
-[data-quiz-screen] button[data-kind="apply"] {
-  min-height: 44px;
-  margin: 0;
-  padding: 0 16px;
-  border: 0;
-  border-radius: 14px;
-  background: var(--color-primary);
-  color: var(--color-paper);
-  font: inherit;
-  font-weight: 600;
-  cursor: pointer;
-  -webkit-appearance: none;
-  appearance: none;
-  -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation;
-}
-[data-quiz-screen] button:active {
-  opacity: 0.88;
-}
-[data-quiz-screen] button:disabled {
-  opacity: 0.55;
-  cursor: not-allowed;
-}
-[data-quiz-error],
-[data-quiz-success] {
-  color: var(--color-ink);
-  font-weight: 600;
-}
-[data-quiz-error] {
-  color: var(--color-danger);
-}
-@media (hover: hover) and (pointer: fine) {
-  [data-quiz-screen] button[data-kind="submit"]:hover:not(:disabled),
-  [data-quiz-screen] button[data-kind="apply"]:hover:not(:disabled) {
-    opacity: 0.92;
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  [data-quiz-screen] *,
-  [data-quiz-screen] *::before,
-  [data-quiz-screen] *::after {
-    animation: none !important;
-    transition: none !important;
-    scroll-behavior: auto !important;
-  }
-  [data-quiz-enter] {
-    opacity: 1;
-    transform: none;
-  }
-  [data-quiz-loading-bar],
-  [data-quiz-mode-thumb] {
-    transform: none;
-  }
-}
-`;
+type ModeChoice = {
+  mode: QuizMode;
+  label: string;
+  hint: string;
+};
+
+const MODE_CHOICES: readonly ModeChoice[] = [
+  { mode: "solo", label: "Solo", hint: "One adult answers alone." },
+  { mode: "table", label: "At the table", hint: "The family answers together." },
+];
+
+const ANSWER_FORM_ID: string = "quiz-answer-form";
 
 function QuizScreenBody(): ReactElement {
   const quiz: ReturnType<typeof useQuizSession> = useQuizSession();
   const session: ReturnType<typeof useFamilySession> = useFamilySession();
-  const role: string = session.snapshot?.role ?? "none";
   const presentation = quiz.presentation;
-  const [questionIndex, setQuestionIndex] = useState<number>(0);
+  const [index, setIndex] = useState<number>(0);
+  const questions: QuizQuestion[] = presentation.kind === "ready" ? presentation.questions : [];
+  const total: number = questions.length;
+  const safeIndex: number = total === 0 ? 0 : Math.min(index, total - 1);
+  const current: QuizQuestion | undefined = questions[safeIndex];
+  const progress: number = total === 0 ? 0 : (safeIndex + 1) / total;
 
-  useEffect(() => {
-    setQuestionIndex(0);
-  }, [presentation.kind === "ready" ? presentation.questions.length : 0, quiz.familyId]);
+  const onSubmit = (p_event: FormEvent<HTMLFormElement>): void => {
+    p_event.preventDefault();
+    if (current !== undefined) {
+      void quiz.submitAnswer(current.id);
+    }
+  };
 
-  const questions: QuizQuestion[] =
-    presentation.kind === "ready" ? presentation.questions : [];
-  const safeIndex: number =
-    questions.length === 0
-      ? 0
-      : Math.min(questionIndex, questions.length - 1);
-  const current: QuizQuestion | null =
-    questions.length > 0 ? questions[safeIndex] ?? null : null;
-  const isDone: boolean =
-    presentation.kind === "ready" &&
-    questions.length > 0 &&
-    questionIndex >= questions.length;
+  const skip = (): void => {
+    if (total > 0) {
+      setIndex((safeIndex + 1) % total);
+    }
+  };
 
   return (
     <div data-quiz-screen data-mode={quiz.mode}>
-      <style href="quiz-screen" precedence="medium">
-        {SCREEN_STYLES}
-      </style>
-      <div data-quiz-scroll>
-        <FamilyThumbShell
-          content={
-            <>
-              <FamilyNav familyId={quiz.familyId} active="quiz" />
-              <span data-quiz-badge data-role={role}>
-                View {role === "none" ? "session" : role}
-              </span>
-              {presentation.kind === "loading" || session.isLoading ? (
-                <div data-quiz-enter aria-live="polite" aria-busy="true">
-                  <h1>Loading the quiz</h1>
-                  <div data-quiz-loading-bar />
-                </div>
-              ) : null}
-              {presentation.kind === "need-family" && !session.isLoading ? (
-                <div data-quiz-enter>
-                  <h1>Family quiz</h1>
-                  <p>Opening the family quiz.</p>
-                </div>
-              ) : null}
-              {presentation.kind === "denied" ? (
-                <div data-quiz-enter role="alert">
-                  <h1>Quiz unavailable</h1>
-                  <p>Only Parent or Child answer the family quiz.</p>
-                </div>
-              ) : null}
-              {presentation.kind === "missing" ? (
-                <div data-quiz-enter>
-                  <h1>Family not found</h1>
-                  <p>That id does not open a quiz.</p>
-                </div>
-              ) : null}
-              {presentation.kind === "error" ? (
-                <div data-quiz-enter role="alert">
-                  <h1>Family quiz</h1>
-                  <p>{presentation.message}</p>
-                </div>
-              ) : null}
-              {presentation.kind === "ready" ? (
-                <div data-quiz-enter>
-                  <h1>Family quiz</h1>
-                  <p>{quiz.modePrompt}</p>
-                  {questions.length === 0 ? (
-                    <div data-quiz-card>
-                      <p>No family questions right now.</p>
-                    </div>
-                  ) : null}
-                  {isDone ? (
-                    <div data-quiz-card>
-                      <p>All questions answered for now.</p>
-                      {quiz.lastEnvelope !== null ? (
-                        <p data-quiz-success>
-                          {String(quiz.lastEnvelope.answers.length)} answers in
-                          GPS.
-                        </p>
-                      ) : null}
-                    </div>
-                  ) : null}
-                  {current !== null && !isDone ? (
-                    <div data-quiz-card data-quiz-prompt="true">
-                      <p>
-                        Question {String(safeIndex + 1)} of{" "}
-                        {String(questions.length)}
-                      </p>
-                      <p>{current.question_text}</p>
-                    </div>
-                  ) : null}
-                </div>
-              ) : null}
-            </>
-          }
-          actions={
-            presentation.kind === "ready" && current !== null && !isDone ? (
+      <FamilyThumbShell
+        sub="Getting to know you"
+        title="Family quiz"
+        content={
+          <>
+            {presentation.kind === "loading" || session.isLoading ? (
+              <LoadingCard label="Loading the quiz" />
+            ) : null}
+            {presentation.kind === "need-family" && !session.isLoading ? (
+              <StateCard icon={QuestionIcon} title="Family quiz">
+                <p>Opening the family quiz.</p>
+              </StateCard>
+            ) : null}
+            {presentation.kind === "denied" ? (
+              <StateCard icon={LockIcon} title="Quiz unavailable" role="alert">
+                <p>Only Parent or Child answer the family quiz.</p>
+              </StateCard>
+            ) : null}
+            {presentation.kind === "missing" ? (
+              <StateCard icon={WarningIcon} title="Family not found">
+                <p>That id does not open a quiz.</p>
+              </StateCard>
+            ) : null}
+            {presentation.kind === "error" ? (
+              <StateCard icon={WarningIcon} title="Family quiz" role="alert">
+                <p>{presentation.message}</p>
+              </StateCard>
+            ) : null}
+            {presentation.kind === "ready" && current === undefined ? (
+              <StateCard icon={QuestionIcon} title="All caught up">
+                <p>No family questions right now.</p>
+              </StateCard>
+            ) : null}
+            {presentation.kind === "ready" && current !== undefined ? (
               <>
-                <div data-quiz-modes>
-                  <span data-quiz-mode-thumb data-mode={quiz.mode} aria-hidden="true" />
-                  <button
-                    type="button"
-                    aria-pressed={quiz.mode === "solo"}
-                    onClick={(): void => {
-                      quiz.setMode("solo" satisfies QuizMode);
-                    }}
+                <div data-gk-stack data-gk-enter>
+                  <div data-gk-progress-meta>
+                    <span>
+                      Question {String(safeIndex + 1)} of {String(total)}
+                    </span>
+                    <span>{String(total - safeIndex - 1)} left after this</span>
+                  </div>
+                  <div
+                    data-gk-progress
+                    role="progressbar"
+                    aria-label="Quiz progress"
+                    aria-valuemin={0}
+                    aria-valuemax={total}
+                    aria-valuenow={safeIndex + 1}
                   >
-                    Solo
-                  </button>
-                  <button
-                    type="button"
-                    aria-pressed={quiz.mode === "table"}
-                    onClick={(): void => {
-                      quiz.setMode("table" satisfies QuizMode);
-                    }}
-                  >
-                    At the table
-                  </button>
+                    <i style={{ transform: `scaleX(${String(progress)})` }} />
+                  </div>
                 </div>
                 <form
-                  data-quiz-card
-                  onSubmit={(p_event: FormEvent<HTMLFormElement>): void => {
-                    p_event.preventDefault();
-                    const questionId: string = current.id;
-                    void quiz
-                      .submitAnswer(questionId)
-                      .then((p_ok: boolean): void => {
-                        if (!p_ok) {
-                          return;
-                        }
-                        setQuestionIndex((p_prev: number): number => {
-                          return p_prev + 1;
-                        });
-                      });
-                  }}
+                  id={ANSWER_FORM_ID}
+                  data-gk-qcard
+                  data-gk-enter
+                  key={current.id}
+                  onSubmit={onSubmit}
                 >
-                  <label>
-                    Answer
+                  <Well icon={QuestionIcon} />
+                  <h2>{current.question_text}</h2>
+                  <fieldset data-gk-stack aria-label="How are you answering?">
+                    {MODE_CHOICES.map((p_choice: ModeChoice) => (
+                      <button
+                        key={p_choice.mode}
+                        type="button"
+                        data-gk-choice
+                        aria-pressed={quiz.mode === p_choice.mode}
+                        onClick={(): void => {
+                          quiz.setMode(p_choice.mode);
+                        }}
+                      >
+                        <span data-gk-radio aria-hidden="true" />
+                        <span data-gk-choice-text>
+                          {p_choice.label}
+                          <small>{p_choice.hint}</small>
+                        </span>
+                      </button>
+                    ))}
+                  </fieldset>
+                  <label data-gk-field>
+                    Your answer
                     <textarea
+                      data-gk-input
                       name={`answer-${current.id}`}
                       value={quiz.drafts[current.id] ?? ""}
-                      onChange={(
-                        p_event: ChangeEvent<HTMLTextAreaElement>,
-                      ): void => {
+                      onChange={(p_event: ChangeEvent<HTMLTextAreaElement>): void => {
                         quiz.setDraft(current.id, p_event.currentTarget.value);
                       }}
                     />
                   </label>
-                  <button
-                    type="submit"
-                    data-kind="submit"
-                    disabled={quiz.isSubmitting}
-                  >
-                    Save answer
-                  </button>
                 </form>
+                {quiz.lastEnvelope !== null ? (
+                  <p data-gk-alert="success" role="status">
+                    <CheckIcon size={20} aria-hidden="true" />
+                    {String(quiz.lastEnvelope.answers.length)} answers in GPS.
+                  </p>
+                ) : null}
                 {quiz.formError !== null ? (
-                  <p data-quiz-error role="alert">
+                  <p data-gk-alert="danger" role="alert">
+                    <WarningIcon size={20} aria-hidden="true" />
                     {quiz.formError}
                   </p>
                 ) : null}
+                <p data-gk-caption>
+                  Your answers shape the missions we suggest. You can edit them later in Profile.
+                </p>
               </>
-            ) : undefined
-          }
-        />
-      </div>
+            ) : null}
+          </>
+        }
+        actions={
+          presentation.kind === "ready" && current !== undefined ? (
+            <div data-gk-action-row>
+              <button
+                type="button"
+                data-gk-btn="ghost"
+                disabled={total < 2}
+                onClick={skip}
+              >
+                Skip
+              </button>
+              <button
+                type="submit"
+                form={ANSWER_FORM_ID}
+                data-gk-btn="primary"
+                disabled={quiz.isSubmitting}
+              >
+                Save answer
+              </button>
+            </div>
+          ) : undefined
+        }
+      />
     </div>
   );
 }

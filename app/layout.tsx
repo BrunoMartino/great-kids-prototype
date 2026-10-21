@@ -1,5 +1,11 @@
 import type { Metadata, Viewport } from "next";
 import type { ReactElement, ReactNode } from "react";
+import { FONT_CLASS_NAMES } from "./design-system/fonts";
+import {
+  REDUCED_MOTION_STYLES,
+  THEME_COLOR_LIGHT,
+  TOKENS_STYLES,
+} from "./design-system/tokens";
 
 type RootLayoutProps = {
   children: ReactNode;
@@ -14,7 +20,6 @@ html {
   min-height: 100dvh;
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
-  color-scheme: light;
 }
 *,
 *::before,
@@ -27,9 +32,22 @@ body {
   min-height: 100vh;
   min-height: -webkit-fill-available;
   min-height: 100dvh;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  color: #2c2a28;
-  background: #faf8f5;
+  font-family: var(--font-sans);
+  font-size: var(--fs-body);
+  line-height: 1.55;
+  color: var(--gk-ink);
+  background: var(--gk-bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+::selection {
+  background: var(--gk-accent);
+  color: var(--gk-ink);
 }
 `;
 
@@ -40,6 +58,8 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   width: "device-width",
+  colorScheme: "light",
+  themeColor: THEME_COLOR_LIGHT,
   initialScale: 1,
   viewportFit: "cover",
 };
@@ -52,10 +72,16 @@ export default async function RootLayout(
   getConnection();
 
   return (
-    <html lang="en">
+    <html lang="en" className={FONT_CLASS_NAMES}>
       <body>
+        <style href="design-tokens" precedence="high">
+          {TOKENS_STYLES}
+        </style>
         <style href="root-document" precedence="high">
           {ROOT_DOCUMENT_STYLES}
+        </style>
+        <style href="reduced-motion" precedence="high">
+          {REDUCED_MOTION_STYLES}
         </style>
         {p_props.children}
       </body>

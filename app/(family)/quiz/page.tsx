@@ -1,14 +1,12 @@
 import dynamic from "next/dynamic";
 import type { ComponentType, ReactElement } from "react";
+import { FamilyThumbShell } from "../chrome/family-thumb-shell";
+import { LoadingCard } from "../chrome/family-ui";
 
 function QuizFallback(): ReactElement {
   return (
     <div data-quiz-screen>
-      <div data-quiz-scroll>
-        <div aria-live="polite" aria-busy="true">
-          <h1>Loading the quiz</h1>
-        </div>
-      </div>
+      <FamilyThumbShell content={<LoadingCard label="Loading the quiz" />} />
     </div>
   );
 }

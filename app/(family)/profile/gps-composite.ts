@@ -62,7 +62,7 @@ export class QuizAnswerLeaf extends GpsComponent {
     const live: number = this.p_envelope.answers.filter(
       (p_item: QuizAnswerItem) => p_item.deleted === false,
     ).length;
-    return `${String(live)} respostas`;
+    return `${String(live)} answers`;
   }
 }
 
@@ -72,7 +72,7 @@ export class RhythmsLeaf extends GpsComponent {
   }
 
   public label(): string {
-    return `${String(this.p_envelope.rhythms.length)} ritmos`;
+    return `${String(this.p_envelope.rhythms.length)} rhythms`;
   }
 }
 
@@ -82,7 +82,7 @@ export class AchievementsLeaf extends GpsComponent {
   }
 
   public label(): string {
-    return `${String(this.p_envelope.achievements.length)} conquistas`;
+    return `${String(this.p_envelope.achievements.length)} achievements`;
   }
 }
 

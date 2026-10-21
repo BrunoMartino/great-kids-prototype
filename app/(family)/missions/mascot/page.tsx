@@ -1,14 +1,12 @@
 import dynamic from "next/dynamic";
 import type { ComponentType, ReactElement } from "react";
+import { FamilyThumbShell } from "../../chrome/family-thumb-shell";
+import { LoadingCard } from "../../chrome/family-ui";
 
 function MascotFallback(): ReactElement {
   return (
     <div data-mascot-screen>
-      <div data-mascot-scroll>
-        <div data-mascot-loading aria-live="polite" aria-busy="true">
-          <h1>Loading mission</h1>
-        </div>
-      </div>
+      <FamilyThumbShell content={<LoadingCard label="Loading mission" />} />
     </div>
   );
 }
