@@ -3,7 +3,7 @@
 import type { ReactElement } from "react";
 import { usePathname } from "next/navigation";
 
-const USER_HOME: string = "/quiz";
+const USER_HOME: string = "/context-switch";
 const ADMIN_HOME: string = "/catalog";
 
 const ADMIN_PREFIXES: readonly string[] = [
@@ -29,16 +29,19 @@ const SWITCH_STYLES: string = `
   width: max-content;
   padding: 4px;
   border: 0;
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--color-paper, #f3f8ff) 92%, #fff);
-  box-shadow:
-    0 0 0 1px color-mix(in srgb, var(--color-ink, #1f2a37) 10%, transparent),
-    0 12px 28px color-mix(in srgb, var(--color-ink, #1f2a37) 14%, transparent);
+  border-radius: var(--r-pill);
+  background: var(--gk-surface);
+  box-shadow: 0 0 0 1px var(--gk-border), var(--el-2);
   transform: translateY(-50%);
 }
-[data-panel-header] [data-surface-mode-switch] {
+[data-panel-topbar] [data-surface-mode-switch] {
   position: static;
+  box-shadow: 0 0 0 1px var(--gk-border);
   transform: none;
+}
+[data-panel-topbar] [data-surface-mode-option] {
+  min-width: 64px;
+  min-height: 32px;
 }
 [data-surface-mode-option] {
   display: inline-flex;
@@ -47,9 +50,9 @@ const SWITCH_STYLES: string = `
   min-width: 72px;
   min-height: 40px;
   padding: 0 14px;
-  border-radius: 999px;
-  color: var(--color-muted, #5a6674);
-  font-size: 0.875rem;
+  border-radius: var(--r-pill);
+  color: var(--gk-ink-muted);
+  font-size: var(--fs-body-sm);
   font-weight: 700;
   letter-spacing: 0.01em;
   line-height: 1;
@@ -57,20 +60,27 @@ const SWITCH_STYLES: string = `
   text-decoration: none;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
+  transition: background-color var(--dur-micro) var(--ease-state), color var(--dur-micro) var(--ease-state);
 }
 [data-surface-mode-option="on"] {
-  background: var(--color-primary, #ff5a36);
-  color: #fff;
+  background: var(--gk-primary);
+  color: var(--gk-on-primary);
+}
+@media (hover: hover) and (pointer: fine) {
+  [data-surface-mode-option="off"]:hover {
+    background: var(--gk-surface-2);
+    color: var(--gk-ink);
+  }
 }
 [data-surface-mode-option]:focus {
-  outline: 2px solid var(--color-ink, #1f2a37);
+  outline: 2px solid var(--gk-focus);
   outline-offset: 2px;
 }
 [data-surface-mode-option]:focus:not(:focus-visible) {
   outline: none;
 }
 [data-surface-mode-option]:focus-visible {
-  outline: 2px solid var(--color-ink, #1f2a37);
+  outline: 2px solid var(--gk-focus);
   outline-offset: 2px;
 }
 @media (prefers-reduced-motion: reduce) {

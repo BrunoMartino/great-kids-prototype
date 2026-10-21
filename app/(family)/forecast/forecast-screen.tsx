@@ -1,12 +1,24 @@
 "use client";
 
+import type { ChangeEvent, ReactElement } from "react";
 import {
-  type ChangeEvent,
-  type FormEvent,
-  type ReactElement,
-} from "react";
-import { FamilyNav } from "../chrome/family-nav";
+  ArrowsClockwiseIcon,
+  CalendarCheckIcon,
+  CheckIcon,
+  CloudSunIcon,
+  LockIcon,
+  SunIcon,
+  WarningIcon,
+} from "@/app/design-system/icons";
 import { FamilyThumbShell } from "../chrome/family-thumb-shell";
+import { LoadingCard, StateCard, Well } from "../chrome/family-ui";
+import {
+  StatusBadge,
+  WeekStrip,
+  dayLabel,
+  missionTitleOf,
+  weekLabel,
+} from "../chrome/family-week";
 import { SuggestionLeaf } from "../calendar/day-composite";
 import { useFamilySession } from "../context-switch/family-session-context";
 import {
@@ -16,406 +28,246 @@ import {
 import type { WeekSuggestionItem } from "./week-suggestion";
 
 const SCREEN_STYLES: string = `
-[data-forecast-screen] {
-  position: relative;
+[data-forecast-placed] {
+  gap: 14px;
+}
+[data-forecast-placed-head] {
   display: flex;
-  flex-direction: column;
-  flex: 1 1 auto;
-  min-width: 0;
-  min-height: 0;
-  height: 100%;
-  overflow: hidden;
-}
-[data-forecast-scroll] {
-  display: flex;
-  flex-direction: column;
-  flex: 1 1 auto;
-  gap: 16px;
-  min-width: 0;
-  min-height: 0;
-  overflow-x: hidden;
-  overflow-y: auto;
-  overflow-anchor: none;
-  padding: 8px 4px 16px;
-  -webkit-overflow-scrolling: touch;
-  overscroll-behavior: contain;
-  scrollbar-width: thin;
-  scrollbar-color: color-mix(in srgb, var(--color-ink) 22%, transparent) transparent;
-}
-[data-forecast-scroll]::-webkit-scrollbar { width: 4px; }
-[data-forecast-scroll]::-webkit-scrollbar-thumb {
-  background: color-mix(in srgb, var(--color-ink) 22%, transparent);
-  border-radius: 999px;
-}
-[data-forecast-screen] h1 { margin: 0; font-size: 1.35rem; line-height: 1.25; }
-[data-forecast-screen] h2 { margin: 0; font-size: 1.05rem; }
-[data-forecast-screen] p { margin: 0; color: var(--color-muted); line-height: 1.45; }
-[data-forecast-badge] {
-  display: inline-flex;
   align-items: center;
-  align-self: flex-start;
-  min-height: 28px;
-  padding: 0 10px;
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--color-primary) 14%, var(--color-paper));
-  color: var(--color-primary);
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+  gap: 14px;
 }
-[data-forecast-badge][data-role="Child"] {
-  background: color-mix(in srgb, var(--color-child) 14%, var(--color-paper));
-  color: var(--color-child);
-}
-[data-forecast-enter] {
+[data-forecast-placed-head] > div {
   display: flex;
+  flex: 1 1 auto;
   flex-direction: column;
-  gap: 12px;
-  animation: forecast-enter 280ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  min-width: 0;
 }
-@keyframes forecast-enter {
-  from { opacity: 0; transform: translate3d(0, 8px, 0); }
-  to { opacity: 1; transform: translate3d(0, 0, 0); }
-}
-[data-forecast-loading-bar] {
-  height: 12px;
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--color-ink) 10%, var(--color-paper));
-  transform-origin: left center;
-  animation: forecast-load 900ms ease-in-out infinite;
-}
-@keyframes forecast-load {
-  0% { opacity: 0.45; transform: scaleX(0.55); }
-  50% { opacity: 1; transform: scaleX(1); }
-  100% { opacity: 0.45; transform: scaleX(0.55); }
-}
-[data-forecast-card],
-[data-forecast-tools] {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding: 16px;
-  border-radius: 20px;
-  background: color-mix(in srgb, var(--color-tertiary) 22%, var(--color-paper));
-}
-[data-forecast-screen] label {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  color: var(--color-muted);
-  font-size: 0.85rem;
-}
-[data-forecast-screen] input {
-  width: 100%;
-  min-height: 44px;
-  box-sizing: border-box;
-  padding: 0 14px;
-  border: 1px solid color-mix(in srgb, var(--color-ink) 14%, var(--color-tertiary));
-  border-radius: 14px;
-  background: var(--color-paper);
-  color: var(--color-ink);
-  font: inherit;
+[data-forecast-placed-head] strong {
   font-size: 16px;
-  -webkit-appearance: none;
-  appearance: none;
-}
-[data-forecast-screen] input:focus,
-[data-forecast-screen] button:focus { outline: 2px solid var(--color-ink); outline-offset: 2px; }
-[data-forecast-screen] input:focus:not(:focus-visible),
-[data-forecast-screen] button:focus:not(:focus-visible) { outline: none; }
-[data-forecast-screen] input:focus-visible,
-[data-forecast-screen] button:focus-visible { outline: 2px solid var(--color-ink); outline-offset: 2px; }
-[data-forecast-actions] { display: flex; flex-direction: column; gap: 8px; }
-[data-forecast-screen] button {
-  min-height: 44px;
-  margin: 0;
-  padding: 0 16px;
-  border: 0;
-  border-radius: 14px;
-  background: var(--color-primary);
-  color: var(--color-paper);
-  font: inherit;
   font-weight: 600;
-  cursor: pointer;
-  -webkit-appearance: none;
-  appearance: none;
-  -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation;
+  line-height: 1.3;
 }
-[data-forecast-screen] button[data-kind="ghost"] {
-  background: color-mix(in srgb, var(--color-ink) 10%, var(--color-paper));
-  color: var(--color-ink);
-}
-[data-forecast-screen] button[data-kind="secondary"] {
-  background: var(--color-secondary);
-  color: var(--color-paper);
-}
-[data-forecast-screen] button:active { opacity: 0.88; }
-[data-forecast-screen] button:disabled { opacity: 0.55; cursor: not-allowed; }
-[data-forecast-error] { color: var(--color-danger); font-weight: 600; }
-[data-forecast-empty] { font-weight: 600; }
-[data-forecast-status] {
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--color-secondary);
-}
-[data-forecast-backdrop] {
-  position: absolute;
-  inset: 0;
-  z-index: 4;
-  display: flex;
-  align-items: flex-end;
-  padding: 12px;
-  background: color-mix(in srgb, var(--color-ink) 38%, transparent);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 160ms ease-in;
-}
-[data-forecast-backdrop][data-open="true"] {
-  opacity: 1;
-  pointer-events: auto;
-  transition: opacity 240ms cubic-bezier(0.16, 1, 0.3, 1);
-}
-[data-forecast-sheet] {
-  width: 100%;
-  padding: 20px 16px 16px;
-  border-radius: 20px 20px 16px 16px;
-  background: var(--color-paper);
-  opacity: 0;
-  transform: translate3d(0, 8px, 0);
-  transition: transform 160ms ease-in, opacity 160ms ease-in;
-}
-[data-forecast-backdrop][data-open="true"] [data-forecast-sheet] {
-  opacity: 1;
-  transform: translate3d(0, 0, 0);
-  transition: transform 240ms cubic-bezier(0.16, 1, 0.3, 1), opacity 240ms cubic-bezier(0.16, 1, 0.3, 1);
-}
-[data-forecast-sheet] h2 { margin-bottom: 8px; }
-[data-forecast-sheet] button { width: 100%; margin-top: 12px; }
-@media (hover: hover) and (pointer: fine) {
-  [data-forecast-screen] button:hover:not(:disabled) { opacity: 0.92; }
-}
-@media (prefers-reduced-motion: reduce) {
-  [data-forecast-screen] *,
-  [data-forecast-screen] *::before,
-  [data-forecast-screen] *::after {
-    animation: none !important;
-    transition: none !important;
-  }
+[data-forecast-move] {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 10px;
 }
 `;
 
 function ForecastScreenBody(): ReactElement {
   const forecast: ReturnType<typeof useForecastSession> = useForecastSession();
   const session: ReturnType<typeof useFamilySession> = useFamilySession();
-  const role: string = session.snapshot?.role ?? "none";
   const presentation = forecast.presentation;
   const isModalOpen: boolean = forecast.proposal !== null;
-
-  const onApply = (p_event: FormEvent<HTMLFormElement>): void => {
-    p_event.preventDefault();
-    forecast.applyId();
-  };
+  const hasDay: boolean = forecast.day.trim().length > 0;
 
   return (
     <div data-forecast-screen>
       <style href="forecast-screen" precedence="medium">
         {SCREEN_STYLES}
       </style>
-      <div data-forecast-scroll inert={isModalOpen}>
+      <div data-gk-screen-frame inert={isModalOpen}>
         <FamilyThumbShell
+          sub={weekLabel(forecast.day)}
+          title="Week forecast"
           content={
             <>
-        <FamilyNav familyId={forecast.familyId} active="forecast" />
-        <span data-forecast-badge data-role={role}>
-          View {role === "none" ? "session" : role}
-        </span>
-        {presentation.kind === "loading" || session.isLoading ? (
-          <div data-forecast-enter aria-live="polite" aria-busy="true">
-            <h1>Loading the forecast</h1>
-            <div data-forecast-loading-bar />
-          </div>
-        ) : null}
-        {presentation.kind === "need-family" && !session.isLoading ? (
-          <div data-forecast-enter>
-            <h1>Week forecast</h1>
-            <p>Opening the family forecast.</p>
-          </div>
-        ) : null}
-        {presentation.kind === "denied" ? (
-          <div data-forecast-enter role="alert">
-            <h1>Forecast is Parent only</h1>
-            <p>Child view does not put suggestions on the calendar.</p>
-          </div>
-        ) : null}
-        {presentation.kind === "missing" ? (
-          <div data-forecast-enter>
-            <h1>Family not found</h1>
-            <p>That id does not open the forecast.</p>
-          </div>
-        ) : null}
-        {presentation.kind === "error" ? (
-          <div data-forecast-enter role="alert">
-            <h1>Week forecast</h1>
-            <p>{presentation.message}</p>
-          </div>
-        ) : null}
-        {presentation.kind === "ready" ? (
-          <div data-forecast-enter>
-            <h1>Week forecast</h1>
-            <p>Finite list. Published missions only. Without a day, it does not go on the calendar.</p>
-            {presentation.suggestions.length === 0 ? (
-              <div data-forecast-card data-forecast-empty-state="true">
-                <p data-forecast-empty>No published suggestions.</p>
-              </div>
-            ) : null}
-            {presentation.suggestions.map((p_item: WeekSuggestionItem) => (
-              <div data-forecast-card key={p_item.mission_id}>
-                <h2>{p_item.title}</h2>
-                <div data-forecast-actions>
-                  <button
-                    type="button"
-                    disabled={forecast.isSaving || forecast.day.trim().length === 0}
-                    onClick={(): void => {
-                      void forecast.drop(p_item.mission_id);
-                    }}
-                  >
-                    Place on this day
-                  </button>
-                </div>
-              </div>
-            ))}
-            <div data-forecast-card>
-              <h2>On this day</h2>
-              <p>
-                {presentation.day.p_day} · {presentation.day.statusLabel()}
-              </p>
-              {presentation.day.getChildren().length === 0 ? (
-                <p>No suggestions on this day.</p>
-              ) : null}
-              {presentation.day.getChildren().map((p_child, p_index) => {
-                if (!(p_child instanceof SuggestionLeaf)) {
-                  return null;
+              <WeekStrip
+                day={forecast.day}
+                onSelect={forecast.setDay}
+                markedDays={
+                  presentation.kind === "ready" && presentation.day.getChildren().length > 0
+                    ? [presentation.day.p_day]
+                    : []
                 }
-                return (
-                  <div
-                    data-forecast-card
-                    key={`${p_child.p_item.id}-${String(p_index)}`}
-                  >
-                    <p data-forecast-status>{p_child.statusLabel()}</p>
-                    <p>{p_child.p_item.mission_id}</p>
-                    {p_child.p_item.status === "scheduled" ? (
-                      <div data-forecast-actions>
-                        <button
-                          type="button"
-                          data-kind="secondary"
-                          disabled={forecast.isSaving}
-                          onClick={(): void => {
-                            void forecast.markDone(p_child.p_item);
-                          }}
-                        >
-                          Mark done
-                        </button>
-                        <label>
-                          Move to day
-                          <input
-                            type="date"
-                            name="target-day"
-                            value={forecast.targetDay}
-                            onChange={(p_event: ChangeEvent<HTMLInputElement>): void => {
-                              forecast.setTargetDay(p_event.currentTarget.value);
-                            }}
-                          />
-                        </label>
-                        <button
-                          type="button"
-                          data-kind="ghost"
-                          disabled={forecast.isSaving}
-                          onClick={(): void => {
-                            void forecast.moveDay(p_child.p_item);
-                          }}
-                        >
-                          Move
-                        </button>
+              />
+              {presentation.kind === "loading" || session.isLoading ? (
+                <LoadingCard label="Loading the forecast" />
+              ) : null}
+              {presentation.kind === "need-family" && !session.isLoading ? (
+                <StateCard icon={CloudSunIcon} title="Week forecast">
+                  <p>Opening the family forecast.</p>
+                </StateCard>
+              ) : null}
+              {presentation.kind === "denied" ? (
+                <StateCard icon={LockIcon} title="Forecast is Parent only" role="alert">
+                  <p>Child view does not put suggestions on the calendar.</p>
+                </StateCard>
+              ) : null}
+              {presentation.kind === "missing" ? (
+                <StateCard icon={WarningIcon} title="Family not found">
+                  <p>That id does not open the forecast.</p>
+                </StateCard>
+              ) : null}
+              {presentation.kind === "error" ? (
+                <StateCard icon={WarningIcon} title="Week forecast" role="alert">
+                  <p>{presentation.message}</p>
+                </StateCard>
+              ) : null}
+              {presentation.kind === "ready" ? (
+                <>
+                  <section data-gk-stack data-gk-enter aria-labelledby="forecast-ideas">
+                    <h2 data-gk-sec id="forecast-ideas">Ideas for this week</h2>
+                    {presentation.suggestions.length === 0 ? (
+                      <StateCard icon={CloudSunIcon} title="No ideas yet">
+                        <p>No published suggestions.</p>
+                      </StateCard>
+                    ) : (
+                      <div data-gk-list>
+                        {presentation.suggestions.map((p_item: WeekSuggestionItem) => (
+                          <div data-gk-row key={p_item.mission_id}>
+                            <Well icon={SunIcon} size="sm" />
+                            <span data-gk-row-text>
+                              <strong>{p_item.title}</strong>
+                              <span>Published mission</span>
+                            </span>
+                            <button
+                              type="button"
+                              data-gk-btn="secondary"
+                              data-size="sm"
+                              aria-label={`Place ${p_item.title} on ${dayLabel(forecast.day)}`}
+                              disabled={forecast.isSaving || !hasDay}
+                              onClick={(): void => {
+                                void forecast.drop(p_item.mission_id);
+                              }}
+                            >
+                              Place
+                            </button>
+                          </div>
+                        ))}
                       </div>
+                    )}
+                    <p data-gk-caption>
+                      Finite list. Published missions only. Without a day, it does not go on the calendar.
+                    </p>
+                  </section>
+                  <section data-gk-stack data-gk-enter aria-labelledby="forecast-day">
+                    <h2 data-gk-sec id="forecast-day">
+                      {dayLabel(presentation.day.p_day)}
+                    </h2>
+                    {presentation.day.getChildren().length === 0 ? (
+                      <StateCard icon={CalendarCheckIcon} title="Nothing placed">
+                        <p>No suggestions on this day.</p>
+                      </StateCard>
                     ) : null}
-                  </div>
-                );
-              })}
-            </div>
-            {forecast.formError !== null ? (
-              <p data-forecast-error role="alert">
-                {forecast.formError}
-              </p>
-            ) : null}
-          </div>
-        ) : null}
+                    {presentation.day.getChildren().map((p_child, p_index) => {
+                      if (!(p_child instanceof SuggestionLeaf)) {
+                        return null;
+                      }
+                      const isScheduled: boolean = p_child.p_item.status === "scheduled";
+                      return (
+                        <div
+                          data-gk-card
+                          data-forecast-placed
+                          key={`${p_child.p_item.id}-${String(p_index)}`}
+                        >
+                          <div data-forecast-placed-head>
+                            <Well icon={CalendarCheckIcon} size="sm" />
+                            <div>
+                              <strong>{missionTitleOf(p_child.p_item.mission_id)}</strong>
+                            </div>
+                            <StatusBadge status={p_child.statusLabel()} />
+                          </div>
+                          {isScheduled ? (
+                            <>
+                              <button
+                                type="button"
+                                data-gk-btn="secondary"
+                                data-size="sm"
+                                disabled={forecast.isSaving}
+                                onClick={(): void => {
+                                  void forecast.markDone(p_child.p_item);
+                                }}
+                              >
+                                <CheckIcon size={16} weight="bold" aria-hidden="true" />
+                                Mark done
+                              </button>
+                              <div data-forecast-move>
+                                <label data-gk-field>
+                                  Move to day
+                                  <input
+                                    data-gk-input
+                                    type="date"
+                                    name="target-day"
+                                    value={forecast.targetDay}
+                                    onChange={(p_event: ChangeEvent<HTMLInputElement>): void => {
+                                      forecast.setTargetDay(p_event.currentTarget.value);
+                                    }}
+                                  />
+                                </label>
+                                <button
+                                  type="button"
+                                  data-gk-btn="ghost"
+                                  disabled={forecast.isSaving}
+                                  onClick={(): void => {
+                                    void forecast.moveDay(p_child.p_item);
+                                  }}
+                                >
+                                  <ArrowsClockwiseIcon size={16} weight="bold" aria-hidden="true" />
+                                  Move
+                                </button>
+                              </div>
+                            </>
+                          ) : null}
+                        </div>
+                      );
+                    })}
+                  </section>
+                  {forecast.formError !== null && !isModalOpen ? (
+                    <p data-gk-alert="danger" role="alert">
+                      <WarningIcon size={20} aria-hidden="true" />
+                      {forecast.formError}
+                    </p>
+                  ) : null}
+                </>
+              ) : null}
             </>
-          }
-          actions={
-        <form data-forecast-tools onSubmit={onApply}>
-          <label>
-            Day
-            <input
-              type="date"
-              name="day"
-              value={forecast.day}
-              onChange={(p_event: ChangeEvent<HTMLInputElement>): void => {
-                forecast.setDay(p_event.currentTarget.value);
-              }}
-            />
-          </label>
-          <button type="submit">Open forecast</button>
-        </form>
           }
         />
       </div>
       <div
-        data-forecast-backdrop
+        data-gk-sheet-backdrop
         data-open={isModalOpen ? "true" : "false"}
         role="presentation"
         aria-hidden={!isModalOpen}
         inert={!isModalOpen}
       >
-        <div
-          data-forecast-sheet
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="rhythm-proposal-title"
-        >
+        <div data-gk-sheet role="dialog" aria-modal="true" aria-labelledby="rhythm-proposal-title">
+          <span data-gk-grab aria-hidden="true" />
           <h2 id="rhythm-proposal-title">Turn into a rhythm?</h2>
-          <p>
-            This mission repeated. Accept saves the rhythm. Dismiss writes nothing.
-          </p>
+          <p>This mission repeated. Accept saves the rhythm. Dismiss writes nothing.</p>
           {forecast.proposal !== null ? (
-            <p>{forecast.proposal.weekday}</p>
+            <span data-gk-badge="info">
+              <ArrowsClockwiseIcon size={14} weight="bold" aria-hidden="true" />
+              {forecast.proposal.weekday}
+            </span>
           ) : null}
           {forecast.formError !== null && isModalOpen ? (
-            <p data-forecast-error role="alert">
+            <p data-gk-alert="danger" role="alert">
+              <WarningIcon size={20} aria-hidden="true" />
               {forecast.formError}
             </p>
           ) : null}
           <button
             type="button"
-            disabled={forecast.isSaving}
-            onClick={(): void => {
-              void forecast.acceptProposal();
-            }}
-          >
-            Accept rhythm
-          </button>
-          <button
-            type="button"
-            data-kind="ghost"
+            data-gk-btn="secondary"
             disabled={forecast.isSaving}
             onClick={(): void => {
               void forecast.dismissProposal();
             }}
           >
             Dismiss
+          </button>
+          <button
+            type="button"
+            data-gk-btn="primary"
+            disabled={forecast.isSaving}
+            onClick={(): void => {
+              void forecast.acceptProposal();
+            }}
+          >
+            Accept rhythm
           </button>
         </div>
       </div>

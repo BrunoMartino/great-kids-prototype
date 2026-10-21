@@ -1,0 +1,1275 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tidal Design System</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,500..600,50..100&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: a single centered spec column (max 1200) with full-bleed tide header; app phones in a wrapping row; admin dashboard in a window frame with a container-query sidebar. */
+:root {
+  /* Source palette — Tidal Escape */
+  --tidal-deep-current: #0D5C63;
+  --tidal-ocean-depths: #127D86;
+  --tidal-sea-mist: #7FC9CC;
+  --tidal-wave-foam: #E0F2F3;
+  --tidal-driftwood-sand: #DCCBB4;
+  --tidal-coastal-haze: #93A7B0;
+
+  /* Core semantic (light) */
+  --gk-bg: #F5FAFA;
+  --gk-surface: #FFFFFF;
+  --gk-surface-2: #E0F2F3;
+  --gk-surface-warm: #F3ECE1;
+  --gk-ink: #0B2E33;
+  --gk-ink-muted: #4A6670;
+  --gk-ink-subtle: #5E7A84;
+  --gk-border: #D3E3E5;
+  --gk-border-strong: #7D949C;
+  --gk-primary: #0D5C63;
+  --gk-on-primary: #FFFFFF;
+  --gk-primary-hover: #0A4A50;
+  --gk-link: #127D86;
+  --gk-focus: #127D86;
+  --gk-accent: #7FC9CC;
+  --gk-warm: #DCCBB4;
+  --gk-on-warm: #0B2E33;
+  --gk-success: #2E7D5B;
+  --gk-success-soft: #E3F3EA;
+  --gk-success-text: #24664A;
+  --gk-warning: #9A6212;
+  --gk-warning-soft: #F8EEDC;
+  --gk-warning-text: #7F500E;
+  --gk-danger: #B4413C;
+  --gk-danger-soft: #F8E5E3;
+  --gk-danger-text: #963530;
+  --gk-scrim: rgba(7, 28, 31, 0.48);
+  --gk-shadow-rgb: 11, 46, 51;
+  --gk-inset-hi: rgba(255, 255, 255, 0.6);
+
+  /* App layer */
+  --app-hero-from: #0D5C63;
+  --app-hero-to: #127D86;
+  --app-hero-ink: #FFFFFF;
+  --app-tide-1: rgba(127, 201, 204, 0.35);
+  --app-tide-2: rgba(127, 201, 204, 0.22);
+  --app-tide-3: rgba(127, 201, 204, 0.14);
+  --app-foam-wave: rgba(224, 242, 243, 0.18);
+  --app-pool-1: rgba(127, 201, 204, 0.45);
+  --app-pool-2: rgba(220, 203, 180, 0.40);
+  --app-mission-well: #E0F2F3;
+  --app-bezel: #0E1A1C;
+  --app-bezel-edge: #33494F;
+
+  /* Admin layer */
+  --adm-sidebar: #0B2E33;
+  --adm-sidebar-ink: #E0F2F3;
+  --adm-sidebar-muted: #93A7B0;
+  --adm-sidebar-active: #0D5C63;
+  --adm-row-hover: #F5FAFA;
+  --adm-row-selected: #E0F2F3;
+
+  /* Data viz (validated) */
+  --viz-1: #00909B;
+  --viz-2: #C27C2C;
+  --viz-3: #5266B8;
+  --viz-4: #B24F82;
+  --viz-5: #2E9E5E;
+  --viz-grid: #D3E3E5;
+
+  /* Type */
+  --font-display: "Fraunces", Georgia, "Times New Roman", serif;
+  --font-sans: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+
+  /* Radius / elevation / motion */
+  --r-xs: 6px; --r-sm: 10px; --r-md: 14px; --r-lg: 20px; --r-xl: 28px; --r-pill: 999px;
+  --el-1: 0 1px 2px rgba(var(--gk-shadow-rgb), .06), 0 2px 6px rgba(var(--gk-shadow-rgb), .06);
+  --el-2: 0 2px 4px rgba(var(--gk-shadow-rgb), .06), 0 8px 20px rgba(var(--gk-shadow-rgb), .10);
+  --el-3: 0 6px 12px rgba(var(--gk-shadow-rgb), .08), 0 18px 40px rgba(var(--gk-shadow-rgb), .16);
+  --dur-micro: 120ms; --dur-ui: 240ms; --dur-enter: 300ms; --dur-exit: 180ms; --dur-celebrate: 480ms;
+  --ease-enter: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-exit: cubic-bezier(0.4, 0, 1, 1);
+  --ease-state: cubic-bezier(0.42, 0, 0.58, 1);
+  --ease-playful: cubic-bezier(0.34, 1.56, 0.64, 1);
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --gk-bg: #071C1F; --gk-surface: #0E2A2E; --gk-surface-2: #133539; --gk-surface-warm: #2A2A22;
+    --gk-ink: #E0F2F3; --gk-ink-muted: #9FB4BC; --gk-ink-subtle: #8AA1AA;
+    --gk-border: #24474C; --gk-border-strong: #5E7F87;
+    --gk-primary: #7FC9CC; --gk-on-primary: #071C1F; --gk-primary-hover: #9AD6D8;
+    --gk-link: #7FC9CC; --gk-focus: #7FC9CC; --gk-accent: #3FA3A9;
+    --gk-success: #6FCF9F; --gk-success-soft: #133539; --gk-success-text: #6FCF9F;
+    --gk-warning: #E8B866; --gk-warning-soft: #133539; --gk-warning-text: #E8B866;
+    --gk-danger: #F2A39E; --gk-danger-soft: #133539; --gk-danger-text: #F2A39E;
+    --gk-scrim: rgba(0, 0, 0, 0.6); --gk-shadow-rgb: 0, 0, 0; --gk-inset-hi: rgba(224, 242, 243, 0.06);
+    --app-hero-from: #0A4A50; --app-hero-to: #0D5C63; --app-hero-ink: #FFFFFF;
+    --app-tide-1: rgba(63, 163, 169, 0.28); --app-tide-2: rgba(63, 163, 169, 0.18); --app-tide-3: rgba(63, 163, 169, 0.10);
+    --app-foam-wave: rgba(224, 242, 243, 0.10);
+    --app-pool-1: rgba(63, 163, 169, 0.30); --app-pool-2: rgba(220, 203, 180, 0.14);
+    --app-mission-well: #133539; --app-bezel: #000000; --app-bezel-edge: #24474C;
+    --adm-sidebar: #05171A; --adm-sidebar-active: #133539; --adm-row-hover: #133539; --adm-row-selected: #18403F;
+    --viz-1: #13A3AD; --viz-2: #BB7F33; --viz-3: #6A7ED4; --viz-4: #C4609A; --viz-5: #2FA562; --viz-grid: #24474C;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --gk-bg: #071C1F; --gk-surface: #0E2A2E; --gk-surface-2: #133539; --gk-surface-warm: #2A2A22;
+  --gk-ink: #E0F2F3; --gk-ink-muted: #9FB4BC; --gk-ink-subtle: #8AA1AA;
+  --gk-border: #24474C; --gk-border-strong: #5E7F87;
+  --gk-primary: #7FC9CC; --gk-on-primary: #071C1F; --gk-primary-hover: #9AD6D8;
+  --gk-link: #7FC9CC; --gk-focus: #7FC9CC; --gk-accent: #3FA3A9;
+  --gk-success: #6FCF9F; --gk-success-soft: #133539; --gk-success-text: #6FCF9F;
+  --gk-warning: #E8B866; --gk-warning-soft: #133539; --gk-warning-text: #E8B866;
+  --gk-danger: #F2A39E; --gk-danger-soft: #133539; --gk-danger-text: #F2A39E;
+  --gk-scrim: rgba(0, 0, 0, 0.6); --gk-shadow-rgb: 0, 0, 0; --gk-inset-hi: rgba(224, 242, 243, 0.06);
+  --app-hero-from: #0A4A50; --app-hero-to: #0D5C63; --app-hero-ink: #FFFFFF;
+  --app-tide-1: rgba(63, 163, 169, 0.28); --app-tide-2: rgba(63, 163, 169, 0.18); --app-tide-3: rgba(63, 163, 169, 0.10);
+  --app-foam-wave: rgba(224, 242, 243, 0.10);
+  --app-pool-1: rgba(63, 163, 169, 0.30); --app-pool-2: rgba(220, 203, 180, 0.14);
+  --app-mission-well: #133539; --app-bezel: #000000; --app-bezel-edge: #24474C;
+  --adm-sidebar: #05171A; --adm-sidebar-active: #133539; --adm-row-hover: #133539; --adm-row-selected: #18403F;
+  --viz-1: #13A3AD; --viz-2: #BB7F33; --viz-3: #6A7ED4; --viz-4: #C4609A; --viz-5: #2FA562; --viz-grid: #24474C;
+  color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--gk-bg);
+  color: var(--gk-ink);
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: 1.55;
+  overflow-x: hidden;
+}
+h1, h2, h3, h4 { text-wrap: balance; margin: 0; }
+p { margin: 0; }
+button, input, select, textarea { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--gk-focus); outline-offset: 2px; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+svg.i { width: 24px; height: 24px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
+svg.i .duo { fill: currentColor; stroke: none; opacity: .28; }
+svg.i .dot { fill: currentColor; stroke: none; }
+.i-sm { width: 18px !important; height: 18px !important; }
+.i-xs { width: 16px !important; height: 16px !important; }
+
+/* ---------- Tide background (signature) ---------- */
+.tide { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; }
+.tide .pool { position: absolute; border-radius: 50%; filter: blur(36px); will-change: transform; }
+.tide .pool.p1 { width: 280px; height: 280px; left: -60px; top: 18%; background: radial-gradient(circle, var(--app-pool-1), transparent 70%); animation: pool-a 30s var(--ease-state) infinite alternate; }
+.tide .pool.p2 { width: 240px; height: 240px; right: -50px; top: 42%; background: radial-gradient(circle, var(--app-pool-2), transparent 70%); animation: pool-b 38s var(--ease-state) infinite alternate; }
+.tide .ripples { position: absolute; inset: 0; background: var(--gk-ink); opacity: .06;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='120' viewBox='0 0 240 120'%3E%3Cg fill='none' stroke='black' stroke-width='1.2'%3E%3Cpath d='M0 20c40-14 80 14 120 0s80 14 120 0'/%3E%3Cpath d='M0 50c40-14 80 14 120 0s80 14 120 0'/%3E%3Cpath d='M0 80c40-14 80 14 120 0s80 14 120 0'/%3E%3Cpath d='M0 110c40-14 80 14 120 0s80 14 120 0'/%3E%3C/g%3E%3C/svg%3E") repeat 0 0 / 240px 120px;
+          mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='120' viewBox='0 0 240 120'%3E%3Cg fill='none' stroke='black' stroke-width='1.2'%3E%3Cpath d='M0 20c40-14 80 14 120 0s80 14 120 0'/%3E%3Cpath d='M0 50c40-14 80 14 120 0s80 14 120 0'/%3E%3Cpath d='M0 80c40-14 80 14 120 0s80 14 120 0'/%3E%3Cpath d='M0 110c40-14 80 14 120 0s80 14 120 0'/%3E%3C/g%3E%3C/svg%3E") repeat 0 0 / 240px 120px; }
+.tide .wave { position: absolute; left: 0; bottom: 0; width: 200%; will-change: transform;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 120' preserveAspectRatio='none'%3E%3Cpath d='M0 40Q180 0 360 40T720 40T1080 40T1440 40V120H0Z'/%3E%3C/svg%3E") repeat-x 0 0 / 50% 100%;
+          mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 120' preserveAspectRatio='none'%3E%3Cpath d='M0 40Q180 0 360 40T720 40T1080 40T1440 40V120H0Z'/%3E%3C/svg%3E") repeat-x 0 0 / 50% 100%; }
+.tide .w1 { height: 34%; background: var(--app-tide-3); animation: drift-l 42s linear infinite; }
+.tide .w2 { height: 26%; background: var(--app-tide-2); animation: drift-r 28s linear infinite; }
+.tide .w3 { height: 18%; background: var(--app-tide-1); animation: drift-l 18s linear infinite; }
+.tide.on-hero .w1, .tide.on-hero .w2, .tide.on-hero .w3 { background: var(--app-foam-wave); }
+.tide.on-hero .ripples { background: #FFFFFF; opacity: .05; }
+@keyframes drift-l { from { transform: translate3d(0, 0, 0); } to { transform: translate3d(-50%, 0, 0); } }
+@keyframes drift-r { from { transform: translate3d(-50%, 0, 0); } to { transform: translate3d(0, 0, 0); } }
+@keyframes pool-a { from { transform: translate3d(0, 0, 0); } to { transform: translate3d(24px, -18px, 0); } }
+@keyframes pool-b { from { transform: translate3d(0, 0, 0); } to { transform: translate3d(-22px, 20px, 0); } }
+:root[data-tide="paused"] .tide * { animation-play-state: paused !important; }
+
+/* ---------- Page header ---------- */
+.masthead { position: relative; overflow: hidden; background: linear-gradient(160deg, var(--app-hero-from), var(--app-hero-to)); color: var(--app-hero-ink); }
+.masthead-inner { position: relative; z-index: 1; max-width: 1200px; margin-inline: auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 40px 88px; display: flex; flex-direction: column; gap: 18px; }
+.eyebrow { font-size: .75rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+.masthead .eyebrow { color: #E0F2F3; }
+.masthead h1 { font-family: var(--font-display); font-variation-settings: "SOFT" 100; font-weight: 600; font-size: clamp(2.25rem, 6vw, 3.75rem); line-height: 1.05; letter-spacing: -.01em; }
+.masthead p { max-width: 60ch; color: #E0F2F3; font-size: 1.0625rem; }
+.controls { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+.seg { display: inline-flex; padding: 4px; gap: 2px; border-radius: var(--r-pill); background: rgba(224, 242, 243, .16); }
+.seg button { min-height: 36px; padding: 0 14px; border: 0; border-radius: var(--r-pill); background: transparent; color: #FFFFFF; font-size: .875rem; font-weight: 600; cursor: pointer; transition: background var(--dur-micro) var(--ease-state), color var(--dur-micro) var(--ease-state); }
+.seg button[aria-pressed="true"] { background: #FFFFFF; color: #0D5C63; }
+.pill-toggle { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 16px; border-radius: var(--r-pill); border: 1px solid rgba(224, 242, 243, .5); background: transparent; color: #FFFFFF; font-size: .875rem; font-weight: 600; cursor: pointer; }
+
+/* ---------- Sections ---------- */
+.wrap { max-width: 1200px; margin-inline: auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+main.wrap { display: flex; flex-direction: column; gap: 72px; padding-block: 48px 96px; }
+section { display: flex; flex-direction: column; gap: 24px; min-width: 0; }
+.sec-head { display: flex; flex-direction: column; gap: 6px; max-width: 70ch; }
+.sec-head .eyebrow { color: var(--gk-link); }
+.sec-head h2 { font-family: var(--font-display); font-variation-settings: "SOFT" 100; font-weight: 600; font-size: clamp(1.625rem, 3.4vw, 2.25rem); line-height: 1.15; }
+.sec-head p { color: var(--gk-ink-muted); }
+h3.sub { font-size: 1rem; font-weight: 700; }
+.panel { background: var(--gk-surface); border: 1px solid var(--gk-border); border-radius: var(--r-lg); padding: 20px; min-width: 0; }
+.grid-auto { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 16px; }
+.stack { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+.caption { font-size: .75rem; color: var(--gk-ink-muted); }
+code, .mono { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: .8125rem; }
+
+/* Palette */
+.swatches { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 170px), 1fr)); gap: 12px; }
+.swatch { border-radius: var(--r-lg); overflow: hidden; border: 1px solid var(--gk-border); background: var(--gk-surface); display: flex; flex-direction: column; }
+.swatch .sw-color { height: 108px; display: flex; align-items: flex-end; padding: 12px; font-family: var(--font-display); font-size: 1.125rem; font-weight: 600; }
+.swatch .meta { padding: 12px; display: flex; flex-direction: column; gap: 2px; }
+.swatch .meta strong { font-size: .875rem; }
+.swatch .meta span { font-size: .8125rem; color: var(--gk-ink-muted); }
+.table-scroll { overflow-x: auto; border: 1px solid var(--gk-border); border-radius: var(--r-md); background: var(--gk-surface); }
+table.spec { width: 100%; border-collapse: collapse; font-size: .875rem; min-width: 620px; }
+table.spec th, table.spec td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--gk-border); vertical-align: middle; }
+table.spec th { background: var(--gk-surface-2); font-size: .75rem; letter-spacing: .04em; text-transform: uppercase; color: var(--gk-ink-muted); }
+table.spec tr:last-child td { border-bottom: 0; }
+.dotc { display: inline-block; width: 18px; height: 18px; border-radius: 6px; vertical-align: -4px; margin-right: 8px; border: 1px solid var(--gk-border); }
+.ratio { font-variant-numeric: tabular-nums; font-weight: 700; }
+
+/* Type */
+.type-row { display: grid; grid-template-columns: 140px 1fr; gap: 16px; align-items: baseline; padding-block: 12px; border-bottom: 1px solid var(--gk-border); }
+.type-row:last-child { border-bottom: 0; }
+.type-row .caption { font-variant-numeric: tabular-nums; }
+.t-display { font-family: var(--font-display); font-variation-settings: "SOFT" 100; font-weight: 600; font-size: 2.25rem; line-height: 1.1; }
+.t-h1 { font-family: var(--font-display); font-variation-settings: "SOFT" 100; font-weight: 600; font-size: 1.75rem; line-height: 1.2; }
+.t-h2 { font-family: var(--font-display); font-variation-settings: "SOFT" 100; font-weight: 600; font-size: 1.375rem; line-height: 1.25; }
+.t-h3 { font-weight: 700; font-size: 1.125rem; line-height: 1.3; }
+.t-body { font-size: 1rem; line-height: 1.55; max-width: 62ch; }
+.t-sm { font-size: .875rem; line-height: 1.5; color: var(--gk-ink-muted); }
+.t-cap { font-size: .75rem; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--gk-ink-muted); }
+.t-kpi { font-weight: 700; font-size: 2rem; line-height: 1.1; font-variant-numeric: tabular-nums; }
+@media (max-width: 560px) { .type-row { grid-template-columns: 1fr; gap: 4px; } }
+
+/* Spacing / radius / elevation */
+.scale-bars { display: flex; flex-direction: column; gap: 8px; }
+.scale-bars div { display: flex; align-items: center; gap: 12px; font-size: .8125rem; color: var(--gk-ink-muted); font-variant-numeric: tabular-nums; }
+.scale-bars i { display: block; height: 12px; border-radius: 4px; background: var(--gk-accent); }
+.radius-demo { display: grid; grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); gap: 12px; }
+.radius-demo div { aspect-ratio: 1; max-width: 100%; background: var(--gk-surface-2); border: 1.5px solid var(--gk-link); display: flex; align-items: flex-end; padding: 8px; font-size: .75rem; color: var(--gk-ink-muted); }
+.elev-demo { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 20px; padding: 8px; }
+.elev-demo div { height: 88px; border-radius: var(--r-lg); background: var(--gk-surface); display: flex; align-items: flex-end; padding: 10px; font-size: .75rem; color: var(--gk-ink-muted); }
+
+/* Icons */
+.icon-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 12px; }
+.icon-cell { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 14px 6px; border-radius: var(--r-md); background: var(--gk-surface); border: 1px solid var(--gk-border); font-size: .75rem; color: var(--gk-ink-muted); text-align: center; }
+.well { display: inline-grid; place-items: center; width: 48px; height: 48px; border-radius: 50%; background: var(--app-mission-well); color: var(--gk-primary); flex: none; }
+.well.warm { background: var(--gk-surface-warm); color: #86694A; }
+:root[data-theme="dark"] .well.warm { color: var(--gk-warm); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .well.warm { color: var(--gk-warm); } }
+
+/* ---------- Components ---------- */
+.btn { --h: 52px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: var(--h); padding: 0 22px; border-radius: var(--r-pill); border: 0; font-weight: 600; font-size: 1rem; cursor: pointer; text-decoration: none; -webkit-tap-highlight-color: transparent;
+  transition: transform var(--dur-micro) var(--ease-enter), box-shadow var(--dur-micro) var(--ease-enter), background-color var(--dur-micro) var(--ease-state); }
+.btn:active { transform: scale(0.98); }
+.btn-primary { background: var(--gk-primary); color: var(--gk-on-primary); box-shadow: var(--el-2); }
+.btn-warm { background: var(--gk-warm); color: var(--gk-on-warm); box-shadow: var(--el-2), inset 0 1px 0 rgba(255, 255, 255, .55); }
+.btn-secondary { background: var(--gk-surface); color: var(--gk-primary); border: 1.5px solid var(--gk-border-strong); }
+.btn-ghost { background: transparent; color: var(--gk-link); --h: 44px; padding: 0 14px; }
+.btn-danger { background: var(--gk-danger); color: var(--gk-on-primary); }
+.btn-icon { width: 44px; min-height: 44px; padding: 0; border-radius: 50%; background: var(--gk-surface-2); color: var(--gk-ink); }
+.btn[disabled], .btn[aria-disabled="true"] { background: var(--gk-surface-2); color: var(--gk-ink-subtle); box-shadow: none; border-color: transparent; cursor: not-allowed; opacity: .7; transform: none; }
+.btn.is-focus { outline: 2px solid var(--gk-focus); outline-offset: 2px; }
+.btn.sm { --h: 40px; font-size: .875rem; padding: 0 16px; border-radius: var(--r-sm); }
+@media (hover: hover) and (pointer: fine) {
+  .btn-primary:hover { background: var(--gk-primary-hover); transform: translateY(-1px); box-shadow: var(--el-3); }
+  .btn-warm:hover, .btn-secondary:hover { transform: translateY(-1px); box-shadow: var(--el-2); }
+  .btn-ghost:hover { background: var(--gk-surface-2); }
+  .btn[disabled]:hover { transform: none; box-shadow: none; }
+}
+.spinner { width: 18px; height: 18px; border-radius: 50%; border: 2px solid currentColor; border-right-color: transparent; animation: spin 800ms linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.field label { font-size: .875rem; font-weight: 600; }
+.field .help { font-size: .875rem; color: var(--gk-ink-muted); display: flex; gap: 6px; align-items: center; }
+.field.err .help { color: var(--gk-danger-text); }
+.input { width: 100%; min-height: 52px; padding: 0 16px; border-radius: var(--r-md); border: 1.5px solid var(--gk-border-strong); background: var(--gk-surface); color: var(--gk-ink); box-shadow: var(--el-1); transition: border-color var(--dur-micro) var(--ease-state), box-shadow var(--dur-micro) var(--ease-state); }
+.input::placeholder { color: var(--gk-ink-subtle); }
+.input:focus { outline: none; border-color: var(--gk-link); box-shadow: 0 0 0 3px color-mix(in srgb, var(--gk-focus) 28%, transparent); }
+.field.err .input { border-color: var(--gk-danger); }
+.input-wrap { position: relative; display: flex; align-items: center; }
+.input-wrap svg { position: absolute; left: 14px; color: var(--gk-ink-subtle); pointer-events: none; }
+.input-wrap .input { padding-left: 44px; }
+
+.chip { display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 0 16px; border-radius: var(--r-pill); border: 1px solid var(--gk-border-strong); background: var(--gk-surface); color: var(--gk-ink); font-size: .875rem; font-weight: 600; cursor: pointer; transition: background-color var(--dur-micro) var(--ease-state), color var(--dur-micro) var(--ease-state), transform var(--dur-micro) var(--ease-enter); }
+.chip:active { transform: scale(0.97); }
+.chip[aria-pressed="true"] { background: var(--gk-primary); color: var(--gk-on-primary); border-color: var(--gk-primary); }
+.chip .check { display: none; }
+.chip[aria-pressed="true"] .check { display: block; }
+.badge { display: inline-flex; align-items: center; gap: 4px; min-height: 24px; padding: 0 10px 0 8px; border-radius: var(--r-pill); font-size: .75rem; font-weight: 600; white-space: nowrap; }
+.badge svg { width: 14px; height: 14px; }
+.b-success { background: var(--gk-success-soft); color: var(--gk-success-text); }
+.b-warning { background: var(--gk-warning-soft); color: var(--gk-warning-text); }
+.b-danger { background: var(--gk-danger-soft); color: var(--gk-danger-text); }
+.b-info { background: var(--gk-surface-2); color: var(--gk-link); }
+.b-neutral { background: var(--gk-surface-2); color: var(--gk-ink-muted); }
+.b-warm { background: var(--gk-surface-warm); color: var(--gk-ink); }
+
+.segmented { position: relative; display: inline-grid; grid-auto-flow: column; grid-auto-columns: 1fr; padding: 4px; border-radius: var(--r-pill); background: var(--gk-surface-2); }
+.segmented .thumb { position: absolute; top: 4px; bottom: 4px; left: 4px; border-radius: var(--r-pill); background: var(--gk-surface); box-shadow: var(--el-1); transition: transform var(--dur-ui) var(--ease-enter); }
+.segmented button { position: relative; z-index: 1; min-height: 40px; padding: 0 16px; border: 0; background: transparent; font-size: .875rem; font-weight: 600; color: var(--gk-ink-muted); cursor: pointer; border-radius: var(--r-pill); }
+.segmented button[aria-pressed="true"] { color: var(--gk-ink); }
+
+.switch { position: relative; display: inline-flex; align-items: center; gap: 12px; cursor: pointer; font-size: .9375rem; }
+.switch input { position: absolute; opacity: 0; width: 44px; height: 26px; margin: 0; cursor: pointer; }
+.switch .track { width: 44px; height: 26px; border-radius: var(--r-pill); background: var(--gk-border-strong); position: relative; flex: none; transition: background-color var(--dur-ui) var(--ease-state); }
+.switch .track::after { content: ""; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 50%; background: #FFFFFF; box-shadow: 0 1px 3px rgba(0, 0, 0, .25); transition: transform var(--dur-ui) var(--ease-enter); }
+.switch input:checked + .track { background: var(--gk-link); }
+.switch input:checked + .track::after { transform: translateX(18px); }
+.switch input:focus-visible + .track { outline: 2px solid var(--gk-focus); outline-offset: 2px; }
+
+.pebble { position: relative; display: flex; flex-direction: column; gap: 10px; padding: 20px; border-radius: var(--r-lg); background: var(--gk-surface); box-shadow: var(--el-2), inset 0 1px 0 var(--gk-inset-hi); color: var(--gk-ink); text-align: left; border: 0; cursor: pointer; transition: transform var(--dur-micro) var(--ease-enter), box-shadow var(--dur-micro) var(--ease-enter); min-width: 0; }
+.pebble:active { transform: scale(0.98); box-shadow: var(--el-1); }
+@media (hover: hover) and (pointer: fine) { .pebble:hover { transform: translateY(-2px); box-shadow: var(--el-3); } }
+.pebble h4 { font-size: 1.0625rem; font-weight: 700; line-height: 1.3; }
+.pebble p { font-size: .875rem; color: var(--gk-ink-muted); }
+.pebble .go { position: absolute; right: 16px; top: 20px; color: var(--gk-ink-subtle); }
+.mission { position: relative; overflow: hidden; border-radius: var(--r-xl); padding: 22px; background: linear-gradient(160deg, var(--app-hero-from), var(--app-hero-to)); color: var(--app-hero-ink); box-shadow: var(--el-3); display: flex; flex-direction: column; gap: 14px; }
+.mission > :not(.tide) { position: relative; z-index: 1; }
+.mission .eyebrow { color: #E0F2F3; }
+.mission .copy { font-family: var(--font-display); font-variation-settings: "SOFT" 100; font-size: 1.375rem; line-height: 1.3; font-weight: 500; min-height: 3.9em; }
+.mission .caret { display: inline-block; width: 2px; height: 1.05em; vertical-align: -0.15em; background: currentColor; margin-left: 2px; animation: blink 1s steps(1) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+.reward { border-radius: var(--r-lg); padding: 20px; background: linear-gradient(135deg, var(--gk-surface-warm), var(--gk-surface-2)); display: flex; gap: 14px; align-items: center; box-shadow: var(--el-1); }
+.reward h4 { font-size: 1rem; font-weight: 700; }
+.reward p { font-size: .875rem; color: var(--gk-ink-muted); }
+.celebrate { animation: celebrate var(--dur-celebrate) var(--ease-playful) both; }
+@keyframes celebrate { from { opacity: 0; transform: scale(0.9) rotate(-3deg); } to { opacity: 1; transform: scale(1) rotate(0); } }
+
+.list { display: flex; flex-direction: column; background: var(--gk-surface); border-radius: var(--r-lg); box-shadow: var(--el-1); overflow: hidden; }
+.li { display: flex; align-items: center; gap: 14px; min-height: 64px; padding: 10px 16px; border: 0; background: transparent; width: 100%; text-align: left; cursor: pointer; color: var(--gk-ink); position: relative; }
+.li + .li::before { content: ""; position: absolute; top: 0; left: 70px; right: 0; height: 1px; background: var(--gk-border); }
+.li .txt { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.li .txt strong { font-size: 1rem; font-weight: 600; line-height: 1.3; }
+.li .txt span { font-size: .875rem; color: var(--gk-ink-muted); }
+.li .well { width: 40px; height: 40px; }
+.li .well svg { width: 20px; height: 20px; }
+@media (hover: hover) and (pointer: fine) { .li:hover { background: var(--gk-bg); } }
+.avatar { display: inline-grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; font-size: .875rem; font-weight: 700; flex: none; background: var(--gk-surface-2); color: var(--gk-primary); }
+.avatar.sand { background: var(--gk-surface-warm); color: var(--gk-ink); }
+.avatar.sm { width: 32px; height: 32px; font-size: .75rem; }
+
+.alert { display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; border-radius: var(--r-md); font-size: .9375rem; }
+.alert strong { display: block; }
+
+/* Overlays (page-level demo) */
+.overlay { position: fixed; inset: 0; z-index: 30; display: grid; place-items: center; padding: 16px; background: var(--gk-scrim); opacity: 0; pointer-events: none; transition: opacity var(--dur-exit) var(--ease-exit); }
+.overlay.open { opacity: 1; pointer-events: auto; transition: opacity var(--dur-ui) var(--ease-enter); }
+.dialog { width: min(480px, 100%); background: var(--gk-surface); color: var(--gk-ink); border-radius: var(--r-md); box-shadow: var(--el-3); padding: 24px; display: flex; flex-direction: column; gap: 14px; transform: scale(0.97); opacity: 0; transition: transform var(--dur-exit) var(--ease-exit), opacity var(--dur-exit) var(--ease-exit); }
+.overlay.open .dialog { transform: scale(1); opacity: 1; transition: transform var(--dur-ui) var(--ease-enter), opacity var(--dur-ui) var(--ease-enter); }
+.dialog h3 { font-size: 1.25rem; font-weight: 700; }
+.dialog p { color: var(--gk-ink-muted); font-size: .9375rem; }
+.dialog .actions { display: flex; justify-content: flex-end; gap: 10px; flex-wrap: wrap; }
+.toast { position: fixed; z-index: 40; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom, 0px)); display: flex; align-items: center; gap: 10px; max-width: calc(100% - 32px); padding: 12px 16px; border-radius: var(--r-md); background: var(--gk-ink); color: var(--gk-bg); box-shadow: var(--el-3); font-size: .9375rem; font-weight: 500; transform: translate3d(-50%, 16px, 0); opacity: 0; pointer-events: none; transition: transform var(--dur-exit) var(--ease-exit), opacity var(--dur-exit) var(--ease-exit); }
+.toast.show { transform: translate3d(-50%, 0, 0); opacity: 1; pointer-events: auto; transition: transform var(--dur-enter) var(--ease-enter), opacity var(--dur-enter) var(--ease-enter); }
+
+/* ---------- Phones ---------- */
+.phones { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 32px 24px; justify-items: center; }
+.phone-col { display: flex; flex-direction: column; gap: 12px; align-items: center; width: 100%; min-width: 0; }
+.phone-col .caption { text-align: center; max-width: 34ch; }
+.phone { position: relative; width: min(330px, 100%); padding: 10px; border-radius: 52px; background: var(--app-bezel); box-shadow: 0 0 0 2px var(--app-bezel-edge), var(--el-3); }
+.phone::before, .phone::after { content: ""; position: absolute; width: 3px; border-radius: 2px; background: var(--app-bezel-edge); }
+.phone::before { left: -4px; top: 120px; height: 60px; }
+.phone::after { right: -4px; top: 150px; height: 80px; }
+.screen { position: relative; width: 100%; aspect-ratio: 430 / 932; max-width: 100%; border-radius: 42px; overflow: hidden; background: var(--gk-bg); }
+.app { position: absolute; top: 0; left: 0; width: 430px; height: 932px; transform-origin: 0 0; transform: scale(var(--s, 0.721)); display: flex; flex-direction: column; background: var(--gk-bg); color: var(--gk-ink); overflow: hidden; }
+.island { position: absolute; top: 14px; left: 50%; width: 124px; height: 36px; margin-left: -62px; border-radius: 20px; background: #000000; z-index: 25; }
+.statusbar { position: relative; z-index: 5; height: 56px; flex: none; display: flex; align-items: center; justify-content: space-between; padding: 8px 34px 0; font-size: 16px; font-weight: 700; }
+.statusbar .sb-icons { display: flex; gap: 6px; align-items: center; }
+.statusbar .sb-icons i { display: block; width: 18px; height: 11px; border-radius: 3px; border: 1.5px solid currentColor; }
+.statusbar .sb-icons b { display: block; width: 16px; height: 11px; background: linear-gradient(to right, currentColor 0 3px, transparent 3px 5px, currentColor 5px 8px, transparent 8px 10px, currentColor 10px 13px, transparent 13px); }
+.homebar { position: absolute; bottom: 8px; left: 50%; width: 140px; height: 5px; margin-left: -70px; border-radius: 3px; background: var(--gk-ink); opacity: .85; z-index: 26; }
+.app-head { position: relative; z-index: 5; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 4px 20px 8px; min-height: 60px; }
+.app-head h2 { font-family: var(--font-display); font-variation-settings: "SOFT" 100; font-weight: 600; font-size: 24px; line-height: 1.2; }
+.app-head .sub { font-size: 14px; color: var(--gk-ink-muted); }
+.hamb { width: 44px; height: 44px; border-radius: 14px; border: 0; display: grid; place-items: center; background: var(--gk-surface); color: var(--gk-ink); box-shadow: var(--el-1); cursor: pointer; flex: none; }
+.on-dark .hamb { background: rgba(224, 242, 243, .16); color: #FFFFFF; box-shadow: none; }
+.app-scroll { position: relative; z-index: 2; flex: 1; overflow-y: auto; overflow-x: hidden; padding: 4px 20px 140px; display: flex; flex-direction: column; gap: 24px; scrollbar-width: none; }
+.app-scroll::-webkit-scrollbar { display: none; }
+.app h3.sec { font-size: 18px; font-weight: 700; display: flex; justify-content: space-between; align-items: baseline; }
+.app h3.sec a { font-size: 14px; font-weight: 600; color: var(--gk-link); text-decoration: none; }
+.tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.tiles .pebble { min-height: 150px; }
+.tiles .pebble .num { font-weight: 700; font-size: 26px; line-height: 1; font-variant-numeric: tabular-nums; }
+#phone-home .statusbar { position: absolute; top: 0; left: 0; right: 0; z-index: 6; }
+.hero { position: relative; overflow: hidden; margin: 0; padding: 56px 0 30px; background: linear-gradient(160deg, var(--app-hero-from), var(--app-hero-to)); color: #FFFFFF; border-radius: 0 0 36px 36px; flex: none; }
+.hero .app-head { padding-bottom: 4px; }
+.hero .app-head h2 { color: #FFFFFF; }
+.hero .app-head .sub { color: #E0F2F3; }
+.hero .mission { margin: 12px 20px 0; background: rgba(7, 28, 31, .22); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .12); }
+.action-bar { position: absolute; left: 0; right: 0; bottom: 0; z-index: 6; padding: 14px 20px 30px; display: flex; gap: 12px; background: linear-gradient(to top, var(--gk-bg) 62%, transparent); }
+.action-bar .btn { flex: 1; }
+.week { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+.day { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 10px 0; border-radius: 18px; border: 0; background: var(--gk-surface); color: var(--gk-ink); box-shadow: var(--el-1); font-size: 12px; font-weight: 600; cursor: pointer; }
+.day b { font-size: 18px; font-variant-numeric: tabular-nums; }
+.day i { width: 6px; height: 6px; border-radius: 50%; background: var(--gk-accent); }
+.day[aria-pressed="true"] { background: var(--gk-primary); color: var(--gk-on-primary); }
+.day[aria-pressed="true"] i { background: var(--gk-warm); }
+.progress { height: 8px; border-radius: var(--r-pill); background: var(--gk-surface-2); overflow: hidden; }
+.progress i { display: block; height: 100%; width: 100%; border-radius: inherit; background: var(--gk-link); transform-origin: left center; transform: scaleX(.4); transition: transform var(--dur-ui) var(--ease-enter); }
+.q-card { padding: 24px; border-radius: var(--r-xl); background: var(--gk-surface); box-shadow: var(--el-2), inset 0 1px 0 var(--gk-inset-hi); display: flex; flex-direction: column; gap: 16px; }
+.q-card h3 { font-family: var(--font-display); font-variation-settings: "SOFT" 100; font-weight: 600; font-size: 24px; line-height: 1.25; }
+.choice { display: flex; align-items: center; gap: 14px; min-height: 60px; padding: 12px 16px; border-radius: var(--r-md); border: 1.5px solid var(--gk-border-strong); background: var(--gk-surface); color: var(--gk-ink); font-size: 16px; font-weight: 500; text-align: left; cursor: pointer; transition: border-color var(--dur-micro) var(--ease-state), background-color var(--dur-micro) var(--ease-state); }
+.choice .radio { width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--gk-border-strong); flex: none; display: grid; place-items: center; }
+.choice[aria-pressed="true"] { border-color: var(--gk-link); background: var(--gk-surface-2); }
+.choice[aria-pressed="true"] .radio { border-color: var(--gk-link); }
+.choice[aria-pressed="true"] .radio::after { content: ""; width: 10px; height: 10px; border-radius: 50%; background: var(--gk-link); }
+.members { display: flex; gap: 10px; flex-wrap: wrap; }
+.members .m { display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: var(--gk-ink-muted); width: 64px; }
+.members .avatar { width: 56px; height: 56px; font-size: 18px; box-shadow: var(--el-1); }
+.mascot { width: 56px; height: 56px; flex: none; }
+
+/* In-phone drawer and sheet */
+.p-scrim { position: absolute; inset: 0; z-index: 20; background: var(--gk-scrim); opacity: 0; pointer-events: none; transition: opacity var(--dur-exit) var(--ease-exit); }
+.p-drawer { position: absolute; top: 0; right: 0; bottom: 0; z-index: 21; width: 84%; max-width: 360px; padding: 70px 18px 34px; background: var(--gk-surface); border-radius: 32px 0 0 32px; box-shadow: var(--el-3); display: flex; flex-direction: column; gap: 6px; transform: translate3d(104%, 0, 0); transition: transform var(--dur-exit) var(--ease-exit); }
+.drawer-open .p-scrim { opacity: 1; pointer-events: auto; transition: opacity 280ms var(--ease-enter); }
+.drawer-open .p-drawer { transform: translate3d(0, 0, 0); transition: transform 280ms var(--ease-enter); }
+.p-drawer .d-title { font-family: var(--font-display); font-variation-settings: "SOFT" 100; font-weight: 600; font-size: 22px; padding: 0 10px 10px; display: flex; justify-content: space-between; align-items: center; }
+.d-item { display: flex; align-items: center; gap: 14px; min-height: 56px; padding: 0 12px; border-radius: var(--r-md); border: 0; background: transparent; color: var(--gk-ink); font-size: 17px; font-weight: 600; cursor: pointer; text-align: left; width: 100%; }
+.d-item svg { color: var(--gk-link); }
+.d-item[aria-current="page"] { background: var(--gk-surface-2); }
+.d-foot { margin-top: auto; display: flex; flex-direction: column; gap: 4px; border-top: 1px solid var(--gk-border); padding-top: 12px; }
+.d-foot .switch { padding: 10px 12px; font-weight: 600; font-size: 16px; justify-content: space-between; }
+.p-sheet { position: absolute; left: 0; right: 0; bottom: 0; z-index: 21; padding: 12px 22px 36px; background: var(--gk-surface); border-radius: 32px 32px 0 0; box-shadow: var(--el-3); display: flex; flex-direction: column; gap: 14px; transform: translate3d(0, 104%, 0); transition: transform var(--dur-exit) var(--ease-exit); }
+.p-sheet .grab { width: 40px; height: 5px; border-radius: 3px; background: var(--gk-border-strong); align-self: center; opacity: .6; }
+.p-sheet h3 { font-size: 20px; font-weight: 700; }
+.p-sheet p { font-size: 15px; color: var(--gk-ink-muted); }
+.p-sheet .btn { width: 100%; }
+.sheet-open .p-scrim { opacity: 1; pointer-events: auto; transition: opacity 280ms var(--ease-enter); }
+.sheet-open .p-sheet { transform: translate3d(0, 0, 0); transition: transform 280ms var(--ease-enter); }
+
+/* ---------- Admin ---------- */
+.browser { border-radius: var(--r-lg); border: 1px solid var(--gk-border); background: var(--gk-surface); box-shadow: var(--el-3); overflow: hidden; min-width: 0; }
+.browser-bar { display: flex; align-items: center; gap: 8px; padding: 10px 14px; border-bottom: 1px solid var(--gk-border); background: var(--gk-surface-2); }
+.browser-bar i { width: 11px; height: 11px; border-radius: 50%; background: var(--gk-border-strong); opacity: .6; }
+.browser-bar span { margin-left: 8px; flex: 1; min-width: 0; padding: 4px 12px; border-radius: var(--r-pill); background: var(--gk-surface); font-size: .75rem; color: var(--gk-ink-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.admin { container-type: inline-size; container-name: admin; background: var(--gk-bg); }
+.adm-grid { display: grid; grid-template-columns: 248px minmax(0, 1fr); min-height: 720px; }
+.sidebar { background: var(--adm-sidebar); color: var(--adm-sidebar-ink); padding: 20px 14px; display: flex; flex-direction: column; gap: 18px; }
+.brand { display: flex; align-items: center; gap: 10px; padding: 0 8px; font-family: var(--font-display); font-variation-settings: "SOFT" 100; font-weight: 600; font-size: 1.25rem; }
+.brand .mark { width: 32px; height: 32px; border-radius: 10px; display: grid; place-items: center; background: #0D5C63; color: #7FC9CC; }
+.nav-group { display: flex; flex-direction: column; gap: 2px; }
+.nav-group .lbl { padding: 0 10px 6px; font-size: .6875rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--adm-sidebar-muted); }
+.nav-item { position: relative; display: flex; align-items: center; gap: 12px; min-height: 40px; padding: 0 10px; border-radius: var(--r-sm); color: var(--adm-sidebar-ink); text-decoration: none; font-size: .9375rem; font-weight: 500; border: 0; background: transparent; cursor: pointer; text-align: left; width: 100%; }
+.nav-item svg { width: 20px; height: 20px; opacity: .9; }
+.nav-item[aria-current="page"] { background: var(--adm-sidebar-active); font-weight: 600; }
+.nav-item[aria-current="page"]::before { content: ""; position: absolute; left: -14px; top: 8px; bottom: 8px; width: 3px; border-radius: 0 3px 3px 0; background: #7FC9CC; }
+@media (hover: hover) and (pointer: fine) { .nav-item:not([aria-current="page"]):hover { background: rgba(224, 242, 243, .08); } }
+.side-foot { margin-top: auto; display: flex; align-items: center; gap: 10px; padding: 10px; border-radius: var(--r-md); background: rgba(224, 242, 243, .06); font-size: .875rem; }
+.side-foot small { display: block; color: var(--adm-sidebar-muted); font-size: .75rem; }
+.adm-main { min-width: 0; display: flex; flex-direction: column; }
+.topbar { display: flex; align-items: center; gap: 16px; padding: 14px 24px; border-bottom: 1px solid var(--gk-border); background: var(--gk-surface); flex-wrap: wrap; }
+.topbar .title { flex: 1; min-width: 160px; }
+.topbar .crumbs { font-size: .75rem; color: var(--gk-ink-muted); }
+.topbar h3 { font-size: 1.25rem; font-weight: 700; line-height: 1.25; }
+.topbar .input-wrap { width: min(280px, 100%); }
+.topbar .input { min-height: 40px; border-radius: var(--r-sm); border-width: 1px; box-shadow: none; font-size: .875rem; }
+.icon-btn.adm-menu { display: none; }
+.adm-body { padding: 24px; display: flex; flex-direction: column; gap: 20px; min-width: 0; }
+.adm-banner { position: relative; overflow: hidden; border-radius: var(--r-md); padding: 20px 22px; background: linear-gradient(160deg, #0D5C63, #127D86); color: #FFFFFF; display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; align-items: center; }
+.adm-banner > * { position: relative; z-index: 1; }
+.adm-banner .wave-static { position: absolute; left: 0; right: 0; bottom: 0; height: 46%; background: rgba(224, 242, 243, .12); z-index: 0;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 120' preserveAspectRatio='none'%3E%3Cpath d='M0 40Q180 0 360 40T720 40T1080 40T1440 40V120H0Z'/%3E%3C/svg%3E") repeat-x 0 0 / 60% 100%;
+          mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 120' preserveAspectRatio='none'%3E%3Cpath d='M0 40Q180 0 360 40T720 40T1080 40T1440 40V120H0Z'/%3E%3C/svg%3E") repeat-x 0 0 / 60% 100%; }
+.adm-banner h4 { font-size: 1.125rem; font-weight: 700; }
+.adm-banner p { color: #E0F2F3; font-size: .875rem; }
+.adm-banner .btn { background: #FFFFFF; color: #0D5C63; }
+.kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+.kpi { background: var(--gk-surface); border: 1px solid var(--gk-border); border-radius: var(--r-md); padding: 18px 20px; display: flex; flex-direction: column; gap: 8px; min-width: 0; box-shadow: var(--el-1); }
+.kpi .t-cap { display: flex; align-items: center; gap: 8px; }
+.kpi .t-cap svg { width: 16px; height: 16px; color: var(--gk-link); }
+.kpi .foot { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.kpi .spark { width: 84px; height: 28px; }
+.adm-row { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 16px; }
+.card { background: var(--gk-surface); border: 1px solid var(--gk-border); border-radius: var(--r-md); padding: 20px; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.card-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+.card-head h4 { font-size: 1rem; font-weight: 700; }
+.legend { display: flex; gap: 16px; flex-wrap: wrap; font-size: .8125rem; color: var(--gk-ink-muted); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend i { width: 14px; height: 3px; border-radius: 2px; }
+.chart-wrap { position: relative; min-width: 0; }
+.chart-wrap svg { width: 100%; height: auto; display: block; overflow: visible; }
+.chart-wrap text { fill: var(--gk-ink-muted); font-size: 12px; font-family: var(--font-sans); font-variant-numeric: tabular-nums; }
+.chart-wrap .lbl-strong { fill: var(--gk-ink); font-weight: 700; }
+.tip { position: absolute; z-index: 5; pointer-events: none; min-width: 150px; padding: 10px 12px; border-radius: var(--r-sm); background: var(--gk-surface); border: 1px solid var(--gk-border); box-shadow: var(--el-3); font-size: .8125rem; opacity: 0; transform: translate3d(0, 4px, 0); transition: opacity var(--dur-micro) var(--ease-enter), transform var(--dur-micro) var(--ease-enter); }
+.tip.show { opacity: 1; transform: translate3d(0, 0, 0); }
+.tip b { display: block; margin-bottom: 4px; }
+.tip div { display: flex; justify-content: space-between; gap: 12px; font-variant-numeric: tabular-nums; }
+.tip i { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; }
+.queue { display: flex; flex-direction: column; }
+.queue .qi { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--gk-border); }
+.queue .qi:last-child { border-bottom: 0; }
+.queue .qi .txt { flex: 1; min-width: 0; }
+.queue .qi strong { display: block; font-size: .9375rem; font-weight: 600; line-height: 1.35; }
+.queue .qi span { font-size: .8125rem; color: var(--gk-ink-muted); }
+.tbl-scroll { overflow-x: auto; margin-inline: -20px; }
+table.data { width: 100%; border-collapse: collapse; font-size: .875rem; min-width: 680px; }
+table.data th { height: 44px; padding: 0 16px; text-align: left; background: var(--gk-surface-2); color: var(--gk-ink-muted); font-size: .75rem; letter-spacing: .04em; text-transform: uppercase; font-weight: 600; white-space: nowrap; }
+table.data td { height: 56px; padding: 0 16px; border-bottom: 1px solid var(--gk-border); white-space: nowrap; }
+table.data td.num, table.data th.num { text-align: right; font-variant-numeric: tabular-nums; }
+table.data tbody tr { transition: background-color var(--dur-micro) var(--ease-state); }
+@media (hover: hover) and (pointer: fine) { table.data tbody tr:hover { background: var(--adm-row-hover); } }
+table.data tbody tr[aria-selected="true"] { background: var(--adm-row-selected); }
+.cell-fam { display: flex; align-items: center; gap: 10px; font-weight: 600; }
+.row-actions { display: flex; gap: 4px; justify-content: flex-end; }
+.icon-btn { width: 36px; height: 36px; border-radius: var(--r-sm); border: 0; display: grid; place-items: center; background: transparent; color: var(--gk-ink-muted); cursor: pointer; }
+@media (hover: hover) and (pointer: fine) { .icon-btn:hover { background: var(--gk-surface-2); color: var(--gk-ink); } }
+.icon-btn svg { width: 18px; height: 18px; }
+.pager { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; font-size: .8125rem; color: var(--gk-ink-muted); }
+.sample-note { font-size: .75rem; color: var(--gk-ink-muted); }
+@container admin (max-width: 1080px) {
+  .adm-grid { grid-template-columns: 72px minmax(0, 1fr); }
+  .sidebar { padding-inline: 12px; align-items: center; }
+  .brand span, .nav-group .lbl, .nav-item span, .side-foot .who { display: none; }
+  .nav-item { justify-content: center; padding: 0; width: 44px; }
+  .nav-item[aria-current="page"]::before { left: -12px; }
+  .side-foot { padding: 6px; }
+  .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@container admin (max-width: 820px) {
+  .adm-row { grid-template-columns: minmax(0, 1fr); }
+}
+@container admin (max-width: 640px) {
+  .adm-grid { grid-template-columns: minmax(0, 1fr); }
+  .sidebar { display: none; }
+  .icon-btn.adm-menu { display: grid; }
+  .topbar .title { min-width: 0; }
+  .topbar { padding: 12px 16px; }
+  .topbar .input-wrap { width: 100%; order: 3; }
+  .adm-body { padding: 16px; }
+  .kpis { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* Motion demo */
+.motion-stage { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 16px; }
+.m-box { height: 120px; border-radius: var(--r-lg); background: var(--gk-surface-2); display: grid; place-items: center; overflow: hidden; }
+.m-box .m-item { padding: 12px 16px; border-radius: var(--r-md); background: var(--gk-surface); box-shadow: var(--el-2); font-size: .875rem; font-weight: 600; }
+.enter-demo { animation: enter var(--dur-enter) var(--ease-enter) both; }
+.exit-demo { animation: exit var(--dur-exit) var(--ease-exit) both; }
+@keyframes enter { from { opacity: 0; transform: translate3d(0, 8px, 0); } to { opacity: 1; transform: translate3d(0, 0, 0); } }
+@keyframes exit { from { opacity: 1; transform: translate3d(0, 0, 0); } to { opacity: 0; transform: translate3d(0, 4px, 0); } }
+
+footer.wrap { padding-block: 32px 48px; border-top: 1px solid var(--gk-border); color: var(--gk-ink-muted); font-size: .875rem; display: flex; flex-direction: column; gap: 6px; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- Icon sprite (Phosphor-style outlines with a duotone layer; implementation uses @phosphor-icons/react) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h10"/></symbol>
+    <symbol id="i-house" viewBox="0 0 24 24"><path class="duo" d="M5 10.5 12 4.5l7 6V19a1 1 0 0 1-1 1h-4v-5h-4v5H6a1 1 0 0 1-1-1z"/><path d="M5 10.5 12 4.5l7 6V19a1 1 0 0 1-1 1h-4v-5h-4v5H6a1 1 0 0 1-1-1z"/></symbol>
+    <symbol id="i-calendar" viewBox="0 0 24 24"><rect class="duo" x="3.5" y="5" width="17" height="5" rx="2"/><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></symbol>
+    <symbol id="i-question" viewBox="0 0 24 24"><circle class="duo" cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="8.5"/><path d="M9.75 9.5a2.25 2.25 0 1 1 3.2 2.04c-.6.3-.95.8-.95 1.46v.5"/><circle class="dot" cx="12" cy="16.6" r="1"/></symbol>
+    <symbol id="i-book" viewBox="0 0 24 24"><path class="duo" d="M4 5.5A1.5 1.5 0 0 1 5.5 4H11v16H5.5A1.5 1.5 0 0 1 4 18.5z"/><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H11v16H5.5A1.5 1.5 0 0 1 4 18.5zM20 5.5A1.5 1.5 0 0 0 18.5 4H13v16h5.5a1.5 1.5 0 0 0 1.5-1.5z"/></symbol>
+    <symbol id="i-star" viewBox="0 0 24 24"><path class="duo" d="M12 3.8l2.5 5.1 5.6.8-4 3.9.9 5.6-5-2.6-5 2.6.9-5.6-4-3.9 5.6-.8z"/><path d="M12 3.8l2.5 5.1 5.6.8-4 3.9.9 5.6-5-2.6-5 2.6.9-5.6-4-3.9 5.6-.8z"/></symbol>
+    <symbol id="i-gift" viewBox="0 0 24 24"><rect class="duo" x="5.5" y="13" width="13" height="7"/><rect x="4" y="9" width="16" height="4" rx="1"/><path d="M5.5 13v6a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-6M12 9v11M12 9C10.5 6 7 6 7 7.5S10 9 12 9c2 0 5 .5 5-1.5S13.5 6 12 9z"/></symbol>
+    <symbol id="i-cycle" viewBox="0 0 24 24"><path d="M19 9a7.5 7.5 0 0 0-13.6-1.5M5 15a7.5 7.5 0 0 0 13.6 1.5M19 4v5h-5M5 20v-5h5"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24"><circle class="duo" cx="12" cy="12" r="4"/><circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M5.6 18.4 7 17M17 7l1.4-1.4"/></symbol>
+    <symbol id="i-users" viewBox="0 0 24 24"><circle class="duo" cx="9" cy="9" r="3.25"/><circle cx="9" cy="9" r="3.25"/><path d="M3.5 19a5.5 5.5 0 0 1 11 0"/><circle cx="16.5" cy="9.5" r="2.5"/><path d="M15.6 14.2A4.5 4.5 0 0 1 20.5 19"/></symbol>
+    <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 4v16h16M8 16v-4M12 16V8M16 16v-6"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+    <symbol id="i-check-circle" viewBox="0 0 24 24"><circle class="duo" cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="8.5"/><path d="M8.2 12.3l2.6 2.6 5-5.2"/></symbol>
+    <symbol id="i-chev-r" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></symbol>
+    <symbol id="i-chev-l" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+    <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 16v-5a6 6 0 0 1 12 0v5l1.5 2h-15zM10 20.5a2 2 0 0 0 4 0"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4 4"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-layers" viewBox="0 0 24 24"><path class="duo" d="M12 4 3 8.5l9 4.5 9-4.5z"/><path d="M12 4 3 8.5l9 4.5 9-4.5zM3 12.5l9 4.5 9-4.5M3 16.5 12 21l9-4.5"/></symbol>
+    <symbol id="i-tag" viewBox="0 0 24 24"><path d="M4 4h7l9 9-7 7-9-9z"/><circle class="dot" cx="8" cy="8" r="1.4"/></symbol>
+    <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s7-6.2 7-11.5a7 7 0 0 0-14 0C5 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></symbol>
+    <symbol id="i-heart" viewBox="0 0 24 24"><path class="duo" d="M12 20s-7.5-4.4-7.5-10A4.25 4.25 0 0 1 12 7.6 4.25 4.25 0 0 1 19.5 10c0 5.6-7.5 10-7.5 10z"/><path d="M12 20s-7.5-4.4-7.5-10A4.25 4.25 0 0 1 12 7.6 4.25 4.25 0 0 1 19.5 10c0 5.6-7.5 10-7.5 10z"/></symbol>
+    <symbol id="i-trend" viewBox="0 0 24 24"><path d="M4 17l5-5 4 3 7-7M15 8h5v5"/></symbol>
+    <symbol id="i-warn" viewBox="0 0 24 24"><path d="M12 4l9 16H3z"/><path d="M12 10v4"/><circle class="dot" cx="12" cy="17" r="1"/></symbol>
+    <symbol id="i-pencil" viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24"><path d="M5 7h14M9 7V4.5h6V7M7 7l1 13h8l1-13"/></symbol>
+    <symbol id="i-out" viewBox="0 0 24 24"><path d="M14 4h5v16h-5M10 8l-4 4 4 4M6 12h9"/></symbol>
+    <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="9" r="3.5"/><path d="M5 20a7 7 0 0 1 14 0"/></symbol>
+    <symbol id="i-card" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="2.5"/><path d="M3 10h18M7 15h4"/></symbol>
+    <symbol id="i-pause" viewBox="0 0 24 24"><path d="M9 6v12M15 6v12"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13l10-6.5z"/></symbol>
+    <symbol id="i-note" viewBox="0 0 24 24"><path class="duo" d="M6 3.5h8l4 4V20a.5.5 0 0 1-.5.5h-11A.5.5 0 0 1 6 20z"/><path d="M6 3.5h8l4 4V20a.5.5 0 0 1-.5.5h-11A.5.5 0 0 1 6 20zM14 3.5V8h4M9 12h6M9 16h4"/></symbol>
+    <symbol id="i-swap" viewBox="0 0 24 24"><path d="M7 4 4 7l3 3M4 7h13M17 20l3-3-3-3M20 17H7"/></symbol>
+    <symbol id="i-mascot" viewBox="0 0 64 64"><ellipse cx="32" cy="36" rx="24" ry="22" fill="#7FC9CC"/><ellipse cx="32" cy="42" rx="14" ry="11" fill="#DCCBB4"/><circle cx="24" cy="30" r="3.2" fill="#0B2E33"/><circle cx="40" cy="30" r="3.2" fill="#0B2E33"/><circle cx="25" cy="29" r="1" fill="#FFFFFF"/><circle cx="41" cy="29" r="1" fill="#FFFFFF"/><path d="M26 38q6 5 12 0" fill="none" stroke="#0B2E33" stroke-width="2.4" stroke-linecap="round"/><path d="M14 22q2-9 10-10M50 22q-2-9-10-10" fill="none" stroke="#0D5C63" stroke-width="3" stroke-linecap="round"/></symbol>
+  </defs>
+</svg>
+
+<header class="masthead">
+  <div class="tide on-hero" aria-hidden="true"><div class="ripples"></div><div class="wave w1"></div><div class="wave w2"></div><div class="wave w3"></div></div>
+  <div class="masthead-inner">
+    <span class="eyebrow">Great Kids · Design system proposal · Family app + Admin panel</span>
+    <h1>Tidal Design System</h1>
+    <p>Deep ocean teals for trust, sea mist for air, and one warm driftwood accent the family reaches for. Calm, tactile cards over a slow animated tide.</p>
+    <div class="controls">
+      <div class="seg" role="group" aria-label="Theme">
+        <button type="button" data-theme-set="auto" aria-pressed="true">Auto</button>
+        <button type="button" data-theme-set="light" aria-pressed="false">Light</button>
+        <button type="button" data-theme-set="dark" aria-pressed="false">Dark</button>
+      </div>
+      <button type="button" class="pill-toggle" id="tide-toggle" aria-pressed="false">
+        <svg class="i i-sm"><use href="#i-pause"/></svg><span>Pause background</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- 1. Palette -->
+  <section id="palette" aria-labelledby="h-palette">
+    <div class="sec-head">
+      <span class="eyebrow">01 · Color</span>
+      <h2 id="h-palette">Tidal Escape palette</h2>
+      <p>Six source colors, extracted from the reference board, mapped to roles. Semantic tokens switch with the theme; every text pair is checked against WCAG AA.</p>
+    </div>
+    <div class="swatches">
+      <div class="swatch"><div class="sw-color" style="background:#0D5C63;color:#FFFFFF">Deep Current</div><div class="meta"><strong class="mono">#0D5C63</strong><span>Primary (light), primary buttons</span></div></div>
+      <div class="swatch"><div class="sw-color" style="background:#127D86;color:#FFFFFF">Ocean Depths</div><div class="meta"><strong class="mono">#127D86</strong><span>Links, focus, active, info</span></div></div>
+      <div class="swatch"><div class="sw-color" style="background:#7FC9CC;color:#0B2E33">Sea Mist</div><div class="meta"><strong class="mono">#7FC9CC</strong><span>Accent tint; primary in dark</span></div></div>
+      <div class="swatch"><div class="sw-color" style="background:#E0F2F3;color:#0D5C63">Wave Foam</div><div class="meta"><strong class="mono">#E0F2F3</strong><span>Tinted surface, selection</span></div></div>
+      <div class="swatch"><div class="sw-color" style="background:#DCCBB4;color:#0B2E33">Driftwood Sand</div><div class="meta"><strong class="mono">#DCCBB4</strong><span>Warm family CTA, rewards</span></div></div>
+      <div class="swatch"><div class="sw-color" style="background:#93A7B0;color:#0B2E33">Coastal Haze</div><div class="meta"><strong class="mono">#93A7B0</strong><span>Decorative neutral only</span></div></div>
+    </div>
+
+    <div class="table-scroll">
+      <table class="spec">
+        <thead><tr><th>Token</th><th>Live value</th><th>Light</th><th>Dark</th><th>Pair checked</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">--gk-bg</td><td><span class="dotc" style="background:var(--gk-bg)"></span></td><td class="mono">#F5FAFA</td><td class="mono">#071C1F</td><td>ink on bg <span class="ratio">13.7 / 15.2</span></td></tr>
+          <tr><td class="mono">--gk-surface</td><td><span class="dotc" style="background:var(--gk-surface)"></span></td><td class="mono">#FFFFFF</td><td class="mono">#0E2A2E</td><td>muted on surface <span class="ratio">6.1 / 7.0</span></td></tr>
+          <tr><td class="mono">--gk-surface-2</td><td><span class="dotc" style="background:var(--gk-surface-2)"></span></td><td class="mono">#E0F2F3</td><td class="mono">#133539</td><td>primary on foam <span class="ratio">6.7</span></td></tr>
+          <tr><td class="mono">--gk-primary</td><td><span class="dotc" style="background:var(--gk-primary)"></span></td><td class="mono">#0D5C63</td><td class="mono">#7FC9CC</td><td>on-primary <span class="ratio">7.7 / 9.3</span></td></tr>
+          <tr><td class="mono">--gk-link</td><td><span class="dotc" style="background:var(--gk-link)"></span></td><td class="mono">#127D86</td><td class="mono">#7FC9CC</td><td>on surface <span class="ratio">4.9 / 8.0</span></td></tr>
+          <tr><td class="mono">--gk-warm</td><td><span class="dotc" style="background:var(--gk-warm)"></span></td><td class="mono">#DCCBB4</td><td class="mono">#DCCBB4</td><td>ink on sand <span class="ratio">9.1</span></td></tr>
+          <tr><td class="mono">--gk-border-strong</td><td><span class="dotc" style="background:var(--gk-border-strong)"></span></td><td class="mono">#7D949C</td><td class="mono">#5E7F87</td><td>UI boundary <span class="ratio">3.2 / 3.5</span></td></tr>
+          <tr><td class="mono">--gk-success</td><td><span class="dotc" style="background:var(--gk-success)"></span></td><td class="mono">#2E7D5B</td><td class="mono">#6FCF9F</td><td>text on surface <span class="ratio">5.0 / 8.0</span></td></tr>
+          <tr><td class="mono">--gk-warning</td><td><span class="dotc" style="background:var(--gk-warning)"></span></td><td class="mono">#9A6212</td><td class="mono">#E8B866</td><td>text on surface <span class="ratio">5.1 / 8.3</span></td></tr>
+          <tr><td class="mono">--gk-danger</td><td><span class="dotc" style="background:var(--gk-danger)"></span></td><td class="mono">#B4413C</td><td class="mono">#F2A39E</td><td>text on surface <span class="ratio">5.6 / 7.6</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="row">
+      <span class="badge b-success"><svg class="i"><use href="#i-check-circle"/></svg>Completed</span>
+      <span class="badge b-warning"><svg class="i"><use href="#i-warn"/></svg>Needs review</span>
+      <span class="badge b-danger"><svg class="i"><use href="#i-x"/></svg>Payment failed</span>
+      <span class="badge b-info"><svg class="i"><use href="#i-calendar"/></svg>Planned</span>
+      <span class="badge b-neutral">Draft</span>
+      <span class="badge b-warm"><svg class="i"><use href="#i-star"/></svg>Reward</span>
+    </div>
+  </section>
+
+  <!-- 2. Typography -->
+  <section id="type" aria-labelledby="h-type">
+    <div class="sec-head">
+      <span class="eyebrow">02 · Typography</span>
+      <h2 id="h-type">A storybook serif, a clear working sans</h2>
+      <p>Fraunces with its soft axis turned up speaks to the family in headlines. Plus Jakarta Sans carries every label, field and table on both surfaces.</p>
+    </div>
+    <div class="panel">
+      <div class="type-row"><span class="caption">Display · 36/40 · Fraunces 600</span><span class="t-display">Small moments, every day</span></div>
+      <div class="type-row"><span class="caption">H1 · 28/34 · Fraunces 600</span><span class="t-h1">This week with the Rivera family</span></div>
+      <div class="type-row"><span class="caption">H2 · 22/28 · Fraunces 600</span><span class="t-h2">Today's mission</span></div>
+      <div class="type-row"><span class="caption">H3 · 18/24 · Jakarta 700</span><span class="t-h3">Planned for Thursday</span></div>
+      <div class="type-row"><span class="caption">Body · 16/25 · Jakarta 400</span><span class="t-body">Pick one mission that fits your evening. You can move it to another day from the calendar, and the diary keeps a note of what you did together.</span></div>
+      <div class="type-row"><span class="caption">Body small · 14/21 · Jakarta 400</span><span class="t-sm">Takes about 20 minutes. Works indoors.</span></div>
+      <div class="type-row"><span class="caption">Caption · 12/17 · Jakarta 600</span><span class="t-cap">Missions completed</span></div>
+      <div class="type-row"><span class="caption">KPI (admin) · 32/35 · tabular</span><span class="t-kpi">3,512</span></div>
+    </div>
+  </section>
+
+  <!-- 3. Space, radius, elevation -->
+  <section id="space" aria-labelledby="h-space">
+    <div class="sec-head">
+      <span class="eyebrow">03 · Space, shape, depth</span>
+      <h2 id="h-space">Pebbles, not boxes</h2>
+      <p>A 4px spacing base, generous radii on the app and a layered shadow with an inner highlight, like the tactile tiles of the mobile reference.</p>
+    </div>
+    <div class="grid-auto">
+      <div class="panel stack">
+        <h3 class="sub">Spacing scale</h3>
+        <div class="scale-bars">
+          <div><i style="width:4px"></i>4 · sp-1</div><div><i style="width:8px"></i>8 · sp-2</div><div><i style="width:12px"></i>12 · sp-3</div><div><i style="width:16px"></i>16 · sp-4</div><div><i style="width:24px"></i>24 · sp-6</div><div><i style="width:32px"></i>32 · sp-8</div><div><i style="width:48px"></i>48 · sp-12</div><div><i style="width:64px"></i>64 · sp-16</div>
+        </div>
+      </div>
+      <div class="panel stack">
+        <h3 class="sub">Radius</h3>
+        <div class="radius-demo">
+          <div style="border-radius:6px">xs 6</div><div style="border-radius:10px">sm 10</div><div style="border-radius:14px">md 14</div><div style="border-radius:20px">lg 20</div><div style="border-radius:28px">xl 28</div><div style="border-radius:999px;justify-content:center;align-items:center">pill</div>
+        </div>
+      </div>
+      <div class="panel stack">
+        <h3 class="sub">Elevation</h3>
+        <div class="elev-demo">
+          <div style="border:1px solid var(--gk-border)">el-0</div><div style="box-shadow:var(--el-1)">el-1</div><div style="box-shadow:var(--el-2), inset 0 1px 0 var(--gk-inset-hi)">el-2 pebble</div><div style="box-shadow:var(--el-3)">el-3</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. Icons -->
+  <section id="icons" aria-labelledby="h-icons">
+    <div class="sec-head">
+      <span class="eyebrow">04 · Iconography</span>
+      <h2 id="h-icons">Phosphor, duotone in round wells</h2>
+      <p>Proposed library: Phosphor Icons. Duotone weight inside 48px tinted wells for feature entry points; regular weight for interface glyphs. Shown here as inline approximations.</p>
+    </div>
+    <div class="icon-grid">
+      <div class="icon-cell"><span class="well"><svg class="i"><use href="#i-question"/></svg></span>Quiz</div>
+      <div class="icon-cell"><span class="well"><svg class="i"><use href="#i-calendar"/></svg></span>Calendar</div>
+      <div class="icon-cell"><span class="well"><svg class="i"><use href="#i-sun"/></svg></span>Forecast</div>
+      <div class="icon-cell"><span class="well warm"><svg class="i"><use href="#i-gift"/></svg></span>Surprise</div>
+      <div class="icon-cell"><span class="well"><svg class="i"><use href="#i-cycle"/></svg></span>Cycle</div>
+      <div class="icon-cell"><span class="well"><svg class="i"><use href="#i-book"/></svg></span>Diary</div>
+      <div class="icon-cell"><span class="well warm"><svg class="i"><use href="#i-star"/></svg></span>Rewards</div>
+      <div class="icon-cell"><span class="well"><svg class="i"><use href="#i-users"/></svg></span>Family</div>
+      <div class="icon-cell"><span class="well"><svg class="i"><use href="#i-layers"/></svg></span>Catalog</div>
+      <div class="icon-cell"><span class="well"><svg class="i"><use href="#i-note"/></svg></span>Materials</div>
+      <div class="icon-cell"><span class="well"><svg class="i"><use href="#i-tag"/></svg></span>Plans</div>
+      <div class="icon-cell"><span class="well"><svg class="i"><use href="#i-chart"/></svg></span>Indicators</div>
+    </div>
+  </section>
+
+  <!-- 5. Components -->
+  <section id="components" aria-labelledby="h-comp">
+    <div class="sec-head">
+      <span class="eyebrow">05 · Components</span>
+      <h2 id="h-comp">Components with every state drawn</h2>
+      <p>Default, hover (pointer devices only), pressed, focus, disabled and loading. Touch targets stay at 44px or more on the app.</p>
+    </div>
+
+    <div class="grid-auto">
+      <div class="panel stack">
+        <h3 class="sub">Buttons</h3>
+        <div class="row">
+          <button class="btn btn-warm" type="button">Start mission</button>
+          <button class="btn btn-primary" type="button">Save plan</button>
+        </div>
+        <div class="row">
+          <button class="btn btn-secondary" type="button">Move to Thursday</button>
+          <button class="btn btn-ghost" type="button">Skip</button>
+        </div>
+        <div class="row">
+          <button class="btn btn-primary is-focus" type="button">Focused</button>
+          <button class="btn btn-primary" type="button" disabled>Disabled</button>
+          <button class="btn btn-primary" type="button" aria-busy="true"><span class="spinner" aria-hidden="true"></span>Saving</button>
+        </div>
+        <div class="row">
+          <button class="btn btn-danger sm" type="button" data-open-dialog>Delete mission</button>
+          <button class="btn btn-primary sm" type="button">Admin primary</button>
+          <button class="btn btn-icon" type="button" aria-label="Notifications"><svg class="i"><use href="#i-bell"/></svg></button>
+        </div>
+      </div>
+
+      <div class="panel stack">
+        <h3 class="sub">Inputs</h3>
+        <div class="field"><label for="f-name">Family name</label><input class="input" id="f-name" value="The Rivera family"></div>
+        <div class="field"><label for="f-search">Search missions</label><div class="input-wrap"><svg class="i i-sm"><use href="#i-search"/></svg><input class="input" id="f-search" placeholder="Try “outdoors” or “bedtime”"></div></div>
+        <div class="field err"><label for="f-mail">Invite by email</label><input class="input" id="f-mail" value="maria@" aria-invalid="true" aria-describedby="f-mail-help"><span class="help" id="f-mail-help"><svg class="i i-xs"><use href="#i-warn"/></svg>Enter a full email address, like maria@example.com.</span></div>
+        <label class="switch"><input type="checkbox" id="f-remind" checked><span class="track"></span>Remind me at 6 pm</label>
+      </div>
+
+      <div class="panel stack">
+        <h3 class="sub">Chips, segmented control</h3>
+        <div class="row" role="group" aria-label="Mission filters">
+          <button class="chip" type="button" aria-pressed="true"><svg class="i i-xs check"><use href="#i-check"/></svg>Indoors</button>
+          <button class="chip" type="button" aria-pressed="false"><svg class="i i-xs check"><use href="#i-check"/></svg>Outdoors</button>
+          <button class="chip" type="button" aria-pressed="false"><svg class="i i-xs check"><use href="#i-check"/></svg>Under 20 min</button>
+          <button class="chip" type="button" aria-pressed="false"><svg class="i i-xs check"><use href="#i-check"/></svg>Bedtime</button>
+        </div>
+        <div class="segmented" id="seg-demo" role="group" aria-label="Range">
+          <span class="thumb" aria-hidden="true"></span>
+          <button type="button" aria-pressed="true">Week</button>
+          <button type="button" aria-pressed="false">Month</button>
+          <button type="button" aria-pressed="false">Year</button>
+        </div>
+        <div class="alert b-info"><svg class="i"><use href="#i-sun"/></svg><div><strong>Rainy week ahead</strong>We swapped two outdoor missions for indoor ones.</div></div>
+        <div class="alert b-danger"><svg class="i"><use href="#i-warn"/></svg><div><strong>Could not save the note</strong>Check your connection and try again.</div></div>
+        <div class="row"><button class="btn btn-secondary sm" type="button" id="toast-btn">Show toast</button></div>
+      </div>
+    </div>
+
+    <div class="grid-auto">
+      <div class="stack">
+        <h3 class="sub">Mission card (typewriter copy)</h3>
+        <div class="mission">
+          <div class="tide on-hero" aria-hidden="true"><div class="wave w2"></div><div class="wave w3"></div></div>
+          <div class="row" style="justify-content:space-between"><span class="eyebrow">Today's mission · 20 min</span><svg class="mascot" style="width:44px;height:44px" aria-hidden="true"><use href="#i-mascot"/></svg></div>
+          <p class="copy" data-typewriter="Build a blanket fort together and tell one story inside it before dinner."></p>
+          <div class="row"><button class="btn btn-warm" type="button">Start mission</button><button class="btn btn-ghost" type="button" data-replay style="color:#FFFFFF">Replay</button></div>
+        </div>
+      </div>
+      <div class="stack">
+        <h3 class="sub">Pebble cards and reward</h3>
+        <div class="tiles">
+          <button class="pebble" type="button"><span class="well"><svg class="i"><use href="#i-calendar"/></svg></span><h4>Calendar</h4><p>3 planned</p><svg class="i i-sm go"><use href="#i-chev-r"/></svg></button>
+          <button class="pebble" type="button"><span class="well warm"><svg class="i"><use href="#i-book"/></svg></span><h4>Diary</h4><p>2 new notes</p><svg class="i i-sm go"><use href="#i-chev-r"/></svg></button>
+        </div>
+        <div class="reward" id="reward"><span class="well warm"><svg class="i"><use href="#i-star"/></svg></span><div><h4>Mission complete</h4><p>Five this week. The fort counts double.</p></div></div>
+        <div class="row"><button class="btn btn-secondary sm" type="button" id="celebrate-btn">Replay celebration</button></div>
+      </div>
+      <div class="stack">
+        <h3 class="sub">List rows</h3>
+        <div class="list">
+          <button class="li" type="button"><span class="avatar">AR</span><span class="txt"><strong>Ana Rivera</strong><span>Parent · holder</span></span><svg class="i i-sm"><use href="#i-chev-r"/></svg></button>
+          <button class="li" type="button"><span class="avatar sand">LR</span><span class="txt"><strong>Leo</strong><span>Child · 7 years</span></span><span class="badge b-success"><svg class="i"><use href="#i-check"/></svg>Active</span></button>
+          <button class="li" type="button"><span class="avatar">GM</span><span class="txt"><strong>Grandma Marta</strong><span>Invited · no app</span></span><span class="badge b-warning"><svg class="i"><use href="#i-warn"/></svg>Pending</span></button>
+        </div>
+        <p class="caption">Avatars use initials only. No child photos (INV-002).</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. App screens -->
+  <section id="app" aria-labelledby="h-app">
+    <div class="sec-head">
+      <span class="eyebrow">06 · Family app</span>
+      <h2 id="h-app">Inside the phone chrome</h2>
+      <p>Each screen is drawn at the real 430 × 932 logical size and scaled into the frame. The hamburger stays top-right as the harness requires; the primary action lives in the thumb zone. Tap the menu on Home, or a mission on Calendar.</p>
+    </div>
+    <div class="phones">
+
+      <!-- Home -->
+      <div class="phone-col">
+        <div class="phone"><div class="screen"><div class="app" id="phone-home">
+          <div class="island" aria-hidden="true"></div>
+          <div class="tide" aria-hidden="true"><div class="pool p1"></div><div class="pool p2"></div><div class="ripples"></div><div class="wave w1"></div><div class="wave w2"></div><div class="wave w3"></div></div>
+          <div class="statusbar" style="color:#FFFFFF"><span>9:41</span><span class="sb-icons"><b></b><i></i></span></div>
+          <div class="app-scroll" style="padding-inline:0;gap:24px">
+            <div class="hero">
+              <div class="tide on-hero" aria-hidden="true"><div class="ripples"></div><div class="wave w2"></div><div class="wave w3"></div></div>
+              <div class="app-head on-dark" style="position:relative;z-index:2">
+                <div><p class="sub">Tuesday, October 21</p><h2>Good evening, Ana</h2></div>
+                <button class="hamb" type="button" aria-label="Open menu" data-drawer-open><svg class="i"><use href="#i-menu"/></svg></button>
+              </div>
+              <div class="mission" style="z-index:2">
+                <div class="row" style="justify-content:space-between"><span class="eyebrow">Today's mission · 20 min</span><svg class="mascot" style="width:48px;height:48px" aria-hidden="true"><use href="#i-mascot"/></svg></div>
+                <p class="copy" data-typewriter="Build a blanket fort together and tell one story inside it before dinner."></p>
+                <div class="row"><button class="btn btn-warm" type="button">Start mission</button><button class="btn btn-ghost" type="button" style="color:#FFFFFF">Swap</button></div>
+              </div>
+            </div>
+            <div style="padding-inline:20px;display:flex;flex-direction:column;gap:24px">
+              <h3 class="sec">This week <a href="#app">See all</a></h3>
+              <div class="tiles">
+                <button class="pebble" type="button"><span class="well"><svg class="i"><use href="#i-calendar"/></svg></span><span class="num">3</span><h4>Planned</h4><svg class="i i-sm go"><use href="#i-chev-r"/></svg></button>
+                <button class="pebble" type="button"><span class="well warm"><svg class="i"><use href="#i-star"/></svg></span><span class="num">5</span><h4>Completed</h4><svg class="i i-sm go"><use href="#i-chev-r"/></svg></button>
+                <button class="pebble" type="button"><span class="well"><svg class="i"><use href="#i-question"/></svg></span><span class="num">4</span><h4>Quiz questions left</h4><svg class="i i-sm go"><use href="#i-chev-r"/></svg></button>
+                <button class="pebble" type="button"><span class="well"><svg class="i"><use href="#i-book"/></svg></span><span class="num">2</span><h4>New diary notes</h4><svg class="i i-sm go"><use href="#i-chev-r"/></svg></button>
+              </div>
+              <h3 class="sec">Your family</h3>
+              <div class="members">
+                <div class="m"><span class="avatar">AR</span>Ana</div>
+                <div class="m"><span class="avatar">DR</span>Diego</div>
+                <div class="m"><span class="avatar sand">LR</span>Leo</div>
+                <div class="m"><span class="avatar sand">SR</span>Sofia</div>
+              </div>
+            </div>
+          </div>
+          <div class="p-scrim" data-drawer-close></div>
+          <nav class="p-drawer" aria-label="Family menu">
+            <div class="d-title">Menu <button class="hamb" type="button" aria-label="Close menu" data-drawer-close><svg class="i"><use href="#i-x"/></svg></button></div>
+            <button class="d-item" type="button"><svg class="i"><use href="#i-question"/></svg>Quiz</button>
+            <button class="d-item" type="button"><svg class="i"><use href="#i-calendar"/></svg>Calendar</button>
+            <button class="d-item" type="button"><svg class="i"><use href="#i-sun"/></svg>Forecast</button>
+            <button class="d-item" type="button"><svg class="i"><use href="#i-gift"/></svg>Surprise</button>
+            <button class="d-item" type="button" aria-current="page"><svg class="i"><use href="#i-cycle"/></svg>Cycle</button>
+            <button class="d-item" type="button"><svg class="i"><use href="#i-book"/></svg>Diary</button>
+            <div class="d-foot">
+              <label class="switch"><span>View as child</span><input type="checkbox" id="p-child"><span class="track"></span></label>
+              <button class="d-item" type="button"><svg class="i"><use href="#i-user"/></svg>Profile</button>
+              <button class="d-item" type="button"><svg class="i"><use href="#i-card"/></svg>Plan</button>
+              <button class="d-item" type="button"><svg class="i"><use href="#i-out"/></svg>Sign out</button>
+            </div>
+          </nav>
+          <div class="homebar" aria-hidden="true"></div>
+        </div></div></div>
+        <p class="caption">Home: tide hero, typewriter mission, pebble tiles in a 2-column grid, initials-only family row. Menu opens the right drawer.</p>
+      </div>
+
+      <!-- Calendar -->
+      <div class="phone-col">
+        <div class="phone"><div class="screen"><div class="app" id="phone-cal">
+          <div class="island" aria-hidden="true"></div>
+          <div class="tide" aria-hidden="true"><div class="ripples"></div><div class="wave w1"></div><div class="wave w2"></div></div>
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><b></b><i></i></span></div>
+          <div class="app-head">
+            <div><p class="sub">Week of Oct 20</p><h2>Calendar</h2></div>
+            <button class="hamb" type="button" aria-label="Open menu"><svg class="i"><use href="#i-menu"/></svg></button>
+          </div>
+          <div class="app-scroll">
+            <div class="week" role="group" aria-label="Days">
+              <button class="day" type="button" aria-pressed="false">Mon<b>20</b><i></i></button>
+              <button class="day" type="button" aria-pressed="true">Tue<b>21</b><i></i></button>
+              <button class="day" type="button" aria-pressed="false">Wed<b>22</b><span style="height:6px"></span></button>
+              <button class="day" type="button" aria-pressed="false">Thu<b>23</b><i></i></button>
+              <button class="day" type="button" aria-pressed="false">Fri<b>24</b><span style="height:6px"></span></button>
+              <button class="day" type="button" aria-pressed="false">Sat<b>25</b><i></i></button>
+              <button class="day" type="button" aria-pressed="false">Sun<b>26</b><span style="height:6px"></span></button>
+            </div>
+            <h3 class="sec">Tuesday</h3>
+            <div class="list">
+              <button class="li" type="button" data-sheet-open><span class="well"><svg class="i"><use href="#i-house"/></svg></span><span class="txt"><strong>Blanket fort story</strong><span>Evening · 20 min · Indoors</span></span><span class="badge b-info"><svg class="i"><use href="#i-calendar"/></svg>Planned</span></button>
+              <button class="li" type="button" data-sheet-open><span class="well warm"><svg class="i"><use href="#i-heart"/></svg></span><span class="txt"><strong>Thank-you note for Grandma</strong><span>After school · 15 min</span></span><span class="badge b-success"><svg class="i"><use href="#i-check"/></svg>Done</span></button>
+            </div>
+            <h3 class="sec">Thursday</h3>
+            <div class="list">
+              <button class="li" type="button" data-sheet-open><span class="well"><svg class="i"><use href="#i-sun"/></svg></span><span class="txt"><strong>Leaf hunt in the park</strong><span>Afternoon · 40 min · Outdoors</span></span><span class="badge b-warning"><svg class="i"><use href="#i-warn"/></svg>Rain likely</span></button>
+            </div>
+            <div class="alert b-info"><svg class="i"><use href="#i-sun"/></svg><div><strong>Forecast tip</strong>Thursday looks rainy. Move the leaf hunt to Saturday?</div></div>
+          </div>
+          <div class="action-bar"><button class="btn btn-primary" type="button"><svg class="i i-sm"><use href="#i-plus"/></svg>Add a mission</button></div>
+          <div class="p-scrim" data-sheet-close></div>
+          <div class="p-sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-h">
+            <span class="grab" aria-hidden="true"></span>
+            <h3 id="sheet-h">Move “Leaf hunt in the park”?</h3>
+            <p>Saturday is sunny and free in your family rhythm. We will keep the reminder at 3 pm.</p>
+            <button class="btn btn-secondary" type="button" data-sheet-close>Keep Thursday</button>
+            <button class="btn btn-primary" type="button" data-sheet-close>Move to Saturday</button>
+          </div>
+          <div class="homebar" aria-hidden="true"></div>
+        </div></div></div>
+        <p class="caption">Calendar: week strip, mission rows with status badges (icon + label), bottom action bar, bottom sheet for confirmations.</p>
+      </div>
+
+      <!-- Quiz -->
+      <div class="phone-col">
+        <div class="phone"><div class="screen"><div class="app" id="phone-quiz">
+          <div class="island" aria-hidden="true"></div>
+          <div class="tide" aria-hidden="true"><div class="pool p1"></div><div class="ripples"></div><div class="wave w1"></div><div class="wave w2"></div><div class="wave w3"></div></div>
+          <div class="statusbar"><span>9:41</span><span class="sb-icons"><b></b><i></i></span></div>
+          <div class="app-head">
+            <div><p class="sub">Getting to know you</p><h2>Family quiz</h2></div>
+            <button class="hamb" type="button" aria-label="Open menu"><svg class="i"><use href="#i-menu"/></svg></button>
+          </div>
+          <div class="app-scroll">
+            <div class="stack" style="gap:8px">
+              <div class="row" style="justify-content:space-between;font-size:14px;color:var(--gk-ink-muted);font-weight:600"><span>Question 4 of 10</span><span>About 3 min left</span></div>
+              <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="10" aria-valuenow="4" aria-label="Quiz progress"><i></i></div>
+            </div>
+            <div class="q-card">
+              <span class="well"><svg class="i"><use href="#i-question"/></svg></span>
+              <h3>What helps your family wind down after school?</h3>
+              <div class="stack" role="group" aria-label="Answers" id="quiz-choices">
+                <button class="choice" type="button" aria-pressed="false"><span class="radio"></span>A snack and a chat at the table</button>
+                <button class="choice" type="button" aria-pressed="true"><span class="radio"></span>Time outside before homework</button>
+                <button class="choice" type="button" aria-pressed="false"><span class="radio"></span>Quiet reading or drawing</button>
+                <button class="choice" type="button" aria-pressed="false"><span class="radio"></span>It changes every day</button>
+              </div>
+            </div>
+            <p class="caption" style="font-size:14px">Your answers shape the missions we suggest. You can edit them later in Profile.</p>
+          </div>
+          <div class="action-bar"><button class="btn btn-ghost" type="button" style="flex:0 0 auto">Skip</button><button class="btn btn-primary" type="button">Next question</button></div>
+          <div class="homebar" aria-hidden="true"></div>
+        </div></div></div>
+        <p class="caption">Quiz: progress, one question per card, large radio choices, Skip + Next in the thumb zone over a calm tide.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. Admin -->
+  <section id="admin" aria-labelledby="h-admin">
+    <div class="sec-head">
+      <span class="eyebrow">07 · Admin panel</span>
+      <h2 id="h-admin">Same tide, working density</h2>
+      <p>A dark-anchored sidebar with grouped navigation, KPI cards, one-axis chart with hover tooltip and table view, and a dense table with visible row actions. No ambient motion. Sample data.</p>
+    </div>
+    <div class="browser">
+      <div class="browser-bar" aria-hidden="true"><i></i><i></i><i></i><span>greatkids.app/indicators</span></div>
+      <div class="admin">
+        <div class="adm-grid">
+          <aside class="sidebar" aria-label="Panel">
+            <div class="brand"><span class="mark"><svg class="i i-sm"><use href="#i-heart"/></svg></span><span>Great Kids</span></div>
+            <div class="nav-group"><span class="lbl">Content</span>
+              <a class="nav-item" href="#admin"><svg class="i"><use href="#i-layers"/></svg><span>Catalog</span></a>
+              <a class="nav-item" href="#admin"><svg class="i"><use href="#i-note"/></svg><span>Materials</span></a>
+              <a class="nav-item" href="#admin"><svg class="i"><use href="#i-question"/></svg><span>Questions</span></a>
+              <a class="nav-item" href="#admin"><svg class="i"><use href="#i-pin"/></svg><span>Contexts</span></a>
+            </div>
+            <div class="nav-group"><span class="lbl">People</span>
+              <a class="nav-item" href="#admin"><svg class="i"><use href="#i-house"/></svg><span>Families</span></a>
+              <a class="nav-item" href="#admin"><svg class="i"><use href="#i-users"/></svg><span>Users</span></a>
+            </div>
+            <div class="nav-group"><span class="lbl">Business</span>
+              <a class="nav-item" href="#admin"><svg class="i"><use href="#i-tag"/></svg><span>Plans</span></a>
+              <a class="nav-item" href="#admin" aria-current="page"><svg class="i"><use href="#i-chart"/></svg><span>Indicators</span></a>
+            </div>
+            <div class="side-foot"><span class="avatar sm">JS</span><span class="who">Julia Santos<small>Admin</small></span></div>
+          </aside>
+          <div class="adm-main">
+            <div class="topbar">
+              <button class="icon-btn adm-menu" type="button" aria-label="Open navigation"><svg class="i"><use href="#i-menu"/></svg></button>
+              <div class="title"><div class="crumbs">Business / Indicators</div><h3>Indicators</h3></div>
+              <div class="input-wrap"><svg class="i i-sm"><use href="#i-search"/></svg><label class="sr-only" for="adm-search">Search families</label><input class="input" id="adm-search" placeholder="Search families, missions…"></div>
+              <span class="badge b-info">Admin</span>
+              <button class="icon-btn" type="button" aria-label="Notifications"><svg class="i"><use href="#i-bell"/></svg></button>
+            </div>
+            <div class="adm-body">
+              <div class="adm-banner">
+                <div class="wave-static" aria-hidden="true"></div>
+                <div><h4>12 missions are waiting for review</h4><p>Published missions are the only ones families can receive.</p></div>
+                <button class="btn sm" type="button">Open review queue</button>
+              </div>
+
+              <div class="kpis">
+                <div class="kpi"><span class="t-cap"><svg class="i"><use href="#i-house"/></svg>Active families</span><span class="t-kpi">1,284</span><div class="foot"><span class="badge b-success"><svg class="i"><use href="#i-trend"/></svg>+6.2%</span><svg class="spark" viewBox="0 0 84 28" aria-hidden="true"><polyline fill="none" stroke="var(--viz-1)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" points="2,22 14,20 26,21 38,16 50,15 62,11 74,9 82,6"/><circle cx="82" cy="6" r="3" fill="var(--viz-1)"/></svg></div></div>
+                <div class="kpi"><span class="t-cap"><svg class="i"><use href="#i-check-circle"/></svg>Missions completed</span><span class="t-kpi">3,512</span><div class="foot"><span class="badge b-success"><svg class="i"><use href="#i-trend"/></svg>+7.7%</span><span class="caption">this week</span></div></div>
+                <div class="kpi"><span class="t-cap"><svg class="i"><use href="#i-question"/></svg>Quiz completion</span><span class="t-kpi">72%</span><div class="foot"><span class="badge b-warning"><svg class="i"><use href="#i-warn"/></svg>−1.4 pts</span><span class="caption">goal 75%</span></div></div>
+                <div class="kpi"><span class="t-cap"><svg class="i"><use href="#i-card"/></svg>Paid plans</span><span class="t-kpi">846</span><div class="foot"><span class="badge b-neutral">66% of active</span><span class="caption">+21 this week</span></div></div>
+              </div>
+
+              <div class="adm-row">
+                <div class="card">
+                  <div class="card-head">
+                    <h4>Missions per week</h4>
+                    <div class="row" style="gap:12px">
+                      <div class="legend"><span><i style="background:var(--viz-1)"></i>Completed</span><span><i style="background:var(--viz-2)"></i>Started</span></div>
+                      <button class="btn btn-secondary sm" type="button" id="chart-table-toggle" aria-pressed="false">Show table</button>
+                    </div>
+                  </div>
+                  <div class="chart-wrap" id="chart"><div class="tip" id="tip" role="status"></div></div>
+                  <div class="table-scroll" id="chart-table" hidden></div>
+                  <p class="sample-note">Sample data for the preview.</p>
+                </div>
+                <div class="card">
+                  <div class="card-head"><h4>Review queue</h4><a href="#admin" style="color:var(--gk-link);font-size:.875rem;font-weight:600;text-decoration:none">View all</a></div>
+                  <div class="queue">
+                    <div class="qi"><span class="well" style="width:36px;height:36px"><svg class="i i-sm"><use href="#i-layers"/></svg></span><div class="txt"><strong>Kitchen science: lemon volcano</strong><span>Catalog · submitted 2 h ago</span></div><span class="badge b-warning"><svg class="i"><use href="#i-warn"/></svg>Review</span></div>
+                    <div class="qi"><span class="well" style="width:36px;height:36px"><svg class="i i-sm"><use href="#i-question"/></svg></span><div class="txt"><strong>How do weekends usually start?</strong><span>Questions · edited today</span></div><span class="badge b-neutral">Draft</span></div>
+                    <div class="qi"><span class="well" style="width:36px;height:36px"><svg class="i i-sm"><use href="#i-note"/></svg></span><div class="txt"><strong>Bedtime routines guide (PDF)</strong><span>Materials · uploaded yesterday</span></div><span class="badge b-success"><svg class="i"><use href="#i-check"/></svg>Published</span></div>
+                    <div class="qi"><span class="well" style="width:36px;height:36px"><svg class="i i-sm"><use href="#i-pin"/></svg></span><div class="txt"><strong>Rainy-day context</strong><span>Contexts · 14 missions linked</span></div><span class="badge b-info">Live</span></div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card">
+                <div class="card-head">
+                  <h4>Families</h4>
+                  <div class="row" style="gap:8px"><button class="chip" type="button" aria-pressed="true" style="min-height:36px"><svg class="i i-xs check"><use href="#i-check"/></svg>All plans</button><button class="chip" type="button" aria-pressed="false" style="min-height:36px"><svg class="i i-xs check"><use href="#i-check"/></svg>Past due</button><button class="btn btn-primary sm" type="button"><svg class="i i-sm"><use href="#i-plus"/></svg>Add family</button></div>
+                </div>
+                <div class="tbl-scroll">
+                  <table class="data">
+                    <thead><tr><th>Family</th><th>Plan</th><th class="num">Members</th><th class="num">Missions (30 d)</th><th>Status</th><th>Last active</th><th class="num"><span class="sr-only">Actions</span></th></tr></thead>
+                    <tbody>
+                      <tr aria-selected="true"><td><span class="cell-fam"><span class="avatar sm">R</span>Rivera</span></td><td>Family yearly</td><td class="num">4</td><td class="num">23</td><td><span class="badge b-success"><svg class="i"><use href="#i-check"/></svg>Active</span></td><td>Today</td><td><div class="row-actions"><button class="icon-btn" type="button" aria-label="Edit Rivera"><svg class="i"><use href="#i-pencil"/></svg></button><button class="icon-btn" type="button" aria-label="Delete Rivera" data-open-dialog><svg class="i"><use href="#i-trash"/></svg></button></div></td></tr>
+                      <tr><td><span class="cell-fam"><span class="avatar sm sand">O</span>Okafor</span></td><td>Family monthly</td><td class="num">5</td><td class="num">17</td><td><span class="badge b-success"><svg class="i"><use href="#i-check"/></svg>Active</span></td><td>Yesterday</td><td><div class="row-actions"><button class="icon-btn" type="button" aria-label="Edit Okafor"><svg class="i"><use href="#i-pencil"/></svg></button><button class="icon-btn" type="button" aria-label="Delete Okafor" data-open-dialog><svg class="i"><use href="#i-trash"/></svg></button></div></td></tr>
+                      <tr><td><span class="cell-fam"><span class="avatar sm">L</span>Lindqvist</span></td><td>Free</td><td class="num">3</td><td class="num">6</td><td><span class="badge b-neutral">Trial</span></td><td>Oct 18</td><td><div class="row-actions"><button class="icon-btn" type="button" aria-label="Edit Lindqvist"><svg class="i"><use href="#i-pencil"/></svg></button><button class="icon-btn" type="button" aria-label="Delete Lindqvist" data-open-dialog><svg class="i"><use href="#i-trash"/></svg></button></div></td></tr>
+                      <tr><td><span class="cell-fam"><span class="avatar sm sand">N</span>Nakamura</span></td><td>Family monthly</td><td class="num">4</td><td class="num">2</td><td><span class="badge b-danger"><svg class="i"><use href="#i-x"/></svg>Past due</span></td><td>Oct 9</td><td><div class="row-actions"><button class="icon-btn" type="button" aria-label="Edit Nakamura"><svg class="i"><use href="#i-pencil"/></svg></button><button class="icon-btn" type="button" aria-label="Delete Nakamura" data-open-dialog><svg class="i"><use href="#i-trash"/></svg></button></div></td></tr>
+                      <tr><td><span class="cell-fam"><span class="avatar sm">B</span>Batista</span></td><td>Family yearly</td><td class="num">6</td><td class="num">31</td><td><span class="badge b-success"><svg class="i"><use href="#i-check"/></svg>Active</span></td><td>Today</td><td><div class="row-actions"><button class="icon-btn" type="button" aria-label="Edit Batista"><svg class="i"><use href="#i-pencil"/></svg></button><button class="icon-btn" type="button" aria-label="Delete Batista" data-open-dialog><svg class="i"><use href="#i-trash"/></svg></button></div></td></tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="pager"><span>Showing 1–5 of 1,284 families</span><div class="row" style="gap:8px"><button class="icon-btn" type="button" aria-label="Previous page" disabled><svg class="i"><use href="#i-chev-l"/></svg></button><button class="icon-btn" type="button" aria-label="Next page"><svg class="i"><use href="#i-chev-r"/></svg></button></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. Motion -->
+  <section id="motion" aria-labelledby="h-motion">
+    <div class="sec-head">
+      <span class="eyebrow">08 · Motion</span>
+      <h2 id="h-motion">Slow tide, quick hands</h2>
+      <p>Ambient loops run for 18 to 42 seconds; interface motion stays between 120 and 300 ms, with exits shorter than entries. Only transform and opacity move. Reduced-motion and the pause control stop the tide.</p>
+    </div>
+    <div class="motion-stage">
+      <div class="stack"><div class="m-box"><div class="m-item" id="m-enter">View enter · 300 ms</div></div><button class="btn btn-secondary sm" type="button" data-motion="enter">Replay enter</button></div>
+      <div class="stack"><div class="m-box"><div class="m-item" id="m-exit">View exit · 180 ms</div></div><button class="btn btn-secondary sm" type="button" data-motion="exit">Replay exit</button></div>
+      <div class="stack"><div class="m-box"><div class="m-item" id="m-cel">Celebrate · 480 ms</div></div><button class="btn btn-secondary sm" type="button" data-motion="cel">Replay celebration</button></div>
+    </div>
+    <div class="table-scroll">
+      <table class="spec">
+        <thead><tr><th>Token</th><th>Value</th><th>Use</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">--dur-micro</td><td>120 ms</td><td>Press, toggle, chip, hover</td></tr>
+          <tr><td class="mono">--dur-ui</td><td>240 ms</td><td>Segmented thumb, switch, dialog</td></tr>
+          <tr><td class="mono">--dur-enter / --dur-exit</td><td>300 / 180 ms</td><td>View change; drawer and sheet use 280 / 180</td></tr>
+          <tr><td class="mono">--ease-enter</td><td class="mono">cubic-bezier(0.16, 1, 0.3, 1)</td><td>All entries</td></tr>
+          <tr><td class="mono">--ease-exit</td><td class="mono">cubic-bezier(0.4, 0, 1, 1)</td><td>All exits</td></tr>
+          <tr><td class="mono">--ease-playful</td><td class="mono">cubic-bezier(0.34, 1.56, 0.64, 1)</td><td>Mission complete, rewards only</td></tr>
+          <tr><td class="mono">tide loops</td><td>18 / 28 / 42 s linear; pools 30 / 38 s</td><td>App background only; never in the admin</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</main>
+
+<footer class="wrap">
+  <span>Great Kids · Tidal Design System proposal · planning stage, no code changed.</span>
+  <span>Sources: Tidal Escape palette board, mobile design reference, FlutterFlow inspiration notes. Spec: MASTER.md and implementation-plan.md in this folder.</span>
+</footer>
+
+<div class="overlay" id="dialog" aria-hidden="true">
+  <div class="dialog" role="alertdialog" aria-modal="true" aria-labelledby="dlg-h" aria-describedby="dlg-p">
+    <h3 id="dlg-h">Delete this item?</h3>
+    <p id="dlg-p">This removes it for every family. Missions already completed stay in their diaries. You cannot undo this.</p>
+    <div class="actions"><button class="btn btn-secondary sm" type="button" data-close-dialog>Cancel</button><button class="btn btn-danger sm" type="button" data-close-dialog>Delete</button></div>
+  </div>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"><svg class="i i-sm"><use href="#i-check-circle"/></svg><span>Mission moved to Saturday</span></div>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* Theme */
+  var themeBtns = document.querySelectorAll("[data-theme-set]");
+  function setTheme(v) {
+    if (v === "auto") { root.removeAttribute("data-theme"); } else { root.setAttribute("data-theme", v); }
+    themeBtns.forEach(function (b) { b.setAttribute("aria-pressed", b.getAttribute("data-theme-set") === v ? "true" : "false"); });
+    try { localStorage.setItem("tidal-theme", v); } catch (e) {}
+    if (window.__drawChart) { window.__drawChart(); }
+  }
+  themeBtns.forEach(function (b) { b.addEventListener("click", function () { setTheme(b.getAttribute("data-theme-set")); }); });
+  try { var saved = localStorage.getItem("tidal-theme"); if (saved) { setTheme(saved); } } catch (e) {}
+
+  /* Tide pause */
+  var tideBtn = document.getElementById("tide-toggle");
+  tideBtn.addEventListener("click", function () {
+    var paused = root.getAttribute("data-tide") === "paused";
+    if (paused) { root.removeAttribute("data-tide"); } else { root.setAttribute("data-tide", "paused"); }
+    tideBtn.setAttribute("aria-pressed", paused ? "false" : "true");
+    tideBtn.querySelector("use").setAttribute("href", paused ? "#i-pause" : "#i-play");
+    tideBtn.querySelector("span").textContent = paused ? "Pause background" : "Play background";
+  });
+
+  /* Phone scale: draw at 430 x 932, scale into the frame */
+  var screens = document.querySelectorAll(".screen");
+  function fit() { screens.forEach(function (s) { var w = s.clientWidth; var app = s.querySelector(".app"); if (w && app) { app.style.setProperty("--s", String(w / 430)); } }); }
+  if (window.ResizeObserver) { var ro = new ResizeObserver(fit); screens.forEach(function (s) { ro.observe(s); }); }
+  window.addEventListener("resize", fit); fit();
+
+  /* Typewriter: slow for the first 18 characters, then fast (mirrors TypewriterRevealStrategy 72 / 16 ms) */
+  function type(el) {
+    var full = el.getAttribute("data-typewriter");
+    if (reduce) { el.textContent = full; return; }
+    if (el.__t) { clearTimeout(el.__t); }
+    var units = Array.from(full); var i = 0;
+    var caret = document.createElement("span"); caret.className = "caret"; caret.setAttribute("aria-hidden", "true");
+    el.textContent = ""; var txt = document.createTextNode(""); el.appendChild(txt); el.appendChild(caret);
+    el.setAttribute("aria-label", full);
+    (function step() {
+      if (i >= units.length) { el.__t = setTimeout(function () { caret.remove(); }, 900); return; }
+      txt.data += units[i]; i += 1;
+      el.__t = setTimeout(step, i < 18 ? 72 : 16);
+    })();
+  }
+  var tws = document.querySelectorAll("[data-typewriter]");
+  tws.forEach(type);
+  document.querySelectorAll("[data-replay]").forEach(function (b) { b.addEventListener("click", function () { tws.forEach(type); }); });
+
+  /* Drawer and sheet inside phones */
+  var home = document.getElementById("phone-home");
+  home.querySelectorAll("[data-drawer-open]").forEach(function (b) { b.addEventListener("click", function () { home.classList.add("drawer-open"); }); });
+  home.querySelectorAll("[data-drawer-close]").forEach(function (b) { b.addEventListener("click", function () { home.classList.remove("drawer-open"); }); });
+  var cal = document.getElementById("phone-cal");
+  cal.querySelectorAll("[data-sheet-open]").forEach(function (b) { b.addEventListener("click", function () { cal.classList.add("sheet-open"); }); });
+  cal.querySelectorAll("[data-sheet-close]").forEach(function (b) { b.addEventListener("click", function () { cal.classList.remove("sheet-open"); }); });
+
+  /* Toggle groups */
+  function pressGroup(container, sel) {
+    container.querySelectorAll(sel).forEach(function (b) {
+      b.addEventListener("click", function () { container.querySelectorAll(sel).forEach(function (o) { o.setAttribute("aria-pressed", o === b ? "true" : "false"); }); });
+    });
+  }
+  pressGroup(document.getElementById("quiz-choices"), ".choice");
+  pressGroup(cal.querySelector(".week"), ".day");
+  document.querySelectorAll(".chip").forEach(function (c) { c.addEventListener("click", function () { c.setAttribute("aria-pressed", c.getAttribute("aria-pressed") === "true" ? "false" : "true"); }); });
+  var seg = document.getElementById("seg-demo"); var segBtns = seg.querySelectorAll("button"); var thumb = seg.querySelector(".thumb");
+  function placeThumb() { var on = seg.querySelector('[aria-pressed="true"]'); thumb.style.width = on.offsetWidth + "px"; thumb.style.transform = "translateX(" + (on.offsetLeft - 4) + "px)"; }
+  segBtns.forEach(function (b) { b.addEventListener("click", function () { segBtns.forEach(function (o) { o.setAttribute("aria-pressed", o === b ? "true" : "false"); }); placeThumb(); }); });
+  placeThumb(); window.addEventListener("resize", placeThumb);
+  if (document.fonts && document.fonts.ready) { document.fonts.ready.then(placeThumb); }
+
+  /* Dialog and toast */
+  var dlg = document.getElementById("dialog"); var lastFocus = null;
+  function openDlg(e) { lastFocus = e.currentTarget; dlg.classList.add("open"); dlg.setAttribute("aria-hidden", "false"); dlg.querySelector("[data-close-dialog]").focus(); }
+  function closeDlg() { dlg.classList.remove("open"); dlg.setAttribute("aria-hidden", "true"); if (lastFocus) { lastFocus.focus(); } }
+  document.querySelectorAll("[data-open-dialog]").forEach(function (b) { b.addEventListener("click", openDlg); });
+  dlg.querySelectorAll("[data-close-dialog]").forEach(function (b) { b.addEventListener("click", closeDlg); });
+  dlg.addEventListener("click", function (e) { if (e.target === dlg) { closeDlg(); } });
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape") { closeDlg(); home.classList.remove("drawer-open"); cal.classList.remove("sheet-open"); } });
+  var toast = document.getElementById("toast"); var tt = null;
+  document.getElementById("toast-btn").addEventListener("click", function () { toast.classList.add("show"); clearTimeout(tt); tt = setTimeout(function () { toast.classList.remove("show"); }, 4000); });
+
+  /* Motion replays */
+  function replay(el, cls) { el.classList.remove("enter-demo", "exit-demo", "celebrate"); void el.offsetWidth; el.classList.add(cls); }
+  document.querySelectorAll("[data-motion]").forEach(function (b) {
+    b.addEventListener("click", function () {
+      var k = b.getAttribute("data-motion");
+      if (k === "enter") { replay(document.getElementById("m-enter"), "enter-demo"); }
+      if (k === "exit") { var x = document.getElementById("m-exit"); replay(x, "exit-demo"); setTimeout(function () { x.classList.remove("exit-demo"); }, 900); }
+      if (k === "cel") { replay(document.getElementById("m-cel"), "celebrate"); }
+    });
+  });
+  document.getElementById("celebrate-btn").addEventListener("click", function () { replay(document.getElementById("reward"), "celebrate"); });
+
+  /* Chart: one y-axis, two series, crosshair tooltip, table view */
+  var weeks = ["Aug 31", "Sep 7", "Sep 14", "Sep 21", "Sep 28", "Oct 5", "Oct 12", "Oct 19"];
+  var series = [
+    { name: "Completed", color: "--viz-1", values: [2410, 2580, 2720, 2690, 2950, 3140, 3260, 3512] },
+    { name: "Started", color: "--viz-2", values: [3120, 3290, 3410, 3380, 3620, 3790, 3880, 4105] }
+  ];
+  var chart = document.getElementById("chart"); var tip = document.getElementById("tip");
+  var W = 640, H = 260, m = { t: 16, r: 132, b: 30, l: 44 }, yMax = 4500, ticks = [0, 1500, 3000, 4500];
+  function x(i) { return m.l + i * (W - m.l - m.r) / (weeks.length - 1); }
+  function y(v) { return m.t + (1 - v / yMax) * (H - m.t - m.b); }
+  function fmt(n) { return n.toLocaleString("en-US"); }
+  var NS = "http://www.w3.org/2000/svg";
+  function el(tag, attrs) { var e = document.createElementNS(NS, tag); for (var k in attrs) { e.setAttribute(k, attrs[k]); } return e; }
+  function draw() {
+    var old = chart.querySelector("svg"); if (old) { old.remove(); }
+    W = Math.max(300, chart.clientWidth || 640); H = W < 480 ? 220 : 260; m.r = W < 480 ? 104 : 132;
+    var cs = getComputedStyle(root);
+    var svg = el("svg", { viewBox: "0 0 " + W + " " + H, role: "img", "aria-label": "Line chart of missions started and completed per week, August 31 to October 19" });
+    ticks.forEach(function (t) {
+      svg.appendChild(el("line", { x1: m.l, x2: W - m.r, y1: y(t), y2: y(t), stroke: cs.getPropertyValue("--viz-grid").trim(), "stroke-width": 1 }));
+      var tx = el("text", { x: m.l - 8, y: y(t) + 4, "text-anchor": "end" }); tx.textContent = t === 0 ? "0" : (t / 1000) + "k"; svg.appendChild(tx);
+    });
+    var every = W < 480 ? 3 : 2;
+    weeks.forEach(function (w, i) { if ((i % every === 0 && i < weeks.length - 2) || i === weeks.length - 1) { var tx = el("text", { x: x(i), y: H - 8, "text-anchor": "middle" }); tx.textContent = w; svg.appendChild(tx); } });
+    var cross = el("line", { y1: m.t, y2: H - m.b, stroke: cs.getPropertyValue("--gk-border-strong").trim(), "stroke-width": 1, "stroke-dasharray": "3 3", opacity: 0 });
+    svg.appendChild(cross);
+    var dots = [];
+    series.forEach(function (s) {
+      var col = cs.getPropertyValue(s.color).trim();
+      var d = s.values.map(function (v, i) { return (i ? "L" : "M") + x(i).toFixed(1) + " " + y(v).toFixed(1); }).join(" ");
+      svg.appendChild(el("path", { d: d, fill: "none", stroke: col, "stroke-width": 2, "stroke-linejoin": "round", "stroke-linecap": "round" }));
+      var li = s.values.length - 1;
+      svg.appendChild(el("circle", { cx: x(li), cy: y(s.values[li]), r: 4, fill: col, stroke: cs.getPropertyValue("--gk-surface").trim(), "stroke-width": 2 }));
+      var lab = el("text", { x: x(li) + 10, y: y(s.values[li]) + 4, "class": "lbl-strong" }); lab.textContent = s.name + " " + (W < 480 ? (s.values[li] / 1000).toFixed(1) + "k" : fmt(s.values[li])); svg.appendChild(lab);
+      var hd = el("circle", { r: 5, fill: col, stroke: cs.getPropertyValue("--gk-surface").trim(), "stroke-width": 2, opacity: 0 }); svg.appendChild(hd); dots.push(hd);
+    });
+    var hit = el("rect", { x: m.l - 10, y: m.t, width: W - m.l - m.r + 20, height: H - m.t - m.b, fill: "transparent" });
+    svg.appendChild(hit);
+    function move(ev) {
+      var r = svg.getBoundingClientRect(); var px = (ev.clientX - r.left) * W / r.width;
+      var i = Math.round((px - m.l) / ((W - m.l - m.r) / (weeks.length - 1))); i = Math.max(0, Math.min(weeks.length - 1, i));
+      cross.setAttribute("x1", x(i)); cross.setAttribute("x2", x(i)); cross.setAttribute("opacity", 1);
+      dots.forEach(function (dt, k) { dt.setAttribute("cx", x(i)); dt.setAttribute("cy", y(series[k].values[i])); dt.setAttribute("opacity", 1); });
+      tip.innerHTML = "<b>Week of " + weeks[i] + "</b>" + series.map(function (s) { return "<div><span><i style=\"background:var(" + s.color + ")\"></i>" + s.name + "</span><span>" + fmt(s.values[i]) + "</span></div>"; }).join("") + "<div><span>Completion rate</span><span>" + Math.round(series[0].values[i] / series[1].values[i] * 100) + "%</span></div>";
+      var left = x(i) * r.width / W; var tw = tip.offsetWidth || 170;
+      tip.style.left = Math.max(0, Math.min(r.width - tw, left + 12 > r.width - tw ? left - tw - 12 : left + 12)) + "px";
+      tip.style.top = "8px"; tip.classList.add("show");
+    }
+    function leave() { cross.setAttribute("opacity", 0); dots.forEach(function (dt) { dt.setAttribute("opacity", 0); }); tip.classList.remove("show"); }
+    hit.addEventListener("pointermove", move); hit.addEventListener("pointerdown", move); hit.addEventListener("pointerleave", leave);
+    chart.insertBefore(svg, tip);
+  }
+  window.__drawChart = draw; draw();
+  if (window.ResizeObserver) { var lastW = 0; new ResizeObserver(function () { var w = chart.clientWidth; if (w && Math.abs(w - lastW) > 4) { lastW = w; draw(); } }).observe(chart); }
+  if (window.matchMedia) { var mq = window.matchMedia("(prefers-color-scheme: dark)"); if (mq.addEventListener) { mq.addEventListener("change", draw); } }
+  var tbl = document.getElementById("chart-table");
+  tbl.innerHTML = "<table class=\"spec\" style=\"min-width:420px\"><thead><tr><th>Week of</th><th>Started</th><th>Completed</th><th>Rate</th></tr></thead><tbody>" + weeks.map(function (w, i) { return "<tr><td>" + w + "</td><td class=\"ratio\">" + fmt(series[1].values[i]) + "</td><td class=\"ratio\">" + fmt(series[0].values[i]) + "</td><td>" + Math.round(series[0].values[i] / series[1].values[i] * 100) + "%</td></tr>"; }).join("") + "</tbody></table>";
+  var tt2 = document.getElementById("chart-table-toggle");
+  tt2.addEventListener("click", function () { var show = tbl.hidden; tbl.hidden = !show; chart.hidden = show; tt2.setAttribute("aria-pressed", show ? "true" : "false"); tt2.textContent = show ? "Show chart" : "Show table"; });
+})();
+</script>
+</body>
+</html>

@@ -9,28 +9,25 @@ type FamilyLayoutProps = {
 
 const FAMILY_SHELL_STYLES: string = `
 [data-surface="family"] {
-  --color-primary: #ff5a36;
-  --color-secondary: #1f9d8a;
-  --color-tertiary: #ffc43d;
-  --color-success: #2f9e4d;
-  --color-danger: #e23d4d;
-  --color-warning: #f4a259;
-  --color-ink: #1f2a37;
-  --color-muted: #5a6674;
-  --color-paper: #f3f8ff;
-  --color-desk: #b8e4f0;
-  --color-child: #7c5cbf;
-  --color-bezel: #1a222c;
   --phone-screen-width: 430px;
   --phone-screen-height: 932px;
   --phone-bezel: 14px;
   min-height: 100%;
   min-height: 100vh;
   min-height: 100dvh;
-  background: var(--color-desk);
-  color: var(--color-ink);
+  background: var(--app-desk-from);
+  background: var(--grad-desk);
+  color: var(--gk-ink);
+  font-family: var(--font-sans);
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
+}
+[data-surface="family"] :where(h1, h2) {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-variation-settings: "SOFT" 60, "WONK" 0;
+  letter-spacing: -0.01em;
+  color: var(--gk-ink);
 }
 [data-family-desk] {
   position: relative;

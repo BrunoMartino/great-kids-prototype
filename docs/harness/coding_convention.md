@@ -16,7 +16,7 @@ Define coding style and implementation preferences for an MVC-based project.
 - `any` is forbidden unless the user writes it. Agents never introduce `any`, `as any`, or untyped parameters.
 - Prefer class properties declared in the constructor.
 - Client state: `useContext` with `useEffect`. Do not add Redux, Zustand, or other global stores unless the user asks.
-- UI: `/amaterasu-paint` design system. Soft, familial, readable colors for conservative loving parents. Flowbite is visual reference only — never import Flowbite. Loading, modals, and side menus must be animated. Mission copy is typed out (slow then fast) via a JS typewriter library.
+- UI: Tidal design system (`MASTER.md`, `Design-System/`; tokens only from `app/design-system/tokens.ts`). Soft, familial, readable colors for conservative loving parents. Flowbite is visual reference only — never import Flowbite. Loading, modals, and side menus must be animated. Mission copy is typed out (slow then fast) by the native typewriter strategy (`typewriter-reveal-strategy.ts`); no third-party typewriter library.
 
 ## MVC Conventions
 
