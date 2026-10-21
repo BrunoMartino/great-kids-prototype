@@ -19,78 +19,6 @@ import { useMaterialsSession } from "./materials-session-context";
 
 const FILE_ACCEPT: string = "image/*,application/pdf";
 
-const MATERIALS_DROP_STYLES: string = `
-[data-file-drop-field] {
-  grid-column: 1 / -1;
-}
-[data-file-drop] {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  min-height: 148px;
-  padding: 20px 16px;
-  border: 1.5px dashed color-mix(in srgb, var(--color-ink) 22%, transparent);
-  border-radius: 14px;
-  background: color-mix(in srgb, var(--color-desk) 28%, var(--color-paper));
-  cursor: pointer;
-  transition: border-color 120ms ease-out, background 120ms ease-out;
-}
-[data-file-drop][data-active="true"] {
-  border-color: var(--color-primary);
-  background: color-mix(in srgb, var(--color-primary) 10%, var(--color-paper));
-}
-[data-file-drop] input[type="file"] {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  clip-path: inset(50%);
-  border: 0;
-  opacity: 0;
-}
-[data-file-drop-icons] {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  gap: 20px;
-  color: var(--color-ink);
-}
-[data-file-kind] {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  color: var(--color-muted);
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-}
-[data-file-kind] svg {
-  color: var(--color-ink);
-}
-[data-file-drop-copy] {
-  color: var(--color-muted);
-  font-size: 0.875rem;
-  font-weight: 600;
-  text-align: center;
-}
-[data-file-drop][data-chosen="true"] [data-file-drop-copy] {
-  color: var(--color-ink);
-}
-@media (hover: hover) and (pointer: fine) {
-  [data-file-drop]:hover {
-    border-color: var(--color-secondary);
-  }
-}
-`;
 
 function isAllowedMaterialFile(p_file: File): boolean {
   if (p_file.type.startsWith("image/")) {
@@ -208,9 +136,6 @@ export function MaterialsScreen(): ReactElement {
       <style href="panel-page" precedence="medium">
         {PANEL_SCREEN_STYLES}
       </style>
-      <style href="materials-drop" precedence="medium">
-        {MATERIALS_DROP_STYLES}
-      </style>
       <StaffSessionToolbar
         activeRole={session.activeRole}
         onSwitchRole={onSwitchRole}
@@ -249,7 +174,11 @@ export function MaterialsScreen(): ReactElement {
           </span>
           <h1>Materials</h1>
           <p>Books, activities, and other curated materials.</p>
-          <form data-panel-form onSubmit={onCreateSubmit}>
+          <form data-panel-form onSubmit={onCreateSubmit} aria-labelledby="materials-form-title">
+            <div data-panel-form-head>
+              <h2 id="materials-form-title">Add material</h2>
+              <p>Books, activities and printables the family can use. Image or PDF, optional.</p>
+            </div>
             <label data-panel-field>
               <span>Type</span>
               <select name="type" defaultValue="Book">
@@ -266,11 +195,11 @@ export function MaterialsScreen(): ReactElement {
               <span>Title</span>
               <input name="title" type="text" autoComplete="off" required />
             </label>
-            <label data-panel-field>
+            <label data-panel-field data-span="full">
               <span>Description</span>
-              <textarea name="description" rows={8} autoComplete="off" />
+              <textarea name="description" rows={3} autoComplete="off" />
             </label>
-            <div data-panel-field data-file-drop-field>
+            <div data-panel-field data-file-drop-field data-span="full">
               <span>File</span>
               <label
                 data-file-drop
@@ -292,11 +221,9 @@ export function MaterialsScreen(): ReactElement {
                 <span data-file-drop-icons>
                   <span data-file-kind>
                     <ImageFileIcon label="Image" />
-                    Image
                   </span>
                   <span data-file-kind>
                     <PdfFileIcon label="PDF" />
-                    PDF
                   </span>
                 </span>
                 <span data-file-drop-copy>
@@ -304,9 +231,11 @@ export function MaterialsScreen(): ReactElement {
                 </span>
               </label>
             </div>
-            <button type="submit" data-variant="primary">
-              Create
-            </button>
+            <div data-panel-form-actions>
+              <button type="submit" data-variant="primary">
+                Create
+              </button>
+            </div>
             {session.formError !== null ? (
               <p data-panel-form-error role="alert">
                 {session.formError}

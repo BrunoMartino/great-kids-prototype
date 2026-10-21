@@ -47,3 +47,5 @@ export { ClockIcon } from "@phosphor-icons/react/dist/ssr/Clock";
 export { LockIcon } from "@phosphor-icons/react/dist/ssr/Lock";
 export { CalendarCheckIcon } from "@phosphor-icons/react/dist/ssr/CalendarCheck";
 export { CompassIcon } from "@phosphor-icons/react/dist/ssr/Compass";
+export { FileImageIcon } from "@phosphor-icons/react/dist/ssr/FileImage";
+export { FilePdfIcon } from "@phosphor-icons/react/dist/ssr/FilePdf";

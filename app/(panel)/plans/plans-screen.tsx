@@ -86,7 +86,11 @@ export function PlansScreen(): ReactElement {
           </span>
           <h1>Plans</h1>
           <p>Platform plans. No hard delete.</p>
-          <form data-panel-form onSubmit={onCreateSubmit}>
+          <form data-panel-form onSubmit={onCreateSubmit} aria-labelledby="plans-form-title">
+            <div data-panel-form-head>
+              <h2 id="plans-form-title">Add plan</h2>
+              <p>Pick a name and a status. Plans are deactivated, never deleted.</p>
+            </div>
             <label data-panel-field>
               <span>Name</span>
               <input name="name" type="text" autoComplete="off" required />
@@ -98,9 +102,11 @@ export function PlansScreen(): ReactElement {
                 <option value="inactive">Inactive</option>
               </select>
             </label>
-            <button type="submit" data-variant="primary">
-              Create
-            </button>
+            <div data-panel-form-actions>
+              <button type="submit" data-variant="primary">
+                Create
+              </button>
+            </div>
             {session.formError !== null ? (
               <p data-panel-form-error role="alert">
                 {session.formError}
