@@ -9,6 +9,7 @@ export type DiaryNoteItem = {
   id: string;
   text: string;
   kind: string;
+  author?: "Parent" | "Child";
 };
 
 export type DiaryNotesEnvelope = {
@@ -51,7 +52,15 @@ function readNoteItem(p_value: unknown): DiaryNoteItem | null {
   if (typeof p_value.text !== "string" || typeof p_value.kind !== "string") {
     return null;
   }
-  return { id: p_value.id, text: p_value.text, kind: p_value.kind };
+  const note: DiaryNoteItem = {
+    id: p_value.id,
+    text: p_value.text,
+    kind: p_value.kind,
+  };
+  if (p_value.author === "Parent" || p_value.author === "Child") {
+    note.author = p_value.author;
+  }
+  return note;
 }
 
 function readNotesEnvelope(p_value: unknown): DiaryNotesEnvelope | null {

@@ -64,7 +64,13 @@ export const viewport: Viewport = {
   viewportFit: "cover",
 };
 
-export default function RootLayout(p_props: RootLayoutProps): ReactElement {
+export default async function RootLayout(
+  p_props: RootLayoutProps,
+): Promise<ReactElement> {
+  // Warm SQLite in the Node server process (instrumentation cannot load better-sqlite3).
+  const { getConnection } = await import("@/internal/db/connection");
+  getConnection();
+
   return (
     <html lang="en" className={FONT_CLASS_NAMES}>
       <body>

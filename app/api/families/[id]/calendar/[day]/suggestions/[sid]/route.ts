@@ -6,7 +6,7 @@ import {
   type RhythmProposal,
 } from "@/app/api/families/[id]/forecast/rhythm-observer";
 import { GpsPolicy } from "@/app/api/families/[id]/profile/gps-policy";
-import { getMockSession } from "@/internal/db/mock-session";
+import { getFamilyRole } from "@/internal/db/mock-session";
 import { Family } from "@/models/family";
 import type { DayDocument } from "@/app/api/families/[id]/calendar/day-composite";
 
@@ -47,7 +47,7 @@ export async function PATCH(
   const day: string = params.day;
   const sid: string = params.sid;
   try {
-    GpsPolicy.assertCanEdit(getMockSession().role);
+    GpsPolicy.assertCanEdit(getFamilyRole());
   } catch {
     return deny();
   }

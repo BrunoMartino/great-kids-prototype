@@ -8,7 +8,12 @@ import {
   type ReactElement,
   type ReactNode,
 } from "react";
-import { SEEDED_ACCEPTED_TITLE, SEEDED_FAMILY_ID } from "../chrome/seeded-family";
+import {
+  SEEDED_ACCEPTED_CYCLE_ID,
+  SEEDED_ACCEPTED_TITLE,
+  SEEDED_FAMILY_ID,
+  SEEDED_PUBLISHED_MISSIONS,
+} from "../chrome/seeded-family";
 import { useFamilySession } from "../context-switch/family-session-context";
 import { AddDiaryNoteCommand } from "../diary/add-note-command";
 import type { DiaryPayload, NoteKind } from "../diary/diary-payload";
@@ -82,37 +87,41 @@ export function ChildSessionProvider(
     let isActive: boolean = true;
     const load = async (): Promise<void> => {
       setPresentation({ kind: "loading" });
-      try {
-        const command: ListCompletedCommand = new ListCompletedCommand(familyId);
-        const envelope = await command.execute();
-        if (!isActive) {
-          return;
-        }
-        setCompleted(envelope.missions);
+      const [completedResult, diaryResult] = await Promise.all([
+        new ListCompletedCommand(familyId)
+          .execute()
+          .then((p_envelope) => ({
+            ok: true as const,
+            missions: p_envelope.missions,
+          }))
+          .catch((p_error: unknown) => ({
+            ok: false as const,
+            blocked: p_error instanceof HistoryForbiddenError,
+          })),
+        new ListDiaryCommand(familyId)
+          .execute()
+          .then((p_diary: DiaryPayload) => ({
+            ok: true as const,
+            diary: p_diary,
+          }))
+          .catch(() => ({ ok: false as const })),
+      ]);
+      if (!isActive) {
+        return;
+      }
+      if (completedResult.ok) {
+        setCompleted(completedResult.missions);
         setCompletedBlocked(false);
-      } catch (p_error: unknown) {
-        void p_error;
-        if (!isActive) {
-          return;
-        }
+      } else {
         setCompleted([]);
-        setCompletedBlocked(p_error instanceof HistoryForbiddenError);
+        setCompletedBlocked(completedResult.blocked);
       }
-      try {
-        const diary: DiaryPayload = await new ListDiaryCommand(familyId).execute();
-        if (!isActive) {
-          return;
-        }
-        setNotes(diary);
-      } catch (p_error: unknown) {
-        void p_error;
-        if (isActive) {
-          setNotes(null);
-        }
+      if (diaryResult.ok) {
+        setNotes(diaryResult.diary);
+      } else {
+        setNotes(null);
       }
-      if (isActive) {
-        setPresentation({ kind: "ready" });
-      }
+      setPresentation({ kind: "ready" });
     };
     void load();
     return (): void => {
@@ -144,18 +153,33 @@ export function ChildSessionProvider(
         setFormError("Write the story. No photo.");
         return;
       }
+      const linked: CompletedMissionItem | undefined = completed[0];
+      const fallbackMission =
+        SEEDED_PUBLISHED_MISSIONS.find(
+          (p_item) => p_item.title === SEEDED_ACCEPTED_TITLE,
+        ) ?? SEEDED_PUBLISHED_MISSIONS[0];
+      const missionId: string | undefined =
+        linked?.mission_id ?? fallbackMission?.id;
+      const familyMissionId: string =
+        linked?.id ?? SEEDED_ACCEPTED_CYCLE_ID;
+      if (missionId === undefined) {
+        setFormError("Finish a mission first, then write about it.");
+        return;
+      }
       setIsSaving(true);
       setFormError(null);
       try {
         const payload: DiaryPayload = await new AddDiaryNoteCommand(familyId, {
           kind: draftKind,
           text,
+          mission_id: missionId,
+          family_mission_id: familyMissionId,
         }).execute();
         setNotes(payload);
         setDraftText("");
       } catch (p_error: unknown) {
         if (p_error instanceof DiaryForbiddenError) {
-          setFormError("Child view cannot save notes on this API yet.");
+          setFormError("Could not save this mission note.");
         } else if (p_error instanceof DiaryIllegalError) {
           setFormError("Empty text, invalid type, or a photo.");
         } else {

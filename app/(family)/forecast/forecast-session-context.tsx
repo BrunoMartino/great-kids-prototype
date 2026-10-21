@@ -150,18 +150,25 @@ export function ForecastSessionProvider(
     }
     setPresentation({ kind: "loading" });
     try {
-      const weekResponse: Response = await fetch(
-        `/api/families/${encodeURIComponent(trimmed)}/forecast/week`,
-        { cache: "no-store", signal: p_signal },
-      );
+      const [weekResponse, dayResponse]: [Response, Response] =
+        await Promise.all([
+          fetch(
+            `/api/families/${encodeURIComponent(trimmed)}/forecast/week`,
+            { cache: "no-store", signal: p_signal },
+          ),
+          fetch(
+            `/api/families/${encodeURIComponent(trimmed)}/calendar/${encodeURIComponent(p_day)}`,
+            { cache: "no-store", signal: p_signal },
+          ),
+        ]);
       if (p_signal?.aborted) {
         return;
       }
-      if (weekResponse.status === 403) {
+      if (weekResponse.status === 403 || dayResponse.status === 403) {
         setPresentation({ kind: "denied" });
         return;
       }
-      if (weekResponse.status === 404) {
+      if (weekResponse.status === 404 || dayResponse.status === 404) {
         setPresentation({ kind: "missing" });
         return;
       }
@@ -172,7 +179,17 @@ export function ForecastSessionProvider(
         });
         return;
       }
-      const weekBody: unknown = await weekResponse.json();
+      if (!dayResponse.ok) {
+        setPresentation({
+          kind: "error",
+          message: "Could not open the day.",
+        });
+        return;
+      }
+      const [weekBody, dayBody]: [unknown, unknown] = await Promise.all([
+        weekResponse.json(),
+        dayResponse.json(),
+      ]);
       const week = readWeekEnvelope(weekBody);
       if (week === null) {
         setPresentation({
@@ -181,29 +198,6 @@ export function ForecastSessionProvider(
         });
         return;
       }
-      const dayResponse: Response = await fetch(
-        `/api/families/${encodeURIComponent(trimmed)}/calendar/${encodeURIComponent(p_day)}`,
-        { cache: "no-store", signal: p_signal },
-      );
-      if (p_signal?.aborted) {
-        return;
-      }
-      if (dayResponse.status === 403) {
-        setPresentation({ kind: "denied" });
-        return;
-      }
-      if (dayResponse.status === 404) {
-        setPresentation({ kind: "missing" });
-        return;
-      }
-      if (!dayResponse.ok) {
-        setPresentation({
-          kind: "error",
-          message: "Could not open the day.",
-        });
-        return;
-      }
-      const dayBody: unknown = await dayResponse.json();
       const document: DayDocument | null = readDayDocument(dayBody);
       if (document === null) {
         setPresentation({ kind: "error", message: "Day in an invalid format." });

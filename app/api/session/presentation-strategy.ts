@@ -1,4 +1,4 @@
-import { getMockSession } from "@/internal/db/mock-session";
+import { setFamilyRole } from "@/internal/db/mock-session";
 
 export type SessionPresentation = {
   role: "Parent" | "Child";
@@ -39,11 +39,7 @@ const store: PresentationStore = {
 };
 
 function alignFamilyMock(p_role: "Parent" | "Child"): void {
-  const sessionRole: string = getMockSession().role;
-  if (sessionRole === "Admin" || sessionRole === "Operator") {
-    return;
-  }
-  getMockSession().role = p_role;
+  setFamilyRole(p_role);
 }
 
 export function applyRole(p_role: string): void {

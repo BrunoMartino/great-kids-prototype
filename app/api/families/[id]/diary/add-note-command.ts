@@ -6,6 +6,7 @@ import {
   NoteLeaf,
   NotesComposite,
 } from "@/app/api/families/[id]/diary/notes-composite";
+import { getFamilyRole, type FamilyRole } from "@/internal/db/mock-session";
 import {
   FamilyDiary,
   type DiaryDocument,
@@ -109,7 +110,13 @@ export class AddNoteCommand implements DiaryCommand {
     }
     this.previousFamilyNotes = current.family_notes;
     this.previousMissionNote = current.mission_note;
-    const note: NoteItem = { id: crypto.randomUUID(), text, kind: strategyKind };
+    const author: FamilyRole = getFamilyRole();
+    const note: NoteItem = {
+      id: crypto.randomUUID(),
+      text,
+      kind: strategyKind,
+      author,
+    };
     const familyHub: NotesComposite = NotesComposite.fromEnvelope(current.family_notes);
     familyHub.add(new NoteLeaf(note));
     const missionHub: MissionNotesComposite = MissionNotesComposite.fromEnvelope(

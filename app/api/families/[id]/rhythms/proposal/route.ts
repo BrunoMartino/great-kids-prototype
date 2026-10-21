@@ -1,6 +1,6 @@
 import { GpsPolicy } from "@/app/api/families/[id]/profile/gps-policy";
 import { getConnection, queryRaw } from "@/internal/db/connection";
-import { getMockSession } from "@/internal/db/mock-session";
+import { getFamilyRole } from "@/internal/db/mock-session";
 import { Family } from "@/models/family";
 import { FamilyProfile, type GpsDocument, type RhythmsEnvelope } from "@/models/family_profile";
 
@@ -40,7 +40,7 @@ export async function POST(
   const params: { id: string } = await p_context.params;
   const familyId: string = params.id;
   try {
-    GpsPolicy.assertCanEdit(getMockSession().role);
+    GpsPolicy.assertCanEdit(getFamilyRole());
   } catch {
     return deny();
   }

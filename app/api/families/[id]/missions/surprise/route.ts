@@ -1,7 +1,7 @@
 import { GpsPolicy } from "@/app/api/families/[id]/profile/gps-policy";
 import { AcceptedFamilyMissionFactory } from "@/app/api/families/[id]/missions/surprise/accepted-factory";
 import { SurpriseSelectionStrategy } from "@/app/api/families/[id]/missions/surprise/selection-strategy";
-import { getMockSession } from "@/internal/db/mock-session";
+import { getFamilyRole } from "@/internal/db/mock-session";
 import { Family } from "@/models/family";
 
 type FamilyRouteContext = {
@@ -20,7 +20,7 @@ export async function POST(
   const params: { id: string } = await p_context.params;
   const familyId: string = params.id;
   try {
-    GpsPolicy.assertCanEdit(getMockSession().role);
+    GpsPolicy.assertCanEdit(getFamilyRole());
   } catch {
     return deny();
   }

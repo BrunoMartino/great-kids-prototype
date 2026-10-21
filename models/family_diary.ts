@@ -8,6 +8,7 @@ export type NoteItem = {
   id: string;
   text: string;
   kind: string;
+  author?: "Parent" | "Child";
 };
 
 export type NotesEnvelope = {
@@ -57,7 +58,11 @@ function parseNoteItem(p_value: unknown): NoteItem {
   ) {
     throw new Error("invalid note");
   }
-  return { id: p_value.id, text: p_value.text, kind: p_value.kind };
+  const note: NoteItem = { id: p_value.id, text: p_value.text, kind: p_value.kind };
+  if (p_value.author === "Parent" || p_value.author === "Child") {
+    note.author = p_value.author;
+  }
+  return note;
 }
 
 function parseNotesEnvelope(p_json: string): NotesEnvelope {

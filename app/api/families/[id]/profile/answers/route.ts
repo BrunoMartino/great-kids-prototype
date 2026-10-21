@@ -1,7 +1,7 @@
 import { DeleteAnswerCommand } from "@/app/api/families/[id]/profile/delete-answer-command";
 import { EditAnswerCommand } from "@/app/api/families/[id]/profile/edit-answer-command";
 import { GpsPolicy } from "@/app/api/families/[id]/profile/gps-policy";
-import { getMockSession } from "@/internal/db/mock-session";
+import { getFamilyRole } from "@/internal/db/mock-session";
 import { FamilyProfile, type QuizAnswerEnvelope, type QuizAnswerItem } from "@/models/family_profile";
 
 type FamilyRouteContext = {
@@ -33,7 +33,7 @@ export async function GET(
   const params: { id: string } = await p_context.params;
   const familyId: string = params.id;
   try {
-    GpsPolicy.assertCanEdit(getMockSession().role);
+    GpsPolicy.assertCanEdit(getFamilyRole());
   } catch {
     return deny();
   }
@@ -58,7 +58,7 @@ export async function PATCH(
   const params: { id: string } = await p_context.params;
   const familyId: string = params.id;
   try {
-    GpsPolicy.assertCanEdit(getMockSession().role);
+    GpsPolicy.assertCanEdit(getFamilyRole());
   } catch {
     return deny();
   }
@@ -88,7 +88,7 @@ export async function DELETE(
   const params: { id: string } = await p_context.params;
   const familyId: string = params.id;
   try {
-    GpsPolicy.assertCanEdit(getMockSession().role);
+    GpsPolicy.assertCanEdit(getFamilyRole());
   } catch {
     return deny();
   }

@@ -5,7 +5,7 @@ import {
 } from "@/app/api/families/[id]/forecast/week-list-strategy";
 import { UnpublishedMissionError } from "@/app/api/families/[id]/calendar/schedule-on-day";
 import { GpsPolicy } from "@/app/api/families/[id]/profile/gps-policy";
-import { getMockSession } from "@/internal/db/mock-session";
+import { getFamilyRole } from "@/internal/db/mock-session";
 import { Family } from "@/models/family";
 
 type FamilyRouteContext = {
@@ -28,7 +28,7 @@ export async function GET(
   const params: { id: string } = await p_context.params;
   const familyId: string = params.id;
   try {
-    GpsPolicy.assertCanEdit(getMockSession().role);
+    GpsPolicy.assertCanEdit(getFamilyRole());
   } catch {
     return deny();
   }
@@ -46,7 +46,7 @@ export async function POST(
   const params: { id: string } = await p_context.params;
   const familyId: string = params.id;
   try {
-    GpsPolicy.assertCanEdit(getMockSession().role);
+    GpsPolicy.assertCanEdit(getFamilyRole());
   } catch {
     return deny();
   }

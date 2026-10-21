@@ -8,6 +8,7 @@ export const PANEL_SCREEN_STYLES: string = `
   width: 100%;
   max-width: 1120px;
   min-width: 0;
+  container: panel-page / inline-size;
 }
 [data-panel-page] h1 {
   margin: 0;
@@ -119,7 +120,8 @@ export const PANEL_SCREEN_STYLES: string = `
   transform: scale(0.98);
 }
 [data-panel-page] input,
-[data-panel-page] select {
+[data-panel-page] select,
+[data-panel-page] textarea {
   min-height: 40px;
   width: 100%;
   padding: 0 12px;
@@ -183,9 +185,12 @@ export const PANEL_SCREEN_STYLES: string = `
   outline: 2px solid var(--gk-focus);
   outline-offset: 2px;
 }
+/* Create-form card (MASTER §9.2/§9.3, admin): header, 2-column field grid, full-width rows, actions right. */
 [data-panel-form] {
   display: grid;
-  gap: 12px;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+  gap: 16px;
   width: 100%;
   min-width: 0;
   padding: 20px;
@@ -194,18 +199,118 @@ export const PANEL_SCREEN_STYLES: string = `
   background: var(--gk-surface);
   box-shadow: var(--el-1);
 }
+[data-panel-form-head] {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  grid-column: 1 / -1;
+}
+[data-panel-page] [data-panel-form-head] h2 {
+  margin: 0;
+  color: var(--gk-ink);
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+[data-panel-page] [data-panel-form-head] p {
+  margin: 0;
+  color: var(--gk-ink-muted);
+  font-size: var(--fs-body-sm);
+}
 [data-panel-field] {
   display: flex;
   flex-direction: column;
   gap: 6px;
   min-width: 0;
 }
-[data-panel-field] span {
+[data-panel-field][data-span="full"],
+[data-panel-form-actions],
+[data-panel-form] > [data-panel-form-error] {
+  grid-column: 1 / -1;
+}
+[data-panel-field] > span:first-child {
   color: var(--gk-ink-muted);
   font-size: var(--fs-caption);
   font-weight: 700;
   letter-spacing: 0.04em;
+  line-height: 1.4;
   text-transform: uppercase;
+}
+[data-panel-page] textarea {
+  min-height: 96px;
+  padding: 10px 12px;
+  line-height: 1.5;
+  resize: vertical;
+}
+[data-panel-form-actions] {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+  padding-top: 16px;
+  border-top: 1px solid var(--gk-border);
+}
+[data-file-drop] {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-height: 88px;
+  padding: 16px;
+  border: 1.5px dashed var(--gk-border-strong);
+  border-radius: var(--r-md);
+  background: var(--gk-surface);
+  color: var(--gk-ink-muted);
+  cursor: pointer;
+  transition: background-color var(--dur-micro) var(--ease-state), border-color var(--dur-micro) var(--ease-state);
+}
+[data-file-drop][data-active="true"] {
+  border-color: var(--gk-link);
+  background: var(--gk-surface-2);
+}
+[data-file-drop]:focus-within {
+  outline: 2px solid var(--gk-focus);
+  outline-offset: 2px;
+}
+[data-file-drop] input[type="file"] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  min-height: 0;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  clip-path: inset(50%);
+  border: 0;
+  opacity: 0;
+}
+[data-file-drop-icons] {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--gk-link);
+}
+[data-file-kind] {
+  display: inline-flex;
+  align-items: center;
+}
+[data-file-drop-copy] {
+  color: var(--gk-ink-muted);
+  font-size: var(--fs-body-sm);
+  font-weight: 500;
+  text-align: center;
+}
+[data-file-drop][data-chosen="true"] [data-file-drop-copy] {
+  color: var(--gk-ink);
+  font-weight: 600;
+}
+@container panel-page (min-width: 720px) {
+  [data-panel-form] {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 [data-panel-form-error] {
   color: var(--gk-danger-ink);
@@ -371,23 +476,6 @@ export const PANEL_SCREEN_STYLES: string = `
   50% { opacity: 1; transform: scaleX(1); }
   100% { opacity: 0.45; transform: scaleX(0.55); }
 }
-@media (min-width: 768px) {
-  /* Fields share one row and one baseline; the submit sits at the row end (was an invalid auto-fit + auto grid, so forms stacked). */
-  [data-panel-form] {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: flex-end;
-  }
-  [data-panel-form] > [data-panel-field] {
-    flex: 1 1 160px;
-  }
-  [data-panel-form] > button {
-    flex: 0 0 auto;
-  }
-  [data-panel-form] > [data-panel-form-error] {
-    flex: 1 1 100%;
-  }
-}
 @media (hover: hover) and (pointer: fine) {
   [data-tooltip]:hover::after {
     opacity: 1;
@@ -406,6 +494,10 @@ export const PANEL_SCREEN_STYLES: string = `
   }
   [data-file-button]:hover {
     background: var(--gk-border);
+  }
+  [data-file-drop]:hover {
+    border-color: var(--gk-link);
+    background: var(--gk-surface-2);
   }
   [data-panel-page] button[data-variant="danger"]:hover:not(:disabled) {
     background: var(--gk-danger);

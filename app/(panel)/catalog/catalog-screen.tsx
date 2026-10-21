@@ -33,11 +33,6 @@ const CATALOG_EXTRAS: string = `
   background: color-mix(in srgb, var(--gk-warning) 18%, var(--gk-surface));
   color: var(--gk-warning-ink);
 }
-@media (min-width: 768px) {
-  [data-panel-catalog] [data-panel-form] > [data-panel-field]:nth-of-type(2) {
-    flex-grow: 1.4;
-  }
-}
 `;
 
 function reviewLabel(p_status: string): string {
@@ -143,7 +138,11 @@ export function CatalogScreen(): ReactElement {
         <div data-panel-success>
           <h1>Catalog</h1>
           <p>Staff missions, including drafts and review.</p>
-          <form data-panel-form onSubmit={onCreateSubmit}>
+          <form data-panel-form onSubmit={onCreateSubmit} aria-labelledby="catalog-form-title">
+            <div data-panel-form-head>
+              <h2 id="catalog-form-title">Add mission</h2>
+              <p>Pick a category and a title. The image is optional.</p>
+            </div>
             <label data-panel-field>
               <span>Category</span>
               <select name="category_id" required defaultValue="">
@@ -165,13 +164,15 @@ export function CatalogScreen(): ReactElement {
               <span>Title</span>
               <input name="title" type="text" autoComplete="off" required />
             </label>
-            <label data-panel-field>
+            <label data-panel-field data-span="full">
               <span>Image</span>
               <input name="file" type="file" accept="image/*" />
             </label>
-            <button type="submit" data-variant="primary">
-              Create
-            </button>
+            <div data-panel-form-actions>
+              <button type="submit" data-variant="primary">
+                Create
+              </button>
+            </div>
             {session.formError !== null ? (
               <p data-panel-form-error role="alert">
                 {session.formError}

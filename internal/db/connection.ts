@@ -13,6 +13,9 @@ export class Connection {
     const absolutePath: string = resolve(sqlitePath);
     mkdirSync(dirname(absolutePath), { recursive: true });
     this.database = new Database(absolutePath);
+    this.database.pragma("journal_mode = WAL");
+    this.database.pragma("busy_timeout = 5000");
+    this.database.pragma("synchronous = NORMAL");
     this.database.pragma("foreign_keys = ON");
     this.applySchema();
   }

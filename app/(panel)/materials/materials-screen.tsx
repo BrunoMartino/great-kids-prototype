@@ -1,8 +1,14 @@
 "use client";
 
-import type { ChangeEvent, FormEvent, ReactElement } from "react";
+import type { ChangeEvent, DragEvent, FormEvent, ReactElement, RefObject } from "react";
+import { useRef, useState } from "react";
 import { PANEL_SCREEN_STYLES } from "../shell/panel-screen-styles";
-import { TrashIcon, UploadIcon } from "../shell/panel-icons";
+import {
+  ImageFileIcon,
+  PdfFileIcon,
+  TrashIcon,
+  UploadIcon,
+} from "../shell/panel-icons";
 import {
   StaffSessionToolbar,
   staffRoleLabel,
@@ -10,6 +16,22 @@ import {
 } from "../shell/staff-session-toolbar";
 import { MATERIAL_TYPES, type PanelMaterialRow } from "./materials-facade";
 import { useMaterialsSession } from "./materials-session-context";
+
+const FILE_ACCEPT: string = "image/*,application/pdf";
+
+
+function isAllowedMaterialFile(p_file: File): boolean {
+  if (p_file.type.startsWith("image/")) {
+    return true;
+  }
+  return p_file.type === "application/pdf";
+}
+
+function assignInputFile(p_input: HTMLInputElement, p_file: File): void {
+  const transfer: DataTransfer = new DataTransfer();
+  transfer.items.add(p_file);
+  p_input.files = transfer.files;
+}
 
 function fileLabel(p_row: PanelMaterialRow): string {
   if (p_row.feat_img_path !== null) {
@@ -23,6 +45,9 @@ function fileLabel(p_row: PanelMaterialRow): string {
 
 export function MaterialsScreen(): ReactElement {
   const session: ReturnType<typeof useMaterialsSession> = useMaterialsSession();
+  const fileInputRef: RefObject<HTMLInputElement | null> = useRef<HTMLInputElement>(null);
+  const [fileName, setFileName] = useState<string | null>(null);
+  const [dragDepth, setDragDepth] = useState<number>(0);
 
   const onSwitchRole = (p_role: StaffRole): void => {
     void session.switchRole(p_role);
@@ -45,8 +70,53 @@ export function MaterialsScreen(): ReactElement {
       .then((p_ok: boolean): void => {
         if (p_ok) {
           form.reset();
+          setFileName(null);
+          setDragDepth(0);
         }
       });
+  };
+
+  const onFileChange = (p_event: ChangeEvent<HTMLInputElement>): void => {
+    const file: File | undefined = p_event.target.files?.[0];
+    if (file === undefined) {
+      setFileName(null);
+      return;
+    }
+    setFileName(file.name);
+  };
+
+  const onDragEnter = (p_event: DragEvent<HTMLLabelElement>): void => {
+    p_event.preventDefault();
+    p_event.stopPropagation();
+    setDragDepth((p_prev: number): number => {
+      return p_prev + 1;
+    });
+  };
+
+  const onDragOver = (p_event: DragEvent<HTMLLabelElement>): void => {
+    p_event.preventDefault();
+    p_event.stopPropagation();
+  };
+
+  const onDragLeave = (p_event: DragEvent<HTMLLabelElement>): void => {
+    p_event.preventDefault();
+    p_event.stopPropagation();
+    setDragDepth((p_prev: number): number => {
+      return Math.max(0, p_prev - 1);
+    });
+  };
+
+  const onDrop = (p_event: DragEvent<HTMLLabelElement>): void => {
+    p_event.preventDefault();
+    p_event.stopPropagation();
+    setDragDepth(0);
+    const input: HTMLInputElement | null = fileInputRef.current;
+    const dropped: File | undefined = p_event.dataTransfer.files[0];
+    if (input === null || dropped === undefined || !isAllowedMaterialFile(dropped)) {
+      return;
+    }
+    assignInputFile(input, dropped);
+    setFileName(dropped.name);
   };
 
   const onRowFile = (
@@ -104,7 +174,11 @@ export function MaterialsScreen(): ReactElement {
           </span>
           <h1>Materials</h1>
           <p>Books, activities, and other curated materials.</p>
-          <form data-panel-form onSubmit={onCreateSubmit}>
+          <form data-panel-form onSubmit={onCreateSubmit} aria-labelledby="materials-form-title">
+            <div data-panel-form-head>
+              <h2 id="materials-form-title">Add material</h2>
+              <p>Books, activities and printables the family can use. Image or PDF, optional.</p>
+            </div>
             <label data-panel-field>
               <span>Type</span>
               <select name="type" defaultValue="Book">
@@ -121,17 +195,47 @@ export function MaterialsScreen(): ReactElement {
               <span>Title</span>
               <input name="title" type="text" autoComplete="off" required />
             </label>
-            <label data-panel-field>
+            <label data-panel-field data-span="full">
               <span>Description</span>
-              <input name="description" type="text" autoComplete="off" />
+              <textarea name="description" rows={3} autoComplete="off" />
             </label>
-            <label data-panel-field>
+            <div data-panel-field data-file-drop-field data-span="full">
               <span>File</span>
-              <input name="file" type="file" accept="image/*,application/pdf" />
-            </label>
-            <button type="submit" data-variant="primary">
-              Create
-            </button>
+              <label
+                data-file-drop
+                data-active={dragDepth > 0 ? "true" : "false"}
+                data-chosen={fileName !== null ? "true" : "false"}
+                onDragEnter={onDragEnter}
+                onDragOver={onDragOver}
+                onDragLeave={onDragLeave}
+                onDrop={onDrop}
+              >
+                <input
+                  ref={fileInputRef}
+                  name="file"
+                  type="file"
+                  accept={FILE_ACCEPT}
+                  aria-label="Drop an image or PDF, or click to browse"
+                  onChange={onFileChange}
+                />
+                <span data-file-drop-icons>
+                  <span data-file-kind>
+                    <ImageFileIcon label="Image" />
+                  </span>
+                  <span data-file-kind>
+                    <PdfFileIcon label="PDF" />
+                  </span>
+                </span>
+                <span data-file-drop-copy>
+                  {fileName ?? "Drop an image or PDF here, or click to browse"}
+                </span>
+              </label>
+            </div>
+            <div data-panel-form-actions>
+              <button type="submit" data-variant="primary">
+                Create
+              </button>
+            </div>
             {session.formError !== null ? (
               <p data-panel-form-error role="alert">
                 {session.formError}
